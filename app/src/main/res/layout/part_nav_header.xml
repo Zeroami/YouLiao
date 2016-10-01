@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/header_area_height"
+    android:background="@mipmap/img_nav_header"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+
+    <TextView
+        android:id="@+id/tv_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/test_signature"
+        android:textColor="@color/white_1"
+        android:textSize="@dimen/dp_14" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_signature"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/test_nickname"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_16" />
+
+    <com.zeroami.commonlib.widget.LCircleImageView
+        android:id="@+id/cv_circle_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_above="@id/tv_nickname"
+        android:layout_marginBottom="16dp"
+        android:src="@mipmap/img_default_face" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cv_circle_avatar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/cv_circle_avatar"
+        android:maxLines="2"
+        android:text="@string/test_username"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_16" />
+
+</RelativeLayout>

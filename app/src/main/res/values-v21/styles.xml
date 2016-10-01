@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="AppTheme" parent="BaseAppTheme" >
+        <!-- windowTranslucentStatus设置后状态栏会半透明 -->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!-- 设置StatusBar为透明色 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

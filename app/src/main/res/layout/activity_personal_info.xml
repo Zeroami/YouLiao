@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/part_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp">
+
+            <com.zeroami.commonlib.widget.LCircleImageView
+                android:id="@+id/cv_circle_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@mipmap/img_default_face"
+                app:border_color="@color/windowBackground"
+                app:border_width="@dimen/dp_1" />
+
+            <TextView
+                android:id="@+id/tv_change_avatar_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="点击更改头像"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/username"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:singleLine="true"
+                android:text="@string/test_username"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/windowBackground" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/nickname"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:singleLine="true"
+                android:text="@string/test_nickname"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+
+            <EditText
+                android:id="@+id/et_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@null"
+                android:hint="@string/hint_nickname"
+                android:singleLine="true"
+                android:textColor="@color/main_content_text_color_1"
+                android:textColorHint="@color/main_content_text_color_2"
+                android:textSize="@dimen/dp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/windowBackground" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="个性签名"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:text="@string/test_signature"
+                android:textColor="@color/main_content_text_color_1"
+                android:textSize="@dimen/dp_14" />
+
+            <EditText
+                android:id="@+id/et_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:hint="@string/hint_signature"
+                android:maxLines="5"
+                android:textColor="@color/main_content_text_color_1"
+                android:textColorHint="@color/main_content_text_color_2"
+                android:textSize="@dimen/dp_14"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_remain_word_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="right"
+                android:textColor="@color/tips_remain_word"
+                android:textSize="@dimen/dp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_save_change"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:background="@drawable/bg_list_item"
+            android:gravity="center_horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp"
+            android:text="@string/save_change"
+            android:textColor="@color/main_content_text_color"
+            android:textSize="@dimen/dp_14"/>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

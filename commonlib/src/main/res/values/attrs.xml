@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--圆形图片控件-->
+    <declare-styleable name="LCircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+
+    <!--进度条-->
+    <declare-styleable name="LCircleProgressView">
+        <attr name="progressIndeterminate" format="boolean"/>
+        <attr name="barColor" format="color"/>
+        <attr name="rimColor" format="color"/>
+        <attr name="rimWidth" format="dimension"/>
+        <attr name="spinSpeed" format="float"/>
+        <attr name="barSpinCycleTime" format="integer"/>
+        <attr name="circleRadius" format="dimension"/>
+        <attr name="fillRadius" format="boolean"/>
+        <attr name="barWidth" format="dimension"/>
+        <attr name="linearProgress" format="boolean"/>
+    </declare-styleable>
+
+    <!-- 侧滑返回Layout-->
+    <declare-styleable name="SwipeBackLayout">
+        <attr name="edge_size" format="dimension"/>
+        <attr name="edge_flag">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="bottom" value="2"/>
+            <enum name="all" value="3"/>
+        </attr>
+        <attr name="shadow_left" format="reference"/>
+        <attr name="shadow_right" format="reference"/>
+        <attr name="shadow_bottom" format="reference"/>
+    </declare-styleable>
+
+    <attr name="SwipeBackLayoutStyle" format="reference"/>
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="4dp"
+
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="@drawable/bg_list_item"
+        android:paddingBottom="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="8dp">
+
+        <com.zeroami.commonlib.widget.LCircleImageView
+            android:id="@+id/cv_circle_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/img_default_face"
+            app:border_color="@color/windowBackground"
+            app:border_width="@dimen/dp_1" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/cv_circle_avatar"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/test_nickname"
+            android:textColor="@color/main_content_text_color"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/tv_signature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_nickname"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/cv_circle_avatar"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/test_signature"
+            android:textColor="@color/main_content_text_color_1"
+            android:textSize="@dimen/dp_12" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
