@@ -21,6 +21,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * <p>作者：Zeroami</p>
+ * <p>邮箱：826589183@qq.com</p>
+ * <p>描述：新的朋友页</p>
+ */
 public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Presenter> implements NewFriendContract.View {
 
     @Bind(R.id.rv_add_request)

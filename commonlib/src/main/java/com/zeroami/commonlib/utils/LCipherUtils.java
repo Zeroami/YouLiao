@@ -18,8 +18,8 @@ public class LCipherUtils {
     /**
      * MD5加密
      *
-     * @param string 源字符串
-     * @return 加密后的字符串
+     * @param string
+     * @return
      */
     public static String md5(String string) {
         byte[] hash = null;

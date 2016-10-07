@@ -41,7 +41,7 @@ public class LNetUtils {
     /**
      * 判断是否有网络连接
      *
-     * @return 是否连接
+     * @return
      */
     public static boolean isNetworkConnected() {
         // 获取手机所有连接管理对象(包括对wi-fi,net等连接的管理)
@@ -58,7 +58,7 @@ public class LNetUtils {
     /**
      * 判断WIFI连接是否可用
      *
-     * @return 是否可用
+     * @return
      */
     public static boolean isWifiConnected() {
         // 获取手机所有连接管理对象(包括对wi-fi,net等连接的管理)
@@ -74,7 +74,7 @@ public class LNetUtils {
     /**
      * 判断MOBILE网络是否可用
      *
-     * @return 是否可用
+     * @return
      */
     public static boolean isMobileConnected() {
         //获取手机所有连接管理对象(包括对wi-fi,net等连接的管理)
@@ -91,7 +91,7 @@ public class LNetUtils {
     /**
      * 注册广播接受者
      *
-     * @return 返回本身，链式调用
+     * @return
      */
     public LNetUtils registerBrocastReceiver() {
         CommonLib.getContext().registerReceiver(mReceiver, mFilter);
@@ -101,7 +101,7 @@ public class LNetUtils {
     /**
      * 反注册广播接受者
      *
-     * @return 返回本身，链式调用
+     * @return
      */
     public LNetUtils unregisterBrocastReceiver() {
         CommonLib.getContext().unregisterReceiver(mReceiver);
@@ -137,7 +137,7 @@ public class LNetUtils {
                 if (LNetUtils.isNetworkConnected()) {
                     mListener.onConnected();
                 } else {
-                    mListener.onDisConnected();
+                    mListener.onDisconnected();
                 }
             }
         }
@@ -151,6 +151,6 @@ public class LNetUtils {
     public interface LOnNetworkStateListener {
         void onConnected();
 
-        void onDisConnected();
+        void onDisconnected();
     }
 }

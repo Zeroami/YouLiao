@@ -22,8 +22,8 @@ public class LDisplayUtils {
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      *
-     * @param dpValue 尺寸dip
-     * @return 像素值
+     * @param dpValue
+     * @return
      */
     public static int dip2px(float dpValue) {
         final float scale = CommonLib.getContext().getResources().getDisplayMetrics().density;
@@ -33,8 +33,8 @@ public class LDisplayUtils {
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      *
-     * @param pxValue 尺寸像素
-     * @return DIP值
+     * @param pxValue
+     * @return
      */
     public static int px2dip(float pxValue) {
         final float scale = CommonLib.getContext().getResources().getDisplayMetrics().density;
@@ -44,8 +44,8 @@ public class LDisplayUtils {
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 sp
      *
-     * @param pxValue 尺寸像素
-     * @return SP值
+     * @param pxValue
+     * @return
      */
     public static int px2sp(float pxValue) {
         float fontScale = CommonLib.getContext().getResources().getDisplayMetrics().scaledDensity;
@@ -55,8 +55,8 @@ public class LDisplayUtils {
     /**
      * 根据手机的分辨率从 sp 的单位 转成为 px
      *
-     * @param spValue SP值
-     * @return 像素值
+     * @param spValue
+     * @return
      */
     public static int sp2px(float spValue) {
         float fontScale = CommonLib.getContext().getResources().getDisplayMetrics().scaledDensity;
@@ -66,7 +66,7 @@ public class LDisplayUtils {
     /**
      * 获取屏幕宽度
      *
-     * @return 屏幕宽度
+     * @return
      */
     public static int getScreenWidth() {
         WindowManager wm = (WindowManager) CommonLib.getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -79,7 +79,7 @@ public class LDisplayUtils {
     /**
      * 获取屏幕高度
      *
-     * @return 屏幕高度
+     * @return
      */
     public static int getScreenHeight() {
         WindowManager wm = (WindowManager) CommonLib.getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -112,8 +112,8 @@ public class LDisplayUtils {
     /**
      * 获取View的测量宽高
      *
-     * @param view     测量的View
-     * @param callback 获取完成回调
+     * @param view
+     * @param callback
      */
     public static void getViewMeasureSize(final View view, final LMeasureCallback callback) {
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

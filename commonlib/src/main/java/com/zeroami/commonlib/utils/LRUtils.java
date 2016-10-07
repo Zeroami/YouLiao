@@ -77,9 +77,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取动画ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getAnimId(String name) {
         try {
@@ -93,9 +93,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取属性ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getAttrId(String name) {
         try {
@@ -109,9 +109,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取颜色ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getColorId(String name) {
         try {
@@ -126,9 +126,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取尺寸ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getDimenId(String name) {
         try {
@@ -143,9 +143,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取图片ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getDrawableId(String name) {
         try {
@@ -161,9 +161,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getId(String name) {
         try {
@@ -177,9 +177,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取布局ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getLayoutId(String name) {
         try {
@@ -194,9 +194,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取菜单ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getMenuId(String name) {
         try {
@@ -210,9 +210,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取RAW ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getRawId(String name) {
         try {
@@ -226,9 +226,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取字符串ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getStringId(String name) {
         try {
@@ -243,9 +243,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取样式ID
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int getStyleId(String name) {
         try {
@@ -260,9 +260,9 @@ public class LRUtils {
     }
 
     /**
-     * 获取自定义属性组
-     *
-     * @param name 名称
+     * 根据字符串获取Id
+     * @param name
+     * @return
      */
     public static int[] getStyleable(String name) {
         try {
@@ -278,10 +278,10 @@ public class LRUtils {
     }
 
     /**
-     * 获取自定义属性
-     *
-     * @param styleableName 属性组名称
-     * @param attributeName 属性名称
+     * 根据字符串获取Id
+     * @param styleableName
+     * @param attributeName
+     * @return
      */
     public static int getStyleableAttribute(
             String styleableName, String attributeName) {

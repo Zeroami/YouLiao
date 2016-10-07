@@ -41,7 +41,7 @@ public class LViewFinder {
      * 根据id获取View
      *
      * @param id
-     * @return found view
+     * @return
      */
     @SuppressWarnings("unchecked")
     public <V extends View> V find(int id) {
@@ -55,7 +55,7 @@ public class LViewFinder {
      * 指定获取ImageView
      *
      * @param id
-     * @return image view
+     * @return
      */
     public ImageView imageView(int id) {
         return find(id);
@@ -65,7 +65,7 @@ public class LViewFinder {
      * 指定获取CompundButton
      *
      * @param id
-     * @return compound button
+     * @return
      */
     public CompoundButton compoundButton(int id) {
         return find(id);
@@ -75,7 +75,7 @@ public class LViewFinder {
      * 指定获取TextView
      *
      * @param id
-     * @return text view
+     * @return
      */
     public TextView textView(int id) {
         return find(id);
@@ -86,7 +86,7 @@ public class LViewFinder {
      *
      * @param id
      * @param content
-     * @return this
+     * @return
      */
     public LViewFinder setText(int id, CharSequence content) {
         textView(id).setText(content);
@@ -98,7 +98,7 @@ public class LViewFinder {
      *
      * @param id
      * @param stringId
-     * @return this
+     * @return
      */
     public LViewFinder setText(int id, int stringId) {
         return setText(id, mWapper.getResources().getString(stringId));
@@ -109,7 +109,7 @@ public class LViewFinder {
      *
      * @param id
      * @param bitmap
-     * @return this
+     * @return
      */
     public LViewFinder setImageBitmap(int id, Bitmap bitmap) {
         imageView(id).setImageBitmap(bitmap);
@@ -121,7 +121,7 @@ public class LViewFinder {
      *
      * @param id
      * @param drawable
-     * @return this
+     * @return
      */
     public LViewFinder setImageDrawable(int id, Drawable drawable) {
         imageView(id).setImageDrawable(drawable);
@@ -133,7 +133,7 @@ public class LViewFinder {
      *
      * @param id
      * @param imageId
-     * @return this
+     * @return
      */
     public LViewFinder setImageResource(int id, int imageId) {
         imageView(id).setImageResource(imageId);
@@ -145,7 +145,7 @@ public class LViewFinder {
      *
      * @param id
      * @param checked
-     * @return this
+     * @return
      */
     public LViewFinder setChecked(int id, boolean checked) {
         compoundButton(id).setChecked(checked);
@@ -157,7 +157,7 @@ public class LViewFinder {
      *
      * @param id
      * @param visibility
-     * @return this
+     * @return
      */
     public LViewFinder setVisibility(int id, int visibility) {
         find(id).setVisibility(visibility);
@@ -170,7 +170,7 @@ public class LViewFinder {
      *
      * @param id
      * @param listener
-     * @return this
+     * @return
      */
     public LViewFinder onClick(int id, OnClickListener listener) {
         find(id).setOnClickListener(listener);
@@ -195,7 +195,7 @@ public class LViewFinder {
      *
      * @param id
      * @param listener
-     * @return view registered with listener
+     * @return
      */
     public LViewFinder onCheckChanged(int id,
                                       OnCheckedChangeListener listener) {

@@ -11,6 +11,7 @@ import rx.schedulers.Schedulers;
  */
 public class LTransformer {
 
+    // 创建一个无泛型实例，封装在一个添加泛型约束的方法里，可实现泛型的强制类型转换
     private static final Observable.Transformer schedulersTransformer = new  Observable.Transformer() {
         @Override public Object call(Object observable) {
             return ((Observable)  observable).subscribeOn(Schedulers.io())

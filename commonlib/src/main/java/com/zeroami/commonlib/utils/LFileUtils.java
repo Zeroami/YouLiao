@@ -37,9 +37,9 @@ public final class LFileUtils {
     public static final int ICON_TYPE_JPG = 5;
     public static final int ICON_TYPE_FILE = 6;
 
-    public static final String MTV_REG = "^.*\\.(mp4|3gp)$";
-    public static final String MP3_REG = "^.*\\.(mp3|wav)$";
-    public static final String JPG_REG = "^.*\\.(gif|jpg|png)$";
+    public static final String REG_VIDEO = "^.*\\.(swf|flv|mp4|rmvb|avi|mpeg|ra|ram|mov|wmv)$";
+    public static final String REG_MUSIC = "^.*\\.(mp3|wav|wma|ogg|ape|acc)$";
+    public static final String REG_IMAGE = "^.*\\.(gif|jpg|jpeg|bmp|png)$";
 
     private static final String FILENAME_REGIX = "^[^\\/?\"*:<>\\]{1,255}$";
 
@@ -53,7 +53,7 @@ public final class LFileUtils {
     /**
      * 是否存在SDCard
      *
-     * @return 是否存在SDCard
+     * @return
      */
     public static boolean checkSDCardAvailable() {
         return android.os.Environment.getExternalStorageState().equals(
@@ -63,17 +63,17 @@ public final class LFileUtils {
     /**
      * 删除文件或递归删除文件夹
      *
-     * @param path 要删除的文件或文件夹
-     * @return boolean
+     * @param path
+     * @return
      */
     public static boolean deleteFile(String path) {
         if (TextUtils.isEmpty(path)) {
-            return true;
+            return false;
         }
 
         File file = new File(path);
         if (!file.exists()) {
-            return true;
+            return false;
         }
         if (file.isFile()) {
             return file.delete();
@@ -94,8 +94,8 @@ public final class LFileUtils {
     /**
      * 删除文件或递归删除文件夹
      *
-     * @param file 要删除的文件或文件夹
-     * @return boolean
+     * @param file
+     * @return
      */
     public static boolean deleteFile(File file) {
         if (file == null || !file.exists()) {
@@ -120,9 +120,9 @@ public final class LFileUtils {
     /**
      * 重命名文件和文件夹
      *
-     * @param file        File对象
-     * @param newFileName 新的文件名
-     * @return boolean
+     * @param file
+     * @param newFileName
+     * @return
      */
     public static boolean renameFile(File file, String newFileName) {
         if (newFileName.matches(FILENAME_REGIX)) {
@@ -143,40 +143,10 @@ public final class LFileUtils {
     }
 
     /**
-     * 文件大小获取
-     *
-     * @param file File对象
-     * @return 文件大小字符串
-     */
-    public static String getFileSize(File file) {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-            int length = fis.available();
-            if (length >= GB) {
-                return String.format("%.2f GB", length * 1.0 / GB);
-            } else if (length >= MB) {
-                return String.format("%.2f MB", length * 1.0 / MB);
-            } else {
-                return String.format("%.2f KB", length * 1.0 / KB);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return "未知";
-    }
-
-    /**
      * 获取文件大小，不存在返回-1
      *
-     * @param path 文件路径
-     * @return 文件大小
+     * @param path
+     * @return
      */
     public static long getFileSize(String path) {
         if (TextUtils.isEmpty(path)) {
@@ -189,11 +159,21 @@ public final class LFileUtils {
 
 
     /**
+     * 获取文件大小，不存在返回-1
+     *
+     * @param file
+     * @return
+     */
+    public static long getFileSize(File file) {
+        return (file.exists() && file.isFile() ? file.length() : -1);
+    }
+
+    /**
      * 用于递归查找文件夹下面的符合条件的文件
      *
-     * @param folder 文件夹
-     * @param filter 文件过滤器
-     * @return 符合条件的文件List
+     * @param folder
+     * @param filter
+     * @return
      */
     public static List<HashMap<String, Object>> recursionFolder(File folder,
                                                                 FileFilter filter) {
@@ -220,13 +200,13 @@ public final class LFileUtils {
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("file", file);
                     // 设置图标种类
-                    if (file.getAbsolutePath().toLowerCase().matches(MP3_REG)) {
+                    if (file.getAbsolutePath().toLowerCase().matches(REG_MUSIC)) {
                         map.put("iconType", ICON_TYPE_MP3);
                     } else if (file.getAbsolutePath().toLowerCase()
-                            .matches(MTV_REG)) {
+                            .matches(REG_VIDEO)) {
                         map.put("iconType", ICON_TYPE_MTV);
                     } else if (file.getAbsolutePath().toLowerCase()
-                            .matches(JPG_REG)) {
+                            .matches(REG_IMAGE)) {
                         map.put("iconType", ICON_TYPE_JPG);
                     } else {
                         map.put("iconType", ICON_TYPE_FILE);
@@ -241,9 +221,9 @@ public final class LFileUtils {
     /**
      * 资源管理器,查找该文件夹下的文件和目录，不递归查找
      *
-     * @param folder 文件夹
-     * @param filter 文件过滤器
-     * @return 符合条件的List
+     * @param folder
+     * @param filter
+     * @return
      */
     public static List<HashMap<String, Object>> unrecursionFolder(File folder,
                                                                   FileFilter filter) {
@@ -272,13 +252,13 @@ public final class LFileUtils {
                 if (p.isDirectory()) {
                     map.put("iconType", ICON_TYPE_FOLDER);
                 } else {
-                    if (p.getAbsolutePath().toLowerCase().matches(MP3_REG)) {
+                    if (p.getAbsolutePath().toLowerCase().matches(REG_MUSIC)) {
                         map.put("iconType", ICON_TYPE_MP3);
                     } else if (p.getAbsolutePath().toLowerCase()
-                            .matches(MTV_REG)) {
+                            .matches(REG_VIDEO)) {
                         map.put("iconType", ICON_TYPE_MTV);
                     } else if (p.getAbsolutePath().toLowerCase()
-                            .matches(JPG_REG)) {
+                            .matches(REG_IMAGE)) {
                         map.put("iconType", ICON_TYPE_JPG);
                     } else {
                         map.put("iconType", ICON_TYPE_FILE);
@@ -294,9 +274,9 @@ public final class LFileUtils {
     /**
      * 示例:"^.*\\.(mp3|mp4|3gp)$"
      *
-     * @param reg        目前允许取值 REG_MTV, REG_MP3, REG_JPG三种
+     * @param reg        匹配的正则
      * @param isAllowDir 是否允许文件夹存在
-     * @return 文件过滤器
+     * @return
      */
     public static FileFilter getFileFilter(final String reg, boolean isAllowDir) {
         if (isAllowDir) {
@@ -326,10 +306,9 @@ public final class LFileUtils {
     /**
      * 读取文件
      *
-     * @param filePath    文件路径
-     * @param charsetName 编码
-     * @return 文件内容
-     * @throws RuntimeException
+     * @param filePath
+     * @param charsetName
+     * @return
      */
     public static String readFile(String filePath, String charsetName) {
         File file = new File(filePath);
@@ -368,11 +347,10 @@ public final class LFileUtils {
     /**
      * 写入文件
      *
-     * @param filePath 文件路径
-     * @param content  内容
-     * @param append   是否追加
-     * @return boolean
-     * @throws RuntimeException
+     * @param filePath
+     * @param content
+     * @param append
+     * @return
      */
     public static boolean writeFile(String filePath, String content,
                                     boolean append) {
@@ -401,178 +379,75 @@ public final class LFileUtils {
     }
 
     /**
-     * write file
-     *
-     * @param filePath    文件路径
-     * @param contentList 内容List
-     * @param append      是否追加
-     * @return boolean
-     * @throws RuntimeException
-     */
-    public static boolean writeFile(String filePath, List<String> contentList,
-                                    boolean append) {
-        if (contentList == null || contentList.size() < 1) {
-            return false;
-        }
-        FileWriter fileWriter = null;
-        try {
-            makeDirs(filePath);
-            fileWriter = new FileWriter(filePath, append);
-            int i = 0;
-            for (String line : contentList) {
-                if (i++ > 0) {
-                    fileWriter.write("\r\n");
-                }
-                fileWriter.write(line);
-            }
-            fileWriter.close();
-            return true;
-        } catch (IOException e) {
-            throw new RuntimeException("IOException occurred. ", e);
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("IOException occurred. ", e);
-                }
-            }
-        }
-    }
-
-    /**
      * 写入文件
      *
-     * @param filePath 文件路径
-     * @param content  内容
-     * @return 执行结果
-     * @throws RuntimeException
+     * @param filePath
+     * @param content
+     * @return
      */
     public static boolean writeFile(String filePath, String content) {
         return writeFile(filePath, content, false);
     }
 
     /**
-     * 写入文件
+     * 复制文件
      *
-     * @param filePath    文件路径
-     * @param contentList 内容List
-     * @return 执行结果
-     * @throws RuntimeException
+     * @param sourceFilePath
+     * @param destFilePath
+     * @return
      */
-    public static boolean writeFile(String filePath, List<String> contentList) {
-        return writeFile(filePath, contentList, false);
-    }
-
-    /**
-     * write file, the bytes will be written to the begin of the file
-     *
-     * @param filePath 文件路径
-     * @param stream   InputStream
-     * @return 执行结果
-     * @throws RuntimeException
-     */
-    public static boolean writeFile(String filePath, InputStream stream) {
-        return writeFile(filePath, stream, false);
-    }
-
-    /**
-     * 写入文件
-     *
-     * @param filePath 文件路径
-     * @param stream   InputStream
-     * @param append   是否追加
-     * @return boolean
-     * @throws RuntimeException
-     */
-    public static boolean writeFile(String filePath, InputStream stream,
-                                    boolean append) {
-        return writeFile(filePath != null ? new File(filePath) : null, stream,
-                append);
-    }
-
-    /**
-     * 写入文件
-     *
-     * @param file   File对象
-     * @param stream InputStream
-     * @return boolean
-     * @throws RuntimeException
-     */
-    public static boolean writeFile(File file, InputStream stream) {
-        return writeFile(file, stream, false);
-    }
-
-    /**
-     * write file
-     *
-     * @param file   文件对象
-     * @param stream InputStream
-     * @param append 是否追加
-     * @return boolean
-     * @throws RuntimeException
-     */
-    public static boolean writeFile(File file, InputStream stream,
-                                    boolean append) {
-        OutputStream o = null;
+    public static boolean copyFile(String sourceFilePath, String destFilePath) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
+            inputStream = new FileInputStream(sourceFilePath);
+            File file = new File(destFilePath);
             makeDirs(file.getAbsolutePath());
-            o = new FileOutputStream(file, append);
+            outputStream = new FileOutputStream(file, false);
             byte data[] = new byte[1024];
             int length = -1;
-            while ((length = stream.read(data)) != -1) {
-                o.write(data, 0, length);
+            while ((length = inputStream.read(data)) != -1) {
+                outputStream.write(data, 0, length);
             }
-            o.flush();
+            outputStream.flush();
             return true;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("FileNotFoundException occurred. ", e);
         } catch (IOException e) {
             throw new RuntimeException("IOException occurred. ", e);
         } finally {
-            if (o != null) {
+            if (inputStream != null) {
                 try {
-                    o.close();
-                    stream.close();
+                    inputStream.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("IOException occurred. ", e);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
                 } catch (IOException e) {
                     throw new RuntimeException("IOException occurred. ", e);
                 }
             }
         }
-    }
 
-    /**
-     * 复制文件
-     *
-     * @param sourceFilePath 源文件路径
-     * @param destFilePath   目标文件路径
-     * @return 执行结果
-     * @throws RuntimeException
-     */
-    public static boolean copyFile(String sourceFilePath, String destFilePath) {
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(sourceFilePath);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("FileNotFoundException occurred. ", e);
-        }
-        return writeFile(destFilePath, inputStream);
     }
 
     /**
      * 输入流转byte[]
      *
-     * @param inStream InputStream
-     * @return Byte数组
+     * @param inputStream
+     * @return
      */
-    public static final byte[] input2byte(InputStream inStream) {
-        if (inStream == null)
+    public static final byte[] input2byte(InputStream inputStream) {
+        if (inputStream == null)
             return null;
         ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
         byte[] buff = new byte[100];
         int rc = 0;
         try {
-            while ((rc = inStream.read(buff, 0, 100)) > 0) {
+            while ((rc = inputStream.read(buff, 0, 100)) > 0) {
                 swapStream.write(buff, 0, rc);
             }
         } catch (IOException e) {
@@ -584,8 +459,8 @@ public final class LFileUtils {
     /**
      * 读取文件到List
      *
-     * @param filePath    文件路径
-     * @param charsetName 编码方式
+     * @param filePath
+     * @param charsetName
      * @return 返回List或null
      * @throws RuntimeException
      */
@@ -625,8 +500,8 @@ public final class LFileUtils {
     /**
      * 获取文件名
      *
-     * @param filePath 文件路径
-     * @return 文件名
+     * @param filePath
+     * @return
      */
     public static String getFileName(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -640,8 +515,8 @@ public final class LFileUtils {
     /**
      * 获取文件夹名称
      *
-     * @param filePath 文件路径
-     * @return 文件夹名称
+     * @param filePath
+     * @return
      */
     public static String getFolderName(String filePath) {
 
@@ -656,8 +531,8 @@ public final class LFileUtils {
     /**
      * 获取扩展名
      *
-     * @param filePath 文件路径
-     * @return 扩展名
+     * @param filePath
+     * @return
      */
     public static String getFileExtension(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -673,8 +548,8 @@ public final class LFileUtils {
     }
 
     /**
-     * @param filePath 文件路径
-     * @return 执行结果
+     * @param filePath
+     * @return
      */
     public static boolean makeDirs(String filePath) {
         String folderName = getFolderName(filePath);
@@ -691,8 +566,8 @@ public final class LFileUtils {
     /**
      * 判断文件是否存在
      *
-     * @param filePath 文件路径
-     * @return 是否存在文件
+     * @param filePath
+     * @return
      */
     public static boolean isFileExist(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -705,10 +580,9 @@ public final class LFileUtils {
 
     /**
      * 判断文件夹是否存在
-     * system.
      *
-     * @param directoryPath 文件夹路径
-     * @return 文件夹是否存在
+     * @param directoryPath
+     * @return
      */
     public static boolean isFolderExist(String directoryPath) {
         if (TextUtils.isEmpty(directoryPath)) {

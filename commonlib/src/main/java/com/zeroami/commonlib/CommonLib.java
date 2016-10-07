@@ -1,6 +1,7 @@
 package com.zeroami.commonlib;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
@@ -37,6 +38,19 @@ public class CommonLib {
      * @param isEnableLog
      */
     public static void setEnableLog(boolean isEnableLog) {
+        setEnableLog(isEnableLog, TAG);
+    }
+
+    /**
+     * 日志开关
+     *
+     * @param isEnableLog
+     * @param tag
+     */
+    public static void setEnableLog(boolean isEnableLog, String tag) {
+        if (TextUtils.isEmpty(tag)) {
+            tag = TAG;
+        }
         if (isEnableLog) {
             Logger.init(TAG).logLevel(LogLevel.FULL).methodCount(1).methodOffset(1);
         } else {

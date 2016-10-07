@@ -38,7 +38,6 @@ public class LOkHttpClientFactory {
     private static final int CONNECT_TIMEOUT = 10;
     private static final int READ_TIMEOUT = 30;
     private static final int WRITE_TIMEOUT = 30;
-
     private static final int MAX_STALE = 60;    // 有网络时默认缓存的时间
 
 
@@ -94,7 +93,7 @@ public class LOkHttpClientFactory {
     /**
      * 获取默认Client，离线可以缓存，在线就获取最新数据
      *
-     * @return OkHttpClient
+     * @return
      */
     public static OkHttpClient getDefaultClient() {
         return getClient(LClientType.TYPE_DEFAULT);
@@ -105,7 +104,7 @@ public class LOkHttpClientFactory {
      * 根据ClientType返回OkHttpClient
      *
      * @param clientType
-     * @return OkHttpClient
+     * @return
      */
     public static OkHttpClient getClient(int clientType) {
         OkHttpClient client = sClientPool.get(clientType);
@@ -151,7 +150,7 @@ public class LOkHttpClientFactory {
      * 根据ClientType创建OkHttpClient
      *
      * @param clientType
-     * @return OkHttpClient
+     * @return
      */
     private static OkHttpClient createClient(int clientType) {
         OkHttpClient client = null;
@@ -169,7 +168,7 @@ public class LOkHttpClientFactory {
     /**
      * 创建默认Client，离线可以缓存，在线就获取最新数据
      *
-     * @return OkHttpClient
+     * @return
      */
     private static OkHttpClient createDefaultClient() {
         return getCustomClient(LClientConfig.get());

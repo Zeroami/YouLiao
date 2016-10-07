@@ -20,7 +20,7 @@ import rx.Subscription;
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：BaseActivity</p>
+ * <p>描述：BaseActivity，完成共有操作，定义操作流程</p>
  */
 public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupport {
 
@@ -42,7 +42,6 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         onSetContentViewBefore();
         setContentView(getLayoutId());
         ButterKnife.bind(this);
-        setSwipeBackEnable(false);      // 默认不带滑动退出的效果，让子类根据需要设置
         onViewCreated();
         if (getIntent() != null) {
             handleIntent(getIntent());
@@ -57,6 +56,7 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
                 replaceFragment(firstFragment, false);
             }
         }
+        setSwipeBackEnable(false);      // 默认不带滑动退出的效果，让子类根据需要设置
         initialize(savedInstanceState);
         onInitialized();
     }

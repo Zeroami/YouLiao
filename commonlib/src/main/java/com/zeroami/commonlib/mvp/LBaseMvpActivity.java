@@ -9,7 +9,7 @@ import com.zeroami.commonlib.utils.LT;
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：MvpActivity，实现MvpView，完成View的通用操作</p>
+ * <p>描述：BaseMvpActivity，实现MvpView，完成View的通用操作</p>
  */
 public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseActivity implements LMvpView {
 
@@ -64,7 +64,7 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
      * 设置加载显示文字
      * @param message
      */
-    public void setLoadingMessage(CharSequence message){
+    protected void setLoadingMessage(CharSequence message){
         mProgressMessage = message;
     }
 

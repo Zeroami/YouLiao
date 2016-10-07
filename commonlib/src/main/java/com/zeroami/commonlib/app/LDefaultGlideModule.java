@@ -13,6 +13,11 @@ import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
 import com.bumptech.glide.module.GlideModule;
 import com.zeroami.commonlib.utils.LFileUtils;
 
+/**
+ * <p>作者：Zeroami</p>
+ * <p>邮箱：826589183@qq.com</p>
+ * <p>描述：默认的Glide配置</p>
+ */
 public class LDefaultGlideModule implements GlideModule {
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {

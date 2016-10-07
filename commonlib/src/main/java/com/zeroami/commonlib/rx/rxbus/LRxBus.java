@@ -47,7 +47,7 @@ public class LRxBus {
     /**
      * 发送一个事件
      *
-     * @param event 事件对象
+     * @param event
      */
     public void post(Object event) {
         mSubject.onNext(event);
@@ -56,8 +56,8 @@ public class LRxBus {
     /**
      * 发送一个带tag的事件
      *
-     * @param event 事件对象
-     * @param tag   事件标志
+     * @param event
+     * @param tag
      */
     public void post(Object event, String tag) {
         mSubject.onNext(new LRxBusEvent(tag, event));
@@ -66,7 +66,7 @@ public class LRxBus {
     /**
      * 发送一个带tag的空事件
      *
-     * @param tag   事件标志
+     * @param tag
      */
     public void postTag(String tag) {
         mSubject.onNext(new LRxBusEvent(tag, EMPTY));
@@ -75,9 +75,9 @@ public class LRxBus {
     /**
      * 仅关注事件的类型
      *
-     * @param eventType 事件对象的Class类型
+     * @param eventType
      * @param <T>
-     * @return Observable
+     * @return
      */
     public <T> Observable<T> toObservable(Class<T> eventType) {
         return mSubject.ofType(eventType);
@@ -86,10 +86,10 @@ public class LRxBus {
     /**
      * 关注事件类型且满足tag标志
      *
-     * @param eventType 事件对象的Class类型
-     * @param tag       事件对象对应的标志
+     * @param eventType
+     * @param tag
      * @param <T>
-     * @return Observable
+     * @return
      */
     public <T> Observable<T> toObservable(final Class<T> eventType, final String tag) {
         return mSubject.filter(new Func1<Object, Boolean>() {
@@ -111,18 +111,18 @@ public class LRxBus {
     /**
      * 仅关注tag对应的事件
      *
-     * @param tag 事件对象对应的标志
-     * @return Observable
+     * @param tag
+     * @return
      */
     public Observable<Object> toTagObservable(String tag) {
-        return toObservable(Object.class, tag);
+        return toObservable(EMPTY_TYPE, tag);
     }
 
 
     /**
      * 发送一个Sticky事件
      *
-     * @param event 事件对象
+     * @param event
      */
     public void postSticky(Object event) {
         synchronized (mStickyEventMap) {
@@ -133,8 +133,8 @@ public class LRxBus {
 
     /**
      * 发送一个带tag的Sticky事件
-     * @param event 事件对象
-     * @param tag 事件标志
+     * @param event
+     * @param tag
      */
     public void postSticky(Object event, String tag) {
         synchronized (mStickyTagEventMap) {
@@ -145,7 +145,7 @@ public class LRxBus {
 
     /**
      * 发送一个带tag的Sticky空事件
-     * @param tag 事件标志
+     * @param tag
      */
     public void postTagSticky(String tag) {
         synchronized (mStickyTagEventMap) {
@@ -157,9 +157,9 @@ public class LRxBus {
     /**
      * 仅关注事件的类型
      *
-     * @param eventType 事件对象的Class类型
+     * @param eventType
      * @param <T>
-     * @return Observable
+     * @return
      */
     public <T> Observable<T> toStickyObservable(final Class<T> eventType) {
         synchronized (mStickyEventMap) {
@@ -182,10 +182,10 @@ public class LRxBus {
     /**
      * 关注事件类型且满足tag标志
      *
-     * @param eventType 事件对象的Class类型
-     * @param tag       事件标志
+     * @param eventType
+     * @param tag
      * @param <T>
-     * @return Observable
+     * @return
      */
     public <T> Observable<T> toStickyObservable(final Class<T> eventType, final String tag) {
         synchronized (mStickyTagEventMap) {
@@ -208,19 +208,19 @@ public class LRxBus {
     /**
      * 仅关注tag对应的事件
      *
-     * @param tag 事件对象对应的标志
-     * @return Observable
+     * @param tag
+     * @return
      */
     public Observable<Object> toTagStickyObservable(String tag) {
-        return toStickyObservable(Object.class, tag);
+        return toStickyObservable(EMPTY_TYPE, tag);
     }
 
     /**
      * 根据eventType获取Sticky事件
      *
-     * @param eventType 事件对象的Class类型
+     * @param eventType
      * @param <T>
-     * @return 事件对象
+     * @return
      */
     public <T> T getStickyEvent(Class<T> eventType) {
         synchronized (mStickyEventMap) {
@@ -231,10 +231,10 @@ public class LRxBus {
     /**
      * 根据eventType和tag获取Sticky事件
      *
-     * @param eventType 事件对象的Class类型
-     * @param tag       事件标志
+     * @param eventType
+     * @param tag
      * @param <T>
-     * @return 事件对象
+     * @return
      */
     public <T> T getStickyEvent(Class<T> eventType, String tag) {
         synchronized (mStickyTagEventMap) {
@@ -245,9 +245,9 @@ public class LRxBus {
     /**
      * 移除指定eventType的Sticky事件
      *
-     * @param eventType 事件对象的Class类型
+     * @param eventType
      * @param <T>
-     * @return 事件对象
+     * @return
      */
     public <T> T removeStickyEvent(Class<T> eventType) {
         synchronized (mStickyEventMap) {
@@ -258,10 +258,10 @@ public class LRxBus {
     /**
      * 移除指定eventType的Sticky事件
      *
-     * @param eventType 事件对象的Class类型
-     * @param tag       事件标志
+     * @param eventType
+     * @param tag
      * @param <T>
-     * @return 事件对象
+     * @return
      */
     public <T> T removeStickyEvent(Class<T> eventType, String tag) {
         synchronized (mStickyTagEventMap) {
@@ -284,7 +284,7 @@ public class LRxBus {
     /**
      * 判断是否有订阅者
      *
-     * @return boolean
+     * @return
      */
     public boolean hasObservers() {
         return mSubject.hasObservers();

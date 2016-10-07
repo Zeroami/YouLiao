@@ -33,7 +33,7 @@ public class LAppUtils {
     /**
      * 获取版本号
      *
-     * @return 版本号
+     * @return
      */
     public static int getVerionCode() {
         int versionCode = -1;
@@ -49,7 +49,7 @@ public class LAppUtils {
     /**
      * 获取版本字符串
      *
-     * @return 版本字符串
+     * @return
      */
     public static String getVerionName() {
         String versionName = "";
@@ -65,7 +65,7 @@ public class LAppUtils {
     /**
      * 安装Apk
      *
-     * @param file    安装文件
+     * @param file
      */
     public static void installApk( File file) {
         Intent intent = new Intent();
@@ -79,7 +79,7 @@ public class LAppUtils {
     /**
      * 安装Apk
      *
-     * @param uri     安装uri
+     * @param uri
      */
     public static void installApk( Uri uri) {
         Intent intent = new Intent();
@@ -92,7 +92,7 @@ public class LAppUtils {
     /**
      * 卸载apk
      *
-     * @param packageName 包名
+     * @param packageName
      */
     public static void uninstallApk( String packageName) {
         Intent intent = new Intent(Intent.ACTION_DELETE);
@@ -106,7 +106,7 @@ public class LAppUtils {
      * 检测服务是否运行
      *
      * @param className 完整类名
-     * @return boolean
+     * @return
      */
     public static boolean isServiceRunning( String className) {
         boolean isRunning = false;
@@ -124,7 +124,7 @@ public class LAppUtils {
 
     /**
      * 判断应用是否处于后台状态
-     * @return boolean
+     * @return
      */
     public static boolean isBackground() {
         ActivityManager am = (ActivityManager) CommonLib.getContext().getSystemService(Context.ACTIVITY_SERVICE);
@@ -141,7 +141,7 @@ public class LAppUtils {
     /**
      * 获取系统所有APP应用
      *
-     * @return 所有App信息
+     * @return
      */
     public static ArrayList<LAppInfo> getAllApp() {
         PackageManager manager = CommonLib.getContext().getPackageManager();
@@ -166,7 +166,7 @@ public class LAppUtils {
     /**
      * 获取用户安装的APP应用
      *
-     * @return 用户安装的App
+     * @return
      */
     public static ArrayList<LAppInfo> getUserApp() {
         PackageManager manager = CommonLib.getContext().getPackageManager();
@@ -194,28 +194,28 @@ public class LAppUtils {
     /**
      * 根据包名和Activity启动类查询应用信息
      *
-     * @param pkg     包名
-     * @param cls     完整类名
-     * @return 符合条件的App
+     * @param packageName
+     * @param className
+     * @return
      */
-    public static LAppInfo getAppByPkgCls(String pkg, String cls) {
+    public static LAppInfo getAppByPkgCls(String packageName, String className) {
         LAppInfo appInfo = new LAppInfo();
 
         PackageManager pm = CommonLib.getContext().getPackageManager();
         Drawable icon;
         CharSequence label = "";
-        ComponentName comp = new ComponentName(pkg, cls);
+        ComponentName comp = new ComponentName(packageName, className);
         try {
             ActivityInfo info = pm.getActivityInfo(comp, 0);
             icon = pm.getApplicationIcon(info.applicationInfo);
-            label = pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0));
+            label = pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0));
         } catch (PackageManager.NameNotFoundException e) {
             icon = pm.getDefaultActivityIcon();
         }
         appInfo.setLabel(label + "");
         appInfo.setIcon(icon);
-        appInfo.setPackageName(pkg);
-        appInfo.setClassName(cls);
+        appInfo.setPackageName(packageName);
+        appInfo.setClassName(className);
 
         return appInfo;
     }
@@ -223,7 +223,7 @@ public class LAppUtils {
     /**
      * 获取手机系统SDK版本
      *
-     * @return SDK版本
+     * @return
      */
     public static int getSDKVersion() {
         return android.os.Build.VERSION.SDK_INT;

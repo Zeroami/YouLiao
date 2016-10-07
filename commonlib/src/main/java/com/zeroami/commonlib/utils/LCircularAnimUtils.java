@@ -24,6 +24,9 @@ public class LCircularAnimUtils {
 
     /**
      * 向四周伸张，直到完成显示。
+     * @param myView
+     * @param startRadius
+     * @param durationMills
      */
     @SuppressLint("NewApi")
     public static void show(View myView, float startRadius, long durationMills) {
@@ -50,6 +53,9 @@ public class LCircularAnimUtils {
 
     /**
      * 由满向中间收缩，直到隐藏。
+     * @param myView
+     * @param endRadius
+     * @param durationMills
      */
     @SuppressLint("NewApi")
     public static void hide(final View myView, float endRadius, long durationMills) {
@@ -81,8 +87,14 @@ public class LCircularAnimUtils {
     }
 
     /**
-     * 从指定View开始向四周伸张(伸张颜色或图片为colorOrImageRes), 然后进入另一个Activity,
-     * 返回至 @thisActivity 后显示收缩动画。
+     * 从指定View开始向四周伸张(伸张颜色或图片为colorOrImageRes), 然后进入另一个Activity,返回至 @thisActivity 后显示收缩动画。
+     * @param thisActivity
+     * @param intent
+     * @param requestCode
+     * @param bundle
+     * @param triggerView
+     * @param colorOrImageRes
+     * @param durationMills
      */
     @SuppressLint("NewApi")
     public static void startActivityForResult(
@@ -129,7 +141,6 @@ public class LCircularAnimUtils {
                 triggerView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("animi", "End");
                         Animator anim =
                                 ViewAnimationUtils.createCircularReveal(view, cx, cy, finalRadius, 0);
                         anim.setDuration(durationMills);
@@ -145,7 +156,6 @@ public class LCircularAnimUtils {
                             }
                         });
                         anim.start();
-                        Log.d("animi2", "start");
                     }
                 }, 1000);
 
@@ -153,8 +163,6 @@ public class LCircularAnimUtils {
             }
         });
         anim.start();
-
-        Log.d("animi", "start");
     }
 
 

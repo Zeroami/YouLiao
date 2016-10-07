@@ -20,25 +20,11 @@ public final class LPollingUtils {
     }
 
     /**
-     * 判断是否存在轮询服务
-     *
-     * @param context 上下文
-     * @param cls     Class
-     * @return 是否存在
-     */
-    public static boolean isPollingServiceExist(Context context, Class<?> cls) {
-        Intent intent = new Intent(context, cls);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
-                intent, PendingIntent.FLAG_NO_CREATE);
-        return pendingIntent != null;
-    }
-
-    /**
      * 开启轮询服务
      *
-     * @param context  上下文
+     * @param context
      * @param interval 时间间隔，单位为秒
-     * @param cls      Class
+     * @param cls
      */
     public static void startPollingService(Context context, int interval,
                                            Class<?> cls) {
@@ -48,11 +34,11 @@ public final class LPollingUtils {
     /**
      * 开启轮询服务
      *
-     * @param context  上下文
+     * @param context
      * @param interval 时间间隔，单位为秒
-     * @param cls      Class
-     * @param action   Action
-     * @param isWakeup 是否唤醒
+     * @param cls
+     * @param action
+     * @param isWakeup
      */
     public static void startPollingService(Context context, int interval,
                                            Class<?> cls, String action, boolean isWakeup) {
@@ -73,8 +59,8 @@ public final class LPollingUtils {
     /**
      * 停止轮询服务
      *
-     * @param context 上下文
-     * @param cls     Class
+     * @param context
+     * @param cls
      */
     public static void stopPollingService(Context context, Class<?> cls) {
         stopPollingService(context, cls, null);
@@ -83,9 +69,9 @@ public final class LPollingUtils {
     /**
      * 停止轮询服务
      *
-     * @param context 上下文
-     * @param cls     Class
-     * @param action  Action
+     * @param context
+     * @param cls
+     * @param action  
      */
     public static void stopPollingService(Context context, Class<?> cls,
                                           String action) {
@@ -99,5 +85,4 @@ public final class LPollingUtils {
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         manager.cancel(pendingIntent);
     }
-
 }

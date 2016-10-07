@@ -25,12 +25,6 @@ public class LProgressDialogHandler extends Handler {
 
     private LOnProgressDialogCancelListener mOnProgressDialogCancelListener;
 
-    /**
-     * 构造方法
-     * @param context       context
-     * @param message       ProgressDialog显示信息
-     * @param cancelable    ProgressDialog是否可取消
-     */
     public LProgressDialogHandler(Context context, CharSequence message,
                                  boolean cancelable) {
         super();

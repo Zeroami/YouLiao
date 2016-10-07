@@ -9,7 +9,7 @@ import com.zeroami.commonlib.utils.LT;
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：MvpFragment</p>
+ * <p>描述：BaseMvpFragment，实现MvpView，完成View的通用操作</p>
  */
 public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFragment implements LMvpView {
 
@@ -20,8 +20,8 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mMvpPresenter = createPresenter();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
      * 设置加载显示文字
      * @param message
      */
-    public void setLoadingMessage(CharSequence message){
+    protected void setLoadingMessage(CharSequence message){
         mProgressMessage = message;
     }
 

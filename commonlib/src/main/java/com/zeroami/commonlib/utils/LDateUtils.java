@@ -12,13 +12,11 @@ import java.util.Date;
  */
 public class LDateUtils {
     /**
-     * 日期类型 *
+     * 日期类型
      */
-    public static final String yyyyMMDD = "yyyy-MM-dd";
-    public static final String yyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
-    public static final String HHmmss = "HH:mm:ss";
-    public static final String LOCALE_DATE_FORMAT = "yyyy年M月d日 HH:mm:ss";
-    public static final String DB_DATA_FORMAT = "yyyy-MM-DD HH:mm:ss";
+    public static final String FORMAT_yyyyMMdd = "yyyy-MM-dd";
+    public static final String FORMAT_yyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_HHmmss = "HH:mm:ss";
 
 
     private LDateUtils() {
@@ -28,13 +26,13 @@ public class LDateUtils {
     /**
      * 将Date类型转换为日期字符串
      *
-     * @param date Date对象
-     * @param type 需要的日期格式
-     * @return 按照需求格式的日期字符串
+     * @param date
+     * @param format
+     * @return
      */
-    public static String formatDate(Date date, String type) {
+    public static String formatDate(Date date, String format) {
         try {
-            SimpleDateFormat df = new SimpleDateFormat(type);
+            SimpleDateFormat df = new SimpleDateFormat(format);
             return df.format(date);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,12 +43,12 @@ public class LDateUtils {
     /**
      * 将日期字符串转换为Date类型
      *
-     * @param dateStr 日期字符串
-     * @param type    日期字符串格式
-     * @return Date对象
+     * @param dateStr
+     * @param format
+     * @return
      */
-    public static Date parseDate(String dateStr, String type) {
-        SimpleDateFormat df = new SimpleDateFormat(type);
+    public static Date parseDate(String dateStr, String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
         Date date = null;
         try {
             date = df.parse(dateStr);
@@ -64,8 +62,8 @@ public class LDateUtils {
     /**
      * 得到年
      *
-     * @param date Date对象
-     * @return 年
+     * @param date
+     * @return
      */
     public static int getYear(Date date) {
         Calendar c = Calendar.getInstance();
@@ -76,8 +74,8 @@ public class LDateUtils {
     /**
      * 得到月
      *
-     * @param date Date对象
-     * @return 月
+     * @param date
+     * @return
      */
     public static int getMonth(Date date) {
         Calendar c = Calendar.getInstance();
@@ -89,8 +87,8 @@ public class LDateUtils {
     /**
      * 得到日
      *
-     * @param date Date对象
-     * @return 日
+     * @param date
+     * @return
      */
     public static int getDay(Date date) {
         Calendar c = Calendar.getInstance();
@@ -102,7 +100,7 @@ public class LDateUtils {
      * 将时间转为今天, 昨天, 前天, XXXX-XX-XX, ...
      *
      * @param timeMillis 时间
-     * @return 当前日期转换为更容易理解的方式
+     * @return
      */
     public static String formatTimeToHumanDayString(long timeMillis) {
         long oneDay = 24 * 60 * 60 * 1000;

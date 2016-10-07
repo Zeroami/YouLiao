@@ -26,12 +26,6 @@ public abstract class LBasePresenter<V extends LMvpView,M extends LMvpModel> imp
     }
 
     /**
-     * View初始化完成
-     */
-    @Override
-    public void doViewInitialized() {}
-
-    /**
      * 关联完成调用
      */
     protected void onViewAttched(){}
@@ -48,19 +42,15 @@ public abstract class LBasePresenter<V extends LMvpView,M extends LMvpModel> imp
      */
     protected abstract M getTestModel();
 
-    /**
-     * 关联View
-     * @param view
-     */
+    @Override
+    public void doViewInitialized() {}
+
     @Override
     public void attachView(V view) {
         this.mMvpView = view;
         onViewAttched();
     }
 
-    /**
-     * 与View解除关联
-     */
     @Override
     public void detachView() {
         this.mMvpView = null;
@@ -79,10 +69,6 @@ public abstract class LBasePresenter<V extends LMvpView,M extends LMvpModel> imp
         }
     }
 
-    /**
-     * 添加一个订阅
-     * @param subscription
-     */
     @Override
     public void addSubscription(Subscription subscription) {
         mSubscriptionManager.addSubscription(subscription);

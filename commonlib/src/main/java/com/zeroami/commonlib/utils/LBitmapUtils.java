@@ -42,10 +42,10 @@ public class LBitmapUtils {
     /**
      * 图片压缩处理（使用Options的方法）
      *
-     * @param options   图片参数
-     * @param reqWidth  目标width
-     * @param reqHeight 目标height
-     * @return 改变后的options
+     * @param options
+     * @param reqWidth
+     * @param reqHeight
+     * @return
      */
     public static BitmapFactory.Options calculateInSampleSize(
             final BitmapFactory.Options options, final int reqWidth,
@@ -60,8 +60,7 @@ public class LBitmapUtils {
                     / (float) reqHeight);
             final int widthRatio = Math.round((float) width
                     / (float) reqWidth);
-            // 选择宽和高中最小的比率作为inSampleSize的值，这样可以保证最终图片的宽和高
-            // 一定都会大于等于目标的宽和高。
+            // 选择宽和高中最小的比率作为inSampleSize的值，这样可以保证最终图片的宽和高一定都会大于等于目标的宽和高。
             inSampleSize = heightRatio < widthRatio ? heightRatio
                     : widthRatio;
         }
@@ -73,9 +72,9 @@ public class LBitmapUtils {
     /**
      * 从流中获取Bitmap
      *
-     * @param resId     资源id
-     * @param reqWidth  目标width
-     * @param reqHeight 目标height
+     * @param resId
+     * @param reqWidth
+     * @param reqHeight
      * @return
      */
     public static Bitmap getBitmapFromResource(int resId,
@@ -93,9 +92,9 @@ public class LBitmapUtils {
     /**
      * 从文件中获取Bitmap
      *
-     * @param path  文件路径
-     * @param reqWidth  目标width
-     * @param reqHeight 目标height
+     * @param path
+     * @param reqWidth
+     * @param reqHeight
      * @return
      */
     public static Bitmap getBitmapFromFile(String path, int reqWidth,
@@ -111,9 +110,9 @@ public class LBitmapUtils {
     /**
      * 从数组中获取Bitmap
      *
-     * @param data      字节数组
-     * @param reqWidth  目标width
-     * @param reqHeight 目标height
+     * @param data
+     * @param reqWidth
+     * @param reqHeight
      * @return
      */
     public static Bitmap getBitmapFromByteArray(byte[] data, int reqWidth, int reqHeight) {
@@ -141,7 +140,7 @@ public class LBitmapUtils {
      * 从View获取Bitmap
      *
      * @param view view
-     * @return bitmap
+     * @return
      */
     public static Bitmap getBitmapFromView(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),
@@ -176,7 +175,7 @@ public class LBitmapUtils {
      * 获取圆角Bitmap
      *
      * @param bitmap
-     * @param radius 圆角半径
+     * @param radius
      * @return
      */
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float radius) {
@@ -206,8 +205,6 @@ public class LBitmapUtils {
                 width, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
         Paint paint = new Paint();
-        Rect rect = new Rect(0, 0, width, width);
-        RectF rectF = new RectF(rect);
         paint.setAntiAlias(true);
         paint.setColor(Color.BLACK);
         canvas.drawCircle(width * 1.0f / 2, width * 1.0f / 2, width * 1.0f / 2, paint);
@@ -218,11 +215,11 @@ public class LBitmapUtils {
 
 
     /**
-     * 缩放图片
+     * 缩放图片，非等比缩放，会出现拉伸
      *
      * @param bitmap
-     * @param targetWidth  目标宽度
-     * @param targetHeight 目标高度
+     * @param targetWidth
+     * @param targetHeight
      * @return
      */
     public static Bitmap zoomImage(Bitmap bitmap, int targetWidth, int targetHeight) {
@@ -241,20 +238,20 @@ public class LBitmapUtils {
      * 压缩图片大小
      *
      * @param bitmap
-     * @param kb     压缩的最大值，单位为kb
+     * @param maxKb     压缩的图片大小的最大值
      * @return
      */
-    public static Bitmap compressImage(Bitmap bitmap, int kb) {
+    public static Bitmap compressImage(Bitmap bitmap, int maxKb) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 100;
-        while (baos.toByteArray().length / 1024 > kb) { // 循环判断如果压缩后图片是否大于多少kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > maxKb) { // 循环判断如果压缩后图片是否大于多少kb,大于继续压缩
             baos.reset();// 重置baos即清空baos
             bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
             options -= 10;// 每次都减少10
         }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
-        Bitmap output = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap output = BitmapFactory.decodeStream(bais, null, null);// 把ByteArrayInputStream数据生成图片
         return output;
     }
 
@@ -368,10 +365,9 @@ public class LBitmapUtils {
         int width = LDisplayUtils.getScreenWidth();
         int height = LDisplayUtils.getScreenHeight();
 
-        Bitmap bp = null;
-        bp = Bitmap.createBitmap(bitmap, 0, 0, width, height);
+        Bitmap output =  Bitmap.createBitmap(bitmap, 0, 0, width, height);
         view.destroyDrawingCache();
-        return bp;
+        return output;
     }
 
     /**
@@ -394,10 +390,9 @@ public class LBitmapUtils {
         int width = LDisplayUtils.getScreenWidth();
         int height = LDisplayUtils.getScreenHeight();
 
-        Bitmap bp = null;
-        bp = Bitmap.createBitmap(bitmap, 0, 0, width, height);
+        Bitmap output = Bitmap.createBitmap(bitmap, 0, statusBarHeight, width, height-statusBarHeight);
         view.destroyDrawingCache();
-        return bp;
+        return output;
     }
 
     /**

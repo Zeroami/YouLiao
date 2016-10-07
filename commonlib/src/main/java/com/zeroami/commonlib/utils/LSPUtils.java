@@ -125,10 +125,9 @@ public class LSPUtils {
     }
 
     /**
-     * 作者：Zeroami
-     * 邮箱：826589183@qq.com
-     * 日期：2016/8/4
-     * 描述：创建一个解决SharedPreferencesCompat.apply方法的一个兼容类
+     * <p>作者：Zeroami</p>
+     * <p>邮箱：826589183@qq.com</p>
+     * <p>描述：创建一个解决SharedPreferencesCompat.apply方法的一个兼容类</p>
      */
     private static class LSharedPreferencesCompat {
         private static final Method sApplyMethod = findApplyMethod();

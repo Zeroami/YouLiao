@@ -24,6 +24,10 @@ public class LThreadUtils {
         doInBackground(r, null);
     }
 
+    public static void doInBackground(final Runnable r, long delay) {
+        doInBackground(r, delay, null);
+    }
+
     public static void doInUiThread(Runnable r) {
         doInUiThread(r, null);
     }
@@ -32,20 +36,8 @@ public class LThreadUtils {
         doInUiThread(r, delay, null);
     }
 
-    public static void doInBackground(final Runnable r, long delay) {
-        doInBackground(r, delay, null);
-    }
-
     public static void doInBackground(final Runnable r, LDebugger debugger) {
         EXECUTOR.execute(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)));
-    }
-
-    public static void doInUiThread(Runnable r, LDebugger debugger) {
-        MAIN_LOOPER_HANDLER.post(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)));
-    }
-
-    public static void doInUiThread(Runnable r, long delay, LDebugger debugger) {
-        MAIN_LOOPER_HANDLER.postDelayed(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)), delay);
     }
 
     public static void doInBackground(final Runnable r, long delay, final LDebugger debugger) {
@@ -55,6 +47,14 @@ public class LThreadUtils {
                 doInBackground(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)));
             }
         }, delay);
+    }
+
+    public static void doInUiThread(Runnable r, LDebugger debugger) {
+        MAIN_LOOPER_HANDLER.post(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)));
+    }
+
+    public static void doInUiThread(Runnable r, long delay, LDebugger debugger) {
+        MAIN_LOOPER_HANDLER.postDelayed(new LDebuggerRunnable(r, new LDebuggerWrapper(debugger)), delay);
     }
 
     public static String getName() {
@@ -123,24 +123,13 @@ public class LThreadUtils {
      * <p>描述：线程任务调试类</p>
      */
     public static abstract class LDebugger {
-        /**
-         * execute in execute thread
-         */
         protected void onPreExecute() {
 
         }
 
-        /**
-         * execute in execute thread
-         */
         protected void onPostExecute() {
 
         }
-
-        /**
-         * execute in execute thread
-         */
-        protected abstract String getMessage();
     }
 
     /**
@@ -174,27 +163,9 @@ public class LThreadUtils {
                 mDebugger.onPostExecute();
             }
 
-            LL.i(getMessage() + " useTime=" + (System.currentTimeMillis() - mThreadStartTime)
+            LL.i(getName() + " useTime=" + (System.currentTimeMillis() - mThreadStartTime)
                     + "ms " + " currentTime=" + System.currentTimeMillis());
         }
 
-        @Override
-        protected String getMessage() {
-            String msg = "ThreadName=" + getName();
-
-            if (mDebugger == null) {
-                return msg;
-            }
-
-            String debuggerMsg = "";
-
-            try {
-                debuggerMsg = mDebugger.getMessage();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return msg + " | " + debuggerMsg;
-        }
     }
 }
