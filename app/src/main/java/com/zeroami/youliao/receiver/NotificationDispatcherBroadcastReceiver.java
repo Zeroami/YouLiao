@@ -9,6 +9,7 @@ import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LSPUtils;
 import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.view.activity.MainActivity;
+import com.zeroami.youliao.view.activity.NewFriendActivity;
 
 /**
  * <p>作者：Zeroami</p>
@@ -22,14 +23,24 @@ public class NotificationDispatcherBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getStringExtra(EXTRA_ACTION);
-        if (LAppUtils.isBackground()){
-            gotoMain(context,action);
+//        if (LAppUtils.isBackground()){
+//            gotoMain(context,action);
+//        }
+        if (action.equals(Constant.Action.ADD_FRIEND)){
+            gotoNewFriend(context);
+        } else if(action.equals(Constant.Action.NEW_FRIEND_ADDED)){
+            gotoMain(context);
         }
     }
 
-    private void gotoMain(Context context,String action){
+    private void gotoMain(Context context){
         Intent intent = new Intent(context,MainActivity.class);
-        intent.putExtra(EXTRA_ACTION,action);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    private void gotoNewFriend(Context context){
+        Intent intent = new Intent(context,NewFriendActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

@@ -12,6 +12,17 @@ import com.zeroami.youliao.bean.User;
  */
 public interface MainContract {
     interface View extends LMvpView {
+
+        /**
+         * 显示底部弹出框
+         */
+        void showBottomSheet();
+
+        /**
+         * 退出App
+         */
+        void exitApp();
+
         /**
          * 更新当前用户信息
          */
@@ -41,9 +52,21 @@ public interface MainContract {
          * 跳转到添加朋友页
          */
         void gotoAddFriend();
+
     }
 
     interface Presenter extends LMvpPresenter<View> {
+
+        /**
+         * 处理菜单键点击
+         */
+        void doMenuKeyDown();
+
+        /**
+         * 处理退出App
+         */
+        void doExitApp();
+
         /**
          * 处理搜索
          */

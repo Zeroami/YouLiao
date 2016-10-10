@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.avos.avoscloud.AVException;
 import com.zeroami.commonlib.mvp.LBasePresenter;
+import com.zeroami.commonlib.utils.LNetUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.bean.User;
@@ -54,6 +55,11 @@ public class LoginPresenter extends LBasePresenter<LoginContract.View, IUserMode
 
         if (password.length() < 6 || password.length() > 16) {
             getMvpView().showToast(LRUtils.getString(R.string.password_length_error));
+            return;
+        }
+
+        if (!LNetUtils.isNetworkConnected()){
+            getMvpView().showToast(LRUtils.getString(R.string.please_check_network));
             return;
         }
 

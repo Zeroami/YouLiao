@@ -46,8 +46,7 @@ public class FriendDetailPresenter extends LBasePresenter<FriendDetailContract.V
         final User toUser = getMvpView().getUser();
         getMvpView().setDefaultExtra(String.format(LRUtils.getString(R.string.format_extra), currentUser.getNickname()));
         if (currentUser.getObjectId().equals(toUser.getObjectId())){ // 判断是否为本人
-            getMvpView().hideAddFriend();
-            getMvpView().hideSendMessage();
+
         }else{
             checkIsMyFriend(toUser);
         }
@@ -58,22 +57,18 @@ public class FriendDetailPresenter extends LBasePresenter<FriendDetailContract.V
      * @param toUser
      */
     private void checkIsMyFriend(final User toUser) {
-        getMvpModel().findFriendByUsername(toUser.getUsername(), new LeanCallback<List<User>>() {
+        getMvpModel().findFriendById(toUser.getObjectId(), new LeanCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> data) {
-                if (data.size() > 0){       // 已添加为朋友，显示发送信息按钮
-                    getMvpView().hideAddFriend();
+                if (data.size() > 0) {       // 已添加为朋友，显示发送信息按钮
                     getMvpView().showSendMessage();
-                }else{                      // 未添加为朋友，判断是否已经发送过添加请求
+                } else {                      // 未添加为朋友，判断是否已经发送过添加请求
                     checkIsAlreadySendAddRequest(toUser);
                 }
             }
 
             @Override
             public void onError(int code, AVException e) {
-                getMvpView().hideAddFriend();
-                getMvpView().hideSendMessage();
-                getMvpView().hideAlreadSendRequestTips();
             }
         });
     }
@@ -87,16 +82,12 @@ public class FriendDetailPresenter extends LBasePresenter<FriendDetailContract.V
             @Override
             public void onSuccess(List<AddRequest> data) {
                 if (data.size() > 0){       // 已经发送过添加请求
-                    getMvpView().hideAddFriend();
                     getMvpView().showAlreadSendRequestTips();
                 }
             }
 
             @Override
             public void onError(int code, AVException e) {
-                getMvpView().hideAddFriend();
-                getMvpView().hideSendMessage();
-                getMvpView().hideAlreadSendRequestTips();
             }
         });
     }
@@ -121,5 +112,10 @@ public class FriendDetailPresenter extends LBasePresenter<FriendDetailContract.V
                 LT.show(LRUtils.getString(R.string.send_add_request_error));
             }
         });
+    }
+
+    @Override
+    public void doAvatarClick() {
+        getMvpView().gotoImage();
     }
 }

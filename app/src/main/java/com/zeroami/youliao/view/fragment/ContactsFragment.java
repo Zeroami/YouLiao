@@ -28,6 +28,7 @@ import com.zeroami.youliao.view.activity.MainActivity;
 import com.zeroami.youliao.view.activity.NewFriendActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 
@@ -50,7 +51,7 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     private TextView tvNewFriendUnread;
 
     private ContactsAdapter mAdapter;
-    private ArrayList<User> mData;
+    private ArrayList<User> mFriendList;
 
     public static ContactsFragment newInstance() {
         return new ContactsFragment();
@@ -83,15 +84,11 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
         swlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                getMvpPresenter().doViewInitialized();
                 swlRefresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        LT.show("刷新成功");
                         swlRefresh.setRefreshing(false);
-                        for (int i = 0; i < 20; i++) {
-                            mData.add(new User());
-                        }
-                        mAdapter.notifyDataSetChanged();
                     }
                 }, 2000);
             }
@@ -99,11 +96,8 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     }
 
     private void initAdapter() {
-        mData = new ArrayList<>();
-        for (int i = 0;i<20;i++){
-            mData.add(new User());
-        }
-        mAdapter = new ContactsAdapter(mData);
+        mFriendList = new ArrayList<>();
+        mAdapter = new ContactsAdapter(getAttachActivity(), mFriendList);
         initHeaderView();
     }
 
@@ -156,6 +150,13 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
                         onReceiveNewFriendRequest();
                     }
                 });
+        LRxBus.getDefault().toTagObservable(Constant.Action.NEW_FRIEND_ADDED)
+                .subscribe(new LRxBusSubscriber<Object>() {
+                    @Override
+                    protected void call(Object o) {
+                        onReceiveNewFriendAdded();
+                    }
+                });
     }
 
     /**
@@ -165,15 +166,16 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
         getMvpPresenter().doReceiveNewFriendRequest();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getMvpPresenter().doViewInitialized();
+    /**
+     * 接收到新朋友被添加
+     */
+    private void onReceiveNewFriendAdded() {
+        getMvpPresenter().doReceiveNewFriendAdded();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ll_new_friend:
                 getMvpPresenter().doNewFriendClick();
                 break;
@@ -187,8 +189,15 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     }
 
     @Override
+    public void updateFriendList(List<User> friendList) {
+        mFriendList.clear();
+        mFriendList.addAll(friendList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void updateNewFriendUnread(int count) {
-        ((MainActivity)getAttachActivity()).setBottomNotificationCount(1, count);
+        ((MainActivity) getAttachActivity()).setBottomNotificationCount(1, count);
         String countStr = count == 0 ? "" : count > 99 ? "99+" : count + "";
         tvNewFriendUnread.setText(countStr);
     }
@@ -205,6 +214,6 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
 
     @Override
     public void gotoNewFriend() {
-        LPageUtils.startActivity(getAttachActivity(), NewFriendActivity.class,false);
+        LPageUtils.startActivity(getAttachActivity(), NewFriendActivity.class, false);
     }
 }

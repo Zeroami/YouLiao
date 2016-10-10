@@ -72,7 +72,7 @@ public class AddRequestManager {
     public void countUnreadAddRequests(final CountCallback countCallback) {
         AVQuery<AVObject> addRequestAVQuery = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
         addRequestAVQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
-        addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUser().getObjectId());
+        addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());
         addRequestAVQuery.whereEqualTo(Constant.AddRequest.IS_READ, false);
         addRequestAVQuery.countInBackground(new CountCallback() {
             @Override
@@ -91,7 +91,7 @@ public class AddRequestManager {
     public void markAddRequestsRead() {
         AVQuery<AVObject> addRequestAVQuery = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
         addRequestAVQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
-        addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUser().getObjectId());
+        addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());
         addRequestAVQuery.whereEqualTo(Constant.AddRequest.IS_READ, false);
         addRequestAVQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -120,11 +120,10 @@ public class AddRequestManager {
      * @param findCallback
      */
     public void findAddRequests(int skip, int limit, FindCallback<AVObject> findCallback) {
-        User user = UserManager.getInstance().getCurrentUser();
         AVQuery<AVObject> q = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
         q.skip(skip);
         q.limit(limit);
-        q.whereEqualTo(Constant.AddRequest.TO_USER_ID, user.getObjectId());
+        q.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());
         q.orderByDescending(AVObject.CREATED_AT);
         q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.findInBackground(findCallback);
@@ -136,9 +135,8 @@ public class AddRequestManager {
      * @param findCallback
      */
     public void findAddRequestByToUser(User toUser,FindCallback<AVObject> findCallback){
-        User user = UserManager.getInstance().getCurrentUser();
         AVQuery<AVObject> q = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
-        q.whereEqualTo(Constant.AddRequest.FROM_USER_ID, user.getObjectId());
+        q.whereEqualTo(Constant.AddRequest.FROM_USER_ID, UserManager.getInstance().getCurrentUserId());
         q.whereEqualTo(Constant.AddRequest.TO_USER_ID, toUser.getObjectId());
         q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.findInBackground(findCallback);
@@ -150,7 +148,7 @@ public class AddRequestManager {
      * @param saveCallback
      */
     public void agreeAddRequest(final AddRequest addRequest, final SaveCallback saveCallback) {
-        addFriend(addRequest.getFromUserId(), new SaveCallback() {
+        UserManager.getInstance().addFriend(addRequest.getFromUserId(), new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e != null) {
@@ -168,22 +166,6 @@ public class AddRequestManager {
         });
     }
 
-    /**
-     * 添加朋友
-     * @param friendId
-     * @param saveCallback
-     */
-    public void addFriend(String friendId, final SaveCallback saveCallback) {
-        AVUser avUser = User.convertToAVUser(UserManager.getInstance().getCurrentUser());
-        avUser.followInBackground(friendId, new FollowCallback() {
-            @Override
-            public void done(AVObject object, AVException e) {
-                if (saveCallback != null) {
-                    saveCallback.done(e);
-                }
-            }
-        });
-    }
 
     /**
      * 创建朋友添加请求
@@ -192,9 +174,8 @@ public class AddRequestManager {
      * @param saveCallback
      */
     public void createAddRequest(User toUser,String extra,SaveCallback saveCallback){
-        User curUser = UserManager.getInstance().getCurrentUser();
         AddRequest addRequest = new AddRequest();
-        addRequest.setFromUserId(curUser.getObjectId());
+        addRequest.setFromUserId(UserManager.getInstance().getCurrentUserId());
         addRequest.setToUserId(toUser.getObjectId());
         addRequest.setStatus(AddRequest.STATUS_WAIT);
         addRequest.setExtra(extra);

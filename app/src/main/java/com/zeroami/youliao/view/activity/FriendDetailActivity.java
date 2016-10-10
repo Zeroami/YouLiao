@@ -1,6 +1,5 @@
 package com.zeroami.youliao.view.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,13 +15,10 @@ import com.zeroami.commonlib.widget.LCircleImageView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.FriendDetailContract;
-import com.zeroami.youliao.data.http.PushManager;
 import com.zeroami.youliao.presenter.FriendDetailPresenter;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.drakeet.materialdialog.MaterialDialog;
 
 /**
@@ -63,10 +59,9 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     }
 
     @Override
-    protected void handleIntent(Intent intent) {
-        mUser = (User) intent.getExtras().getSerializable(EXTRA_USER);
+    protected void handleExtras(Bundle extras) {
+        mUser = (User) extras.getSerializable(EXTRA_USER);
     }
-
 
     @Override
     protected int getLayoutId() {
@@ -110,6 +105,7 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     }
 
     private void initListener(){
+        cvCircleAvatar.setOnClickListener(this);
         tvAddFriend.setOnClickListener(this);
         tvSendMessage.setOnClickListener(this);
     }
@@ -126,6 +122,9 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.cv_circle_avatar:
+                getMvpPresenter().doAvatarClick();
+                break;
             case R.id.tv_add_friend:
                 getMvpPresenter().doEditExtra();
                 break;
@@ -204,5 +203,10 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     @Override
     public void hideAlreadSendRequestTips() {
         tvAlreadySendRequestTips.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void gotoImage() {
+        ImageActivity.launch(this,cvCircleAvatar,mUser.getAvatar());
     }
 }

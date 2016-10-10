@@ -36,24 +36,20 @@ public class SplashPresenter extends LBasePresenter<SplashContract.View,IUserMod
 
     @Override
     public void doViewInitialized() {
-        String versionName = String.format(LRUtils.getString(R.string.format_version_name), LAppUtils.getVerionName());
-        getMvpView().setVersionName(versionName);
-        getMvpView().startAnimation();
+        if (getMvpModel().getExitAppStatus()){  // 当前为退出状态，显示闪屏页
+            String versionName = String.format(LRUtils.getString(R.string.format_version_name), LAppUtils.getVerionName());
+            getMvpView().setVersionName(versionName);
+            getMvpView().startAnimation();
+        }else{
+            doGoto();
+        }
     }
 
     @Override
     public void doGoto() {
         // 判断是否登陆
-        if (LSPUtils.get(Constant.PreferenceKey.KEY_IS_LOGIN,false)){
+        if (getMvpModel().getLoginStatus()){
             getMvpView().gotoMain();
-            AVIMClient.getInstance(getMvpModel().getCurrentUserId()).open(new AVIMClientCallback() {
-                @Override
-                public void done(AVIMClient avimClient, AVIMException e) {
-                    if (e == null){
-                        // 与服务器连接成功
-                    }
-                }
-            });
         }else{
             getMvpView().gotoLogin();
         }

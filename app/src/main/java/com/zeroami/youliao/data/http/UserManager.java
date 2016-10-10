@@ -18,12 +18,14 @@ import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.config.Constant;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：用户数据管理者</p>
+ * <p>描述：用户管理者</p>
  */
 public class UserManager {
     public static final String LOCATION = "location";
@@ -50,7 +52,7 @@ public class UserManager {
      * @param password
      * @param logInCallback
      */
-    public void logIn(String username, String password, LogInCallback<AVUser> logInCallback) {
+    public void login(String username, String password, LogInCallback<AVUser> logInCallback) {
         AVUser.logInInBackground(username, password, logInCallback);
     }
 
@@ -60,14 +62,14 @@ public class UserManager {
      * @param avUser
      * @param callback
      */
-    public void signUp(AVUser avUser, SignUpCallback callback) {
+    public void register(AVUser avUser, SignUpCallback callback) {
         avUser.signUpInBackground(callback);
     }
 
     /**
      * 退出登陆
      */
-    public void logOut() {
+    public void logout() {
         AVUser.logOut();
     }
 
@@ -81,9 +83,13 @@ public class UserManager {
         return (null != currentUser ? currentUser.getObjectId() : null);
     }
 
-    public User getCurrentUser(){
-        String userJson = LSPUtils.get(Constant.PreferenceKey.KEY_CURRENT_USER, "");
-        return new Gson().fromJson(userJson, User.class);
+    /**
+     * 获取当前登陆用户
+     *
+     * @return
+     */
+    public AVUser getCurrentUser(){
+        return AVUser.getCurrentUser(AVUser.class);
     }
 
     /**
@@ -122,7 +128,7 @@ public class UserManager {
      * @param path
      * @param saveCallback
      */
-    public void saveUserWithAvatar(final AVUser avUser, String path, final SaveCallback saveCallback) {
+    public void updateUserWithAvatar(final AVUser avUser, String path, final SaveCallback saveCallback) {
         final AVFile file;
         try {
             file = AVFile.withAbsoluteLocalPath(avUser.getUsername(), path);
@@ -146,12 +152,30 @@ public class UserManager {
         }
     }
 
-    public AVGeoPoint getGeoPoint(AVUser avUser) {
-        return avUser.getAVGeoPoint(LOCATION);
+    /**
+     * 更新信息
+     *
+     * @param avUser
+     * @param saveCallback
+     */
+    public void updateUser(final AVUser avUser, final SaveCallback saveCallback) {
+            avUser.saveInBackground(saveCallback);
     }
 
-    public void setGeoPoint(AVUser avUser, AVGeoPoint point) {
-        avUser.put(LOCATION, point);
+    /**
+     * 添加朋友
+     * @param friendId
+     * @param saveCallback
+     */
+    public void addFriend(String friendId, final SaveCallback saveCallback) {
+        AVUser.getCurrentUser().followInBackground(friendId, new FollowCallback() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                if (saveCallback != null) {
+                    saveCallback.done(e);
+                }
+            }
+        });
     }
 
     /**
@@ -175,40 +199,75 @@ public class UserManager {
     /**
      * 查找出我的全部朋友
      *
-     * @param avUser
-     * @param cachePolicy
      * @param findCallback
      */
-    public void findFriends(AVUser avUser, AVQuery.CachePolicy cachePolicy, FindCallback<AVUser>
+    public void findFriends(final FindCallback<AVUser>
             findCallback) {
-        AVQuery<AVUser> q = null;
         try {
-            q = avUser.followeeQuery(AVUser.class);
+            AVQuery<AVUser> followeeQuery = getCurrentUser().followeeQuery(AVUser.class);
+            final AVQuery<AVUser> followerQuery = getCurrentUser().followerQuery(AVUser.class);
+            followeeQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            followerQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            followeeQuery.include(Constant.FOLLOWEE);
+            followerQuery.include(Constant.FOLLOWER);
+            followeeQuery.findInBackground(new FindCallback<AVUser>() {
+                @Override
+                public void done(final List<AVUser> followeeList, AVException e) {
+                    if (e == null){
+                        followerQuery.findInBackground(new FindCallback<AVUser>() {
+                            @Override
+                            public void done(List<AVUser> followerList, AVException e) {
+                                List<AVUser> list = new ArrayList<AVUser>();
+                                list.addAll(followeeList);
+                                list.addAll(followerList);
+                                findCallback.done(list,e);
+                            }
+                        });
+                    }else{
+                        findCallback.done(followeeList,e);
+                    }
+                }
+            });
         } catch (Exception e) {
         }
-        q.setCachePolicy(cachePolicy);
-//        q.setMaxCacheAge(TimeUnit.MINUTES.toMillis(1));
-        q.findInBackground(findCallback);
+
     }
 
     /**
-     * 根据账号查找我的朋友
+     * 根据id查找我的朋友
      * @param avUser
-     * @param username
-     * @param cachePolicy
+     * @param friendId
      * @param findCallback
      */
-    public void findFriendByUsername(AVUser avUser, String username,AVQuery.CachePolicy cachePolicy, FindCallback<AVUser>
+    public void findFriendById(AVUser avUser, String friendId, final FindCallback<AVUser>
             findCallback) {
-        AVQuery<AVUser> q = null;
         try {
-            q = avUser.followeeQuery(AVUser.class);
+            AVQuery<AVUser> followeeQuery = avUser.followeeQuery(AVUser.class);
+            final AVQuery<AVUser> followerQuery = avUser.followerQuery(AVUser.class);
+            followeeQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            followerQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            followeeQuery.whereEqualTo(Constant.FOLLOWEE, AVUser.createWithoutData("_User", friendId));
+            followerQuery.whereEqualTo(Constant.FOLLOWER, AVUser.createWithoutData("_User", friendId));
+            followeeQuery.findInBackground(new FindCallback<AVUser>() {
+                @Override
+                public void done(final List<AVUser> followeeList, AVException e) {
+                    if (e == null){
+                        followerQuery.findInBackground(new FindCallback<AVUser>() {
+                            @Override
+                            public void done(List<AVUser> followerList, AVException e) {
+                                List<AVUser> list = new ArrayList<AVUser>();
+                                list.addAll(followeeList);
+                                list.addAll(followerList);
+                                findCallback.done(list,e);
+                            }
+                        });
+                    }else{
+                        findCallback.done(followeeList,e);
+                    }
+                }
+            });
         } catch (Exception e) {
         }
-        q.setCachePolicy(cachePolicy);
-//        q.setMaxCacheAge(TimeUnit.MINUTES.toMillis(1));
-        q.whereEqualTo(Constant.User.USERNAME,username);
-        q.findInBackground(findCallback);
     }
 
     /**
@@ -220,7 +279,7 @@ public class UserManager {
     public void findUserByUsername(String username, FindCallback<AVUser>
             findCallback) {
         AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
-        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
+        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereEqualTo(Constant.User.USERNAME, username);
         q.findInBackground(findCallback);
     }
@@ -235,7 +294,7 @@ public class UserManager {
     public void findUsersByNickname(String nickname, int skip, int limit, FindCallback<AVUser>
             findCallback) {
         AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
-        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
+        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereContains(Constant.User.NICKNAME, nickname);
         q.orderByDescending(AVObject.CREATED_AT);
         q.limit(limit);
@@ -252,7 +311,7 @@ public class UserManager {
     public void findUserByObectId(String objectId, FindCallback<AVUser>
             findCallback) {
         AVQuery<AVUser> q = AVUser.getQuery(AVUser.class);
-        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
+        q.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereEqualTo(AVObject.OBJECT_ID, objectId);
         q.findInBackground(findCallback);
     }

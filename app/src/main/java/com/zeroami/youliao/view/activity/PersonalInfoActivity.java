@@ -79,8 +79,8 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
     }
 
     @Override
-    protected void handleIntent(Intent intent) {
-        mUser = (User) intent.getExtras().getSerializable(EXTRA_USER);
+    protected void handleExtras(Bundle extras) {
+        mUser = (User) extras.getSerializable(EXTRA_USER);
     }
 
 
@@ -147,7 +147,7 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
             };
             etSignature.addTextChangedListener(mTextWatcher);
         }
-
+        cvCircleAvatar.setOnClickListener(this);
         tvSaveChange.setOnClickListener(this);
     }
 
@@ -175,7 +175,7 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cv_circle_avatar:
-                pickPhoto();
+                getMvpPresenter().doAvatarClick();
                 break;
             case R.id.tv_save_change:
                 updateChangedUser();
@@ -194,7 +194,7 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
                 if (photos != null && photos.size() > 0){
                     mIsAvatarChanged = true;
                     mAvatarLocalPath = photos.get(0);
-                    Glide.with(this).load(mAvatarLocalPath).into(cvCircleAvatar);
+                    Glide.with(this).load(mAvatarLocalPath).centerCrop().into(cvCircleAvatar);
                 }
             }
         }
@@ -230,7 +230,6 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
 
     @Override
     public void showEditView() {
-        cvCircleAvatar.setOnClickListener(this);
         tvChangeAvatarTips.setVisibility(View.VISIBLE);
         etNickname.setVisibility(View.VISIBLE);
         etSignature.setVisibility(View.VISIBLE);
@@ -246,7 +245,6 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
 
     @Override
     public void hideEditView() {
-        cvCircleAvatar.setOnClickListener(null);
         tvChangeAvatarTips.setVisibility(View.GONE);
         etNickname.setVisibility(View.GONE);
         etSignature.setVisibility(View.GONE);
@@ -292,5 +290,15 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
     public void updateView() {
         mUser = mChangedUser;
         initView();
+    }
+
+    @Override
+    public void changeAvatar() {
+        pickPhoto();
+    }
+
+    @Override
+    public void gotoImage() {
+        ImageActivity.launch(this,cvCircleAvatar,mUser.getAvatar());
     }
 }

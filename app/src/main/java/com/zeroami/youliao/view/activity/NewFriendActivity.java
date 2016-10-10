@@ -3,15 +3,23 @@ package com.zeroami.youliao.view.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
+import com.zeroami.commonlib.recycleview.LAutoLoadOnScrollListener;
+import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.utils.LL;
+import com.zeroami.commonlib.utils.LPageUtils;
+import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.AddRequestAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.AddRequest;
+import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.NewFriendContract;
 import com.zeroami.youliao.presenter.NewFriendPresenter;
 
@@ -19,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * <p>作者：Zeroami</p>
@@ -28,11 +35,18 @@ import butterknife.ButterKnife;
  */
 public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Presenter> implements NewFriendContract.View {
 
-    @Bind(R.id.rv_add_request)
-    RecyclerView rvAddRequest;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.tv_title)
+    TextView tvTitle;
+    @Bind(R.id.rv_new_friend)
+    RecyclerView rvNewFriend;
 
     private AddRequestAdapter mAdapter;
     private List<AddRequest> mAddRequestList;
+    private LAutoLoadOnScrollListener mAutoLoadOnScrollListener;
+
+    private AddRequest mAddRequest;
 
     @Override
     protected NewFriendContract.Presenter createPresenter() {
@@ -47,6 +61,7 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
     @Override
     protected void initialize(Bundle savedInstanceState) {
         setSwipeBackEnable(true);
+        initToolbar();
         initRecyclerView();
     }
 
@@ -55,15 +70,32 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
         getMvpPresenter().doViewInitialized();
     }
 
+    private void initToolbar() {
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        toolbar.setTitle("");
+        tvTitle.setText(LRUtils.getString(R.string.new_friend));
+        setSupportActionBar(toolbar);
+    }
+
     private void initRecyclerView() {
         mAddRequestList = new ArrayList<>();
         mAdapter = new AddRequestAdapter(this,mAddRequestList);
-        rvAddRequest.setLayoutManager(new LinearLayoutManager(this));
-        rvAddRequest.setAdapter(mAdapter);
-        rvAddRequest.addOnItemTouchListener(new SimpleClickListener() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvNewFriend.setLayoutManager(linearLayoutManager);
+        rvNewFriend.setAdapter(mAdapter);
+
+        mAutoLoadOnScrollListener = new LAutoLoadOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                getMvpPresenter().doLoadMore();
+            }
+        };
+        rvNewFriend.addOnScrollListener(mAutoLoadOnScrollListener);
+
+        rvNewFriend.addOnItemTouchListener(new SimpleClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                LL.d(i);
+                mAddRequest = mAddRequestList.get(i);
             }
 
             @Override
@@ -73,7 +105,8 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
 
             @Override
             public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                LL.d(i + "--agree");
+                mAddRequest = mAddRequestList.get(i);
+                getMvpPresenter().doAgreeAddRequest();
             }
 
             @Override
@@ -81,6 +114,16 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -92,6 +135,26 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
 
     @Override
     public void appendAddRequestList(List<AddRequest> addRequestList) {
+        mAutoLoadOnScrollListener.setLoading(false);
+        mAddRequestList.addAll(addRequestList);
+        mAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public AddRequest getAddRequest() {
+        return mAddRequest;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        mAdapter.notifyDataSetChanged();
+        LRxBus.getDefault().postTag(Constant.Action.NEW_FRIEND_ADDED);
+    }
+
+    @Override
+    public void gotoChat() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ChatActivity.EXTRA_USER,mAddRequest.getFromUser());
+        LPageUtils.startActivity(this,ChatActivity.class,bundle,false);
     }
 }

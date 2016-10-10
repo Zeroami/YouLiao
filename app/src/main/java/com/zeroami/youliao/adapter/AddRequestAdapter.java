@@ -6,12 +6,9 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.zeroami.commonlib.utils.LL;
-import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.widget.LCircleImageView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.bean.AddRequest;
-import com.zeroami.youliao.bean.User;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class AddRequestAdapter extends BaseQuickAdapter<AddRequest> {
     private Context mContext;
 
     public AddRequestAdapter(Context context, List<AddRequest> data) {
-        super(R.layout.item_add_request, data);
+        super(R.layout.item_new_friend, data);
         mContext = context;
     }
 

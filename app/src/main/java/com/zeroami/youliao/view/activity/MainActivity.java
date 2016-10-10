@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,8 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
+import com.kennyc.bottomsheet.BottomSheet;
+import com.kennyc.bottomsheet.BottomSheetListener;
 import com.zeroami.commonlib.utils.LDisplayUtils;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -91,6 +94,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     private ContactsFragment mContactsFragment;
     private TopicFragment mTopicFragment;
     private MeFragment mMeFragment;
+    private BottomSheet mBottomSheet;
 
     @Override
     protected MainContract.Presenter createPresenter() {
@@ -198,7 +202,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     }
 
     private void initPopupWindow() {
-        mAddPopupView = LayoutInflater.from(this).inflate(R.layout.popup_add, null);
+        mAddPopupView = LayoutInflater.from(this).inflate(R.layout.layout_popup_add, null);
         mAddPopupView.measure(0, 0);
         mAddPopupViewWidth = mAddPopupView.getMeasuredWidth();
         LViewFinder viewFinder = new LViewFinder(mAddPopupView);
@@ -355,6 +359,13 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_MENU){
+            getMvpPresenter().doMenuKeyDown();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * 设置底部通知数量
@@ -367,6 +378,37 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     }
 
     // ---------------------------------- MVP View接口 ----------------------------------------------
+
+    @Override
+    public void showBottomSheet() {
+        if (mBottomSheet == null){
+            final BottomSheet.Builder builder = new BottomSheet.Builder(this);
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_bottom_sheet,null);
+            NavigationView navigationView = (NavigationView) view.findViewById(R.id.nv_bottom_sheet);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.bs_check_update:
+                            LT.show("check update");
+                            break;
+                        case R.id.bs_exit_app:
+                            getMvpPresenter().doExitApp();
+                            break;
+                    }
+                    mBottomSheet.dismiss();
+                    return true;
+                }
+            });
+            mBottomSheet = builder.setView(view).create();
+            mBottomSheet.show();
+        }else{
+            if (!mBottomSheet.isShowing()){
+                mBottomSheet.show();
+            }
+        }
+
+    }
 
     @Override
     public void updateCurrentUserInfo(User currentUser) {
@@ -412,6 +454,11 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     @Override
     public void gotoAddFriend() {
         LPageUtils.startActivity(this, AddFriendActivity.class, false);
+    }
+
+    @Override
+    public void exitApp() {
+        finish();
     }
 
 

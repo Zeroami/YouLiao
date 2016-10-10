@@ -2,13 +2,13 @@ package com.zeroami.youliao.model.real;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
+import com.zeroami.commonlib.utils.LThreadUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.bean.AddRequest;
 import com.zeroami.youliao.bean.User;
@@ -16,17 +16,14 @@ import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.data.http.AddRequestManager;
 import com.zeroami.youliao.data.http.PushManager;
 import com.zeroami.youliao.data.http.UserManager;
+import com.zeroami.youliao.data.local.SPManager;
 import com.zeroami.youliao.model.IFriendModel;
 import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.callback.SuccessBeforeCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * <p>作者：Zeroami</p>
@@ -38,11 +35,13 @@ public class FriendModel extends BaseModel implements IFriendModel {
     private UserManager mUserManager;
     private PushManager mPushManager;
     private AddRequestManager mAddRequestManager;
+    private SPManager mSPManager;
 
     public FriendModel() {
         mUserManager = UserManager.getInstance();
         mPushManager = PushManager.getInstance();
         mAddRequestManager = AddRequestManager.getInstance();
+        mSPManager = SPManager.getInstance();
     }
 
 
@@ -74,8 +73,9 @@ public class FriendModel extends BaseModel implements IFriendModel {
                 handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
                     @Override
                     public void call(Object data) {
+                        // 发送一条推送告诉对方，我向你发送了添加请求
                         mPushManager.pushMessage(toUser.getObjectId(),
-                                String.format(LRUtils.getString(R.string.notification_receive_add_request), mUserManager.getCurrentUser().getNickname()),
+                                String.format(LRUtils.getString(R.string.notification_receive_add_request), mSPManager.getCurrentUser().getNickname()),
                                 Constant.Action.ADD_FRIEND);
                     }
                 });
@@ -84,9 +84,9 @@ public class FriendModel extends BaseModel implements IFriendModel {
     }
 
     @Override
-    public void findFriendByUsername(String username, final LeanCallback callback) {
-        AVUser avUser = User.convertToAVUser(mUserManager.getCurrentUser());
-        mUserManager.findFriendByUsername(avUser, username, AVQuery.CachePolicy.CACHE_ELSE_NETWORK, new FindCallback<AVUser>() {
+    public void findFriendById(String objectId, final LeanCallback callback) {
+        AVUser avUser = mUserManager.getCurrentUser();
+        mUserManager.findFriendById(avUser, objectId, new FindCallback<AVUser>() {
             @Override
             public void done(List<AVUser> list, AVException e) {
                 handleCallback(User.convertToUserList(list), e, callback, null);
@@ -142,10 +142,9 @@ public class FriendModel extends BaseModel implements IFriendModel {
                 if (callback != null) {
                     if (e == null) {
                         final List<AddRequest> addRequestList = AddRequest.convertToAddRequestList(list);
-                        Observable.OnSubscribe<List<AddRequest>> onSubscribe = new Observable.OnSubscribe<List<AddRequest>>() {
+                        LThreadUtils.doInBackground(new Runnable() {
                             @Override
-                            public void call(Subscriber<? super List<AddRequest>> subscriber) {
-
+                            public void run() {
                                 final CountDownLatch countDownLatch = new CountDownLatch(addRequestList.size());
                                 for (final AddRequest addRequest : addRequestList) {
                                     mUserManager.findUserByObectId(addRequest.getFromUserId(), new FindCallback<AVUser>() {
@@ -158,41 +157,52 @@ public class FriendModel extends BaseModel implements IFriendModel {
                                         }
                                     });
                                 }
-
                                 try {
                                     countDownLatch.await();
-                                    subscriber.onNext(addRequestList);
-                                    subscriber.onCompleted();
+                                    LThreadUtils.doInUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            callback.onSuccess(addRequestList);
+                                        }
+                                    });
                                 } catch (InterruptedException e1) {
                                     e1.printStackTrace();
                                 }
-
                             }
-                        };
-                        Observable.create(onSubscribe)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<List<AddRequest>>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(List<AddRequest> addRequestList) {
-                                        callback.onSuccess(addRequestList);
-                                    }
-                                });
+                        });
                     } else {
                         LL.e(e);
                         callback.onError(e.getCode(), e);
                     }
                 }
+            }
+        });
+    }
+
+    @Override
+    public void agreeAddRequest(final AddRequest addRequest, final LeanCallback callback) {
+        mAddRequestManager.agreeAddRequest(addRequest, new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
+                    @Override
+                    public void call(Object data) {
+                        // 发送一条推送告诉对方，我同意添加了你
+                        mPushManager.pushMessage(addRequest.getFromUserId(),
+                                String.format(LRUtils.getString(R.string.format_agree_add_request), mSPManager.getCurrentUser().getNickname()),
+                                Constant.Action.NEW_FRIEND_ADDED);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void findFriends(final LeanCallback callback) {
+        mUserManager.findFriends(new FindCallback<AVUser>() {
+            @Override
+            public void done(final List<AVUser> list, AVException e) {
+                handleCallback(User.convertToUserList(list),e,callback,null);
             }
         });
     }

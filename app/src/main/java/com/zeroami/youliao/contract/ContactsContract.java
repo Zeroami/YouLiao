@@ -2,6 +2,9 @@ package com.zeroami.youliao.contract;
 
 import com.zeroami.commonlib.mvp.LMvpPresenter;
 import com.zeroami.commonlib.mvp.LMvpView;
+import com.zeroami.youliao.bean.User;
+
+import java.util.List;
 
 /**
  * <p>作者：Zeroami</p>
@@ -10,6 +13,13 @@ import com.zeroami.commonlib.mvp.LMvpView;
  */
 public interface ContactsContract {
     interface View extends LMvpView{
+
+        /**
+         * 更新朋友列表
+         * @param friendList
+         */
+        void updateFriendList(List<User> friendList);
+
         /**
          * 更新新的朋友请求未读数量
          * @param count
@@ -42,5 +52,10 @@ public interface ContactsContract {
          * 处理新的朋友点击
          */
         void doNewFriendClick();
+
+        /**
+         * 处理接收到新朋友被添加
+         */
+        void doReceiveNewFriendAdded();
     }
 }

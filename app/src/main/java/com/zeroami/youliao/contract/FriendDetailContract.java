@@ -10,9 +10,10 @@ import com.zeroami.youliao.bean.User;
  * <p>描述：朋友详情Contract</p>
  */
 public interface FriendDetailContract {
-    interface View extends LMvpView{
+    interface View extends LMvpView {
         /**
          * 获取当前打开的朋友
+         *
          * @return
          */
         User getUser();
@@ -24,12 +25,14 @@ public interface FriendDetailContract {
 
         /**
          * 设置默认额外信息
+         *
          * @param extra
          */
         void setDefaultExtra(String extra);
 
         /**
          * 获取额外信息
+         *
          * @return
          */
         String getExtra();
@@ -63,9 +66,15 @@ public interface FriendDetailContract {
          * 隐藏已发送添加请求提示
          */
         void hideAlreadSendRequestTips();
+
+        /**
+         * 跳转到大图页
+         */
+        void gotoImage();
     }
 
-    interface Presenter extends LMvpPresenter<View>{
+    interface Presenter extends LMvpPresenter<View> {
+
         /**
          * 处理编辑额外信息
          */
@@ -75,5 +84,10 @@ public interface FriendDetailContract {
          * 处理添加朋友
          */
         void doAddFriend();
+
+        /**
+         * 处理头像点击
+         */
+        void doAvatarClick();
     }
 }

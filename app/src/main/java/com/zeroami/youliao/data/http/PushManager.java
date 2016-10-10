@@ -65,7 +65,7 @@ public class PushManager {
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    // 关联nstallation到用户表等操作……
+                    // 关联installation到用户表等操作……
                     UserManager.getInstance().attachUserToPushChannel(avUser);
                 }
             }
@@ -85,13 +85,13 @@ public class PushManager {
     /**
      * 推送消息
      *
-     * @param userId 推送的目标id
-     * @param alert  推送的携带的数据
-     * @param action 推送的携带的数据
+     * @param toUserId
+     * @param alert
+     * @param action
      */
-    public void pushMessage(String userId, String alert, String action) {
+    public void pushMessage(String toUserId, String alert, String action) {
         AVQuery query = AVInstallation.getQuery();
-        query.whereContains(PUSH_CHANNELS, userId);
+        query.whereContains(PUSH_CHANNELS, toUserId);
         AVPush push = new AVPush();
         push.setQuery(query);
         push.setPushToAndroid(true);

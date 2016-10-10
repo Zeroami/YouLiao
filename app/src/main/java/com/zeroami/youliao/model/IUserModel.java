@@ -33,6 +33,18 @@ public interface IUserModel extends LMvpModel {
     void logout();
 
     /**
+     * 获取登陆状态
+     * @return
+     */
+    boolean getLoginStatus();
+
+    /**
+     * 连接服务器
+     * @param callback
+     */
+    void connectServer(LeanCallback callback);
+
+    /**
      * 获取当前用户id
      * @return
      */
@@ -50,5 +62,21 @@ public interface IUserModel extends LMvpModel {
      * @param callback
      */
     void updateUserInfo(User user,LeanCallback callback);
+
+    /**
+     * 获取退出App状态
+     * @return
+     */
+    boolean getExitAppStatus();
+
+    /**
+     * 进入App
+     */
+    void enterApp();
+
+    /**
+     * 退出App
+     */
+    void exitApp();
 
 }

@@ -28,7 +28,20 @@ public class MainPresenter extends LBasePresenter<MainContract.View, IUserModel>
 
     @Override
     public void doViewInitialized() {
+        getMvpModel().enterApp();
+        getMvpModel().connectServer(null);
         getMvpView().updateCurrentUserInfo(getMvpModel().getCurrentUser());
+    }
+
+    @Override
+    public void doMenuKeyDown() {
+        getMvpView().showBottomSheet();
+    }
+
+    @Override
+    public void doExitApp() {
+        getMvpModel().exitApp();
+        getMvpView().exitApp();
     }
 
     @Override

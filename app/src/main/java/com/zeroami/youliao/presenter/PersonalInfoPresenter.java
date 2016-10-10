@@ -17,7 +17,7 @@ import com.zeroami.youliao.model.real.UserModel;
  */
 public class PersonalInfoPresenter extends LBasePresenter<PersonalInfoContract.View,IUserModel> implements PersonalInfoContract.Presenter {
 
-    private boolean isEdit = false;
+    private boolean isEditing = false;
 
     public PersonalInfoPresenter(PersonalInfoContract.View view) {
         super(view);
@@ -35,14 +35,15 @@ public class PersonalInfoPresenter extends LBasePresenter<PersonalInfoContract.V
 
     @Override
     public void doEdit() {
-        isEdit = !isEdit;
-        if (isEdit){
+        if (!isEditing){
+            isEditing = true;
             getMvpView().hideTextView();
             getMvpView().showEditView();
         }else{
             if (getMvpView().isContentChanged()){
                 getMvpView().showAbandonChangeTips();
             }else {
+                isEditing = false;
                 getMvpView().showTextView();
                 getMvpView().hideEditView();
             }
@@ -51,9 +52,19 @@ public class PersonalInfoPresenter extends LBasePresenter<PersonalInfoContract.V
 
     @Override
     public void doAbandonChange() {
+        isEditing = false;
         getMvpView().restoreView();
         getMvpView().showTextView();
         getMvpView().hideEditView();
+    }
+
+    @Override
+    public void doAvatarClick() {
+        if (isEditing){
+            getMvpView().changeAvatar();
+        }else{
+            getMvpView().gotoImage();
+        }
     }
 
     @Override
@@ -70,7 +81,7 @@ public class PersonalInfoPresenter extends LBasePresenter<PersonalInfoContract.V
             getMvpView().showToast(LRUtils.getString(R.string.signature_length_error));
             return;
         }
-        isEdit = !isEdit;
+        isEditing = !isEditing;
         getMvpView().showTextView();
         getMvpView().hideEditView();
         getMvpModel().updateUserInfo(user, new LeanCallback() {

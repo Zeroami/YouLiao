@@ -2,6 +2,9 @@ package com.zeroami.commonlib.mvp;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.zeroami.commonlib.base.LBaseFragment;
 import com.zeroami.commonlib.utils.LT;
@@ -22,6 +25,12 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
     public void onCreate(Bundle savedInstanceState) {
         mMvpPresenter = createPresenter();
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mMvpPresenter = createPresenter();
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override

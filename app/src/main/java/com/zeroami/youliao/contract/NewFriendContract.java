@@ -26,9 +26,30 @@ public interface NewFriendContract {
          * @param addRequestList
          */
         void appendAddRequestList(List<AddRequest> addRequestList);
+
+        /**
+         * 获取添加请求
+         * @return
+         */
+        AddRequest getAddRequest();
+
+        void notifyDataSetChanged();
+
+        /**
+         * 跳转到聊天页
+         */
+        void gotoChat();
     }
 
     interface Presenter extends LMvpPresenter<View> {
+        /**
+         * 处理加载更多
+         */
+        void doLoadMore();
 
+        /**
+         * 处理同意添加请求
+         */
+        void doAgreeAddRequest();
     }
 }

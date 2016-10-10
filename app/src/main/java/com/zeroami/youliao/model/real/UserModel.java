@@ -1,20 +1,24 @@
 package com.zeroami.youliao.model.real;
 
+import android.text.TextUtils;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
-import com.google.gson.Gson;
-import com.zeroami.commonlib.utils.LL;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.zeroami.commonlib.utils.LFileUtils;
 import com.zeroami.commonlib.utils.LRUtils;
-import com.zeroami.commonlib.utils.LSPUtils;
 import com.zeroami.youliao.R;
 
 import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.data.http.PushManager;
 import com.zeroami.youliao.data.http.UserManager;
+import com.zeroami.youliao.data.local.SPManager;
 import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.IUserModel;
 import com.zeroami.youliao.model.callback.SuccessBeforeCallback;
@@ -29,22 +33,24 @@ public class UserModel extends BaseModel implements IUserModel {
 
     private UserManager mUserManager;
     private PushManager mPushManager;
+    private SPManager mSPManager;
 
     public UserModel() {
         mUserManager = UserManager.getInstance();
         mPushManager = PushManager.getInstance();
+        mSPManager = SPManager.getInstance();
     }
 
     @Override
     public void login(String username, String password, final LeanCallback callback) {
-        mUserManager.logIn(username, password, new LogInCallback<AVUser>() {
+        mUserManager.login(username, password, new LogInCallback<AVUser>() {
             @Override
             public void done(final AVUser avUser, AVException e) {
                 handleCallback(User.convertToUser(avUser), e, callback, new SuccessBeforeCallback<User>() {
                     @Override
                     public void call(User data) {
-                        LSPUtils.put(Constant.PreferenceKey.KEY_IS_LOGIN, true);
-                        LSPUtils.put(Constant.PreferenceKey.KEY_CURRENT_USER, new Gson().toJson(data));
+                        mSPManager.login();
+                        mSPManager.saveCurrentUser(data);
                         mPushManager.subscribePushChannel(avUser);
                     }
                 });
@@ -60,10 +66,10 @@ public class UserModel extends BaseModel implements IUserModel {
         avUser.put(Constant.User.NICKNAME, String.format(LRUtils.getString(R.string.format_default_nickname), RandomUtils.createRandomMD5String(8)));
         avUser.put(Constant.User.SIGNATURE, "");
         avUser.put(Constant.User.AVATAR, "");
-        mUserManager.signUp(avUser, new SignUpCallback() {
+        mUserManager.register(avUser, new SignUpCallback() {
             @Override
             public void done(AVException e) {
-                handleCallback(null,e,callback,null);
+                handleCallback(null, e, callback, null);
             }
         });
     }
@@ -71,8 +77,24 @@ public class UserModel extends BaseModel implements IUserModel {
     @Override
     public void logout() {
         mPushManager.unsubscribePushChannel(User.convertToAVUser(getCurrentUser()));
-        mUserManager.logOut();
-        LSPUtils.remove(Constant.PreferenceKey.KEY_IS_LOGIN);
+        mUserManager.logout();
+        mSPManager.logout();
+    }
+
+    @Override
+    public boolean getLoginStatus() {
+        return mSPManager.getLoginStatus();
+    }
+
+    @Override
+    public void connectServer(final LeanCallback callback) {
+        // 与服务器连接，启动PushService与服务器保持通讯
+        AVIMClient.getInstance(getCurrentUserId()).open(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVIMException e) {
+                handleCallback(null, e, callback, null);
+            }
+        });
     }
 
     @Override
@@ -82,7 +104,7 @@ public class UserModel extends BaseModel implements IUserModel {
 
     @Override
     public User getCurrentUser() {
-        return mUserManager.getCurrentUser();
+        return mSPManager.getCurrentUser();
     }
 
 
@@ -91,17 +113,45 @@ public class UserModel extends BaseModel implements IUserModel {
         final AVUser avUser = User.convertToAVUser(getCurrentUser());
         avUser.put(Constant.User.NICKNAME, user.getNickname());
         avUser.put(Constant.User.SIGNATURE, user.getSignature());
-        avUser.put(Constant.User.AVATAR, user.getAvatar());
-        mUserManager.saveUserWithAvatar(avUser, user.getAvatar(), new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
-                    @Override
-                    public void call(Object data) {
-                        LSPUtils.put(Constant.PreferenceKey.KEY_CURRENT_USER, new Gson().toJson(User.convertToUser(avUser)));
-                    }
-                });
-            }
-        });
+        if (TextUtils.isEmpty(user.getAvatar()) || !LFileUtils.isFileExist(user.getAvatar())) {
+            mUserManager.updateUser(avUser, new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
+                        @Override
+                        public void call(Object data) {
+                            mSPManager.saveCurrentUser(User.convertToUser(avUser));
+                        }
+                    });
+                }
+            });
+        } else {
+            mUserManager.updateUserWithAvatar(avUser, user.getAvatar(), new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
+                        @Override
+                        public void call(Object data) {
+                            mSPManager.saveCurrentUser(User.convertToUser(avUser));
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean getExitAppStatus() {
+        return mSPManager.getExitAppStatus();
+    }
+
+    @Override
+    public void enterApp() {
+        mSPManager.enterApp();
+    }
+
+    @Override
+    public void exitApp() {
+        mSPManager.exitApp();
     }
 }

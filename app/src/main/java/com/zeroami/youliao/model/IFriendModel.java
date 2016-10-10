@@ -1,6 +1,7 @@
 package com.zeroami.youliao.model;
 
 import com.zeroami.commonlib.mvp.LMvpModel;
+import com.zeroami.youliao.bean.AddRequest;
 import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.model.callback.LeanCallback;
 
@@ -36,11 +37,11 @@ public interface IFriendModel extends LMvpModel {
     void sendFriendAddRequest(User toUser, String extra, LeanCallback callback);
 
     /**
-     * 根据账号查找我的好友
-     * @param username
+     * 根据id查找我的好友
+     * @param objectId
      * @param callback
      */
-    void findFriendByUsername(String username,LeanCallback callback);
+    void findFriendById(String objectId, LeanCallback callback);
 
     /**
      * 查找我向某个人发起的朋友添加请求
@@ -76,10 +77,24 @@ public interface IFriendModel extends LMvpModel {
     void markAddRequestsRead();
 
     /**
-     *
+     * 查找朋友添加请求
      * @param skip
      * @param limit
      * @param callback
      */
     void findAddRequests(int skip,int limit,LeanCallback callback);
+
+    /**
+     * 同意朋友添加请求
+     * @param addRequest
+     * @param callback
+     */
+    void agreeAddRequest(AddRequest addRequest,LeanCallback callback);
+
+    /**
+     * 查找我的朋友
+     * @param callback
+     */
+    void findFriends(LeanCallback callback);
+
 }

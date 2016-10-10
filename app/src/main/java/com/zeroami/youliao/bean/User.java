@@ -20,6 +20,7 @@ public class User implements Serializable,Cloneable{
     private String avatar;
 
     public static User convertToUser(AVUser avUser){
+        if(avUser == null) return null;
         User user = new User();
         user.objectId = avUser.getObjectId();
         user.username = avUser.getUsername();
@@ -40,6 +41,7 @@ public class User implements Serializable,Cloneable{
     }
 
     public static List<User> convertToUserList(List<AVUser> avUserList){
+        if(avUserList == null) return null;
         List<User> userList = new ArrayList<>();
         for(AVUser avUser : avUserList){
             userList.add(convertToUser(avUser));

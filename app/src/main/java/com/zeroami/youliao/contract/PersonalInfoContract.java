@@ -53,6 +53,16 @@ public interface PersonalInfoContract {
          * 更新控件的内容
          */
         void updateView();
+
+        /**
+         * 更改头像
+         */
+        void changeAvatar();
+
+        /**
+         * 跳转到大图页
+         */
+        void gotoImage();
     }
 
     interface Presenter extends LMvpPresenter<View> {
@@ -66,9 +76,12 @@ public interface PersonalInfoContract {
          */
         void doAbandonChange();
 
+        void doAvatarClick();
+
         /**
          * 处理保存修改
          */
         void doSaveChange(User user);
+
     }
 }

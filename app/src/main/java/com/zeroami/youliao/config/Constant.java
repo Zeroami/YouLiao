@@ -7,11 +7,6 @@ package com.zeroami.youliao.config;
  */
 public class Constant {
 
-    public static final class PreferenceKey{
-        public static final String KEY_IS_LOGIN = "is_login";
-        public static final String KEY_CURRENT_USER = "current_user";
-    }
-
     public static final class User {
         public static final String USERNAME = "username";
         public static final String NICKNAME = "nickname";
@@ -29,14 +24,19 @@ public class Constant {
         public static final String EXTRA = "extra";
     }
 
+    public static final String FOLLOWEE = "followee";
+    public static final String FOLLOWER = "follower";
+
     public static final int CODE_USERNAME_IS_EXIST = 202;   // 用户名已存在
 
     public static final int SIGNATURE_MAX_WORD_NUM = 120;   // 个性签名的最大字数
 
+    public static final int INIT_SIZE = 20;      // 初始大小
     public static final int PAGE_SIZE = 10;      // 每页大小
 
     public static final class Action{
         public static final String ADD_FRIEND = "com.zeroami.youliao.action.ADD_FRIEND";
+        public static final String NEW_FRIEND_ADDED = "com.zeroami.youliao.action.NEW_FRIEND_ADDED";
     }
 
 }

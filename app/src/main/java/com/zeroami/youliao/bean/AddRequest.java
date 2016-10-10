@@ -11,7 +11,7 @@ import java.util.List;
  * <p>邮箱：826589183@qq.com</p>
  * <p>描述：好友添加请求</p>
  */
-public class AddRequest{
+public class AddRequest {
     public static final int STATUS_WAIT = 0;    // 等待同意
     public static final int STATUS_DONE = 1;    // 同意
 
@@ -26,7 +26,8 @@ public class AddRequest{
     private User fromUser;
     private User toUser;
 
-    public static AddRequest convertToAddRequest(AVObject avObject){
+    public static AddRequest convertToAddRequest(AVObject avObject) {
+        if (avObject == null) return null;
         AddRequest addRequest = new AddRequest();
         addRequest.objectId = avObject.getObjectId();
         addRequest.fromUserId = avObject.getString(Constant.AddRequest.FROM_USER_ID);
@@ -37,28 +38,29 @@ public class AddRequest{
         return addRequest;
     }
 
-    public static AVObject convertToAVObject(AddRequest addRequest){
+    public static AVObject convertToAVObject(AddRequest addRequest) {
         AVObject avObject = new AVObject(Constant.AddRequest.CLASS_NAME);
         avObject.setObjectId(addRequest.objectId);
         avObject.put(Constant.AddRequest.FROM_USER_ID, addRequest.fromUserId);
-        avObject.put(Constant.AddRequest.TO_USER_ID,addRequest.toUserId);
-        avObject.put(Constant.AddRequest.STATUS,addRequest.status);
-        avObject.put(Constant.AddRequest.IS_READ,addRequest.isRead);
-        avObject.put(Constant.AddRequest.EXTRA,addRequest.extra);
+        avObject.put(Constant.AddRequest.TO_USER_ID, addRequest.toUserId);
+        avObject.put(Constant.AddRequest.STATUS, addRequest.status);
+        avObject.put(Constant.AddRequest.IS_READ, addRequest.isRead);
+        avObject.put(Constant.AddRequest.EXTRA, addRequest.extra);
         return avObject;
     }
 
-    public static List<AddRequest> convertToAddRequestList(List<AVObject> avObjectList){
+    public static List<AddRequest> convertToAddRequestList(List<AVObject> avObjectList) {
+        if (avObjectList == null) return null;
         List<AddRequest> addRequestList = new ArrayList<>();
-        for (AVObject avObject : avObjectList){
+        for (AVObject avObject : avObjectList) {
             addRequestList.add(convertToAddRequest(avObject));
         }
         return addRequestList;
     }
 
-    public static List<AVObject> convertToAVObjecyList(List<AddRequest> addRequestList){
+    public static List<AVObject> convertToAVObjectList(List<AddRequest> addRequestList) {
         List<AVObject> avObjectList = new ArrayList<>();
-        for (AddRequest addRequest : addRequestList){
+        for (AddRequest addRequest : addRequestList) {
             avObjectList.add(convertToAVObject(addRequest));
         }
         return avObjectList;

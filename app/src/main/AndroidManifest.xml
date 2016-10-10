@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".app.YouLiaoApplication"
@@ -43,11 +44,16 @@
         <activity android:name=".view.activity.AddFriendActivity" />
         <!-- 朋友详情页 -->
         <activity android:name=".view.activity.FriendDetailActivity" />
+        <!-- 新的朋友页 -->
+        <activity
+            android:name=".view.activity.NewFriendActivity"
+            android:launchMode="singleTask" />
 
         <!-- 自定义推送接受者 -->
         <receiver android:name=".receiver.PushBroadcaseReceiver">
             <intent-filter>
                 <action android:name="com.zeroami.youliao.action.ADD_FRIEND" />
+                <action android:name="com.zeroami.youliao.action.NEW_FRIEND_ADDED" />
             </intent-filter>
         </receiver>
         <!-- 通知分发者 -->
@@ -81,7 +87,14 @@
 
 
         <!-- 非自定义区域End -->
-        <activity android:name=".view.activity.NewFriendActivity"></activity>
+
+
+        <!-- 大图页 -->
+        <activity
+            android:name=".view.activity.ImageActivity"
+            android:theme="@style/ContentAnimationTheme" />
+        <!-- 聊天页-->
+        <activity android:name=".view.activity.ChatActivity"></activity>
     </application>
 
 </manifest>

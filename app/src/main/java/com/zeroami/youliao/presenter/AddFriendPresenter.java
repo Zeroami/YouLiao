@@ -80,7 +80,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
 
             @Override
             public void onError(int code, AVException e) {
-                getMvpView().showToast(LRUtils.getString(R.string.operate_failure));
+                getMvpView().showToast(LRUtils.getString(R.string.load_failure));
             }
         });
 
@@ -98,7 +98,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
         getMvpView().hideList();
         getMvpView().hideEmpty();
         getMvpView().showLoading();
-        getMvpModel().findUsersByNickname(mNickname, 0, Constant.PAGE_SIZE, new LeanCallback<List<User>>() {
+        getMvpModel().findUsersByNickname(mNickname, 0, Constant.INIT_SIZE, new LeanCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> data) {
                 getMvpView().hideLoading();
@@ -112,7 +112,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
 
             @Override
             public void onError(int code, AVException e) {
-                getMvpView().showToast(LRUtils.getString(R.string.operate_failure));
+                getMvpView().showToast(LRUtils.getString(R.string.load_failure));
             }
         });
     }
@@ -135,7 +135,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
             public void onError(int code, AVException e) {
                 mCurrentPage--;
                 getMvpView().appendFriendList(new ArrayList<User>());
-                getMvpView().showToast(LRUtils.getString(R.string.operate_failure));
+                getMvpView().showToast(LRUtils.getString(R.string.load_failure));
             }
         });
     }
