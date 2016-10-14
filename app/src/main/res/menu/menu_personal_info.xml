@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_edit"
         android:orderInCategory="100"
-        android:icon="@mipmap/ic_edit"
+        android:icon="@drawable/ic_edit"
         android:title=""
         app:showAsAction="always" />
 </menu>

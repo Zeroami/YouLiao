@@ -87,7 +87,7 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
     }
 
     private void initToolbar() {
-        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");
         tvTitle.setText(LRUtils.getString(R.string.add_friend));
         setSupportActionBar(toolbar);

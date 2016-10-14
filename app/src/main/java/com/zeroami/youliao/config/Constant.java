@@ -43,10 +43,10 @@ public class Constant {
     public static final int INIT_SIZE = 20;      // 初始大小
     public static final int PAGE_SIZE = 10;      // 每页大小
 
-    public static final int EXPRESS_TOTAL_COUNT = 74;
-    public static final int EXPRESS_COL_SIZE = 7;
-    public static final int EXPRESS_ROW_SIZE = 3;
-    public static final String EXPRESS_PREFIX = "emoji_";
+    public static final int EXPRESSION_TOTAL_COUNT = 74;
+    public static final int EXPRESSION_COL_SIZE = 7;
+    public static final int EXPRESSION_ROW_SIZE = 3;
+    public static final String EXPRESSION_PREFIX = "emoji_";
 
     public static final class Action{
         public static final String ADD_FRIEND = "com.zeroami.youliao.action.ADD_FRIEND";

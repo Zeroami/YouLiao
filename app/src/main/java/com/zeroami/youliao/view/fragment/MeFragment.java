@@ -81,7 +81,7 @@ public class MeFragment extends BaseMvpFragment<MeContract.Presenter> implements
     private void initView() {
         if (mCurrentUser != null){
             if (TextUtils.isEmpty(mCurrentUser.getAvatar())) {
-                cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+                cvCircleAvatar.setImageResource(R.drawable.img_default_face);
             } else {
                 Glide.with(this).load(mCurrentUser.getAvatar()).centerCrop().into(cvCircleAvatar);
             }

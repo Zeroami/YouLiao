@@ -250,10 +250,10 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     private void initBottomNavigation() {
 
         // Create items
-        AHBottomNavigationItem chatItem = new AHBottomNavigationItem(LRUtils.getString(R.string.chat), R.mipmap.ic_chat);
-        AHBottomNavigationItem contactsItem = new AHBottomNavigationItem(LRUtils.getString(R.string.contacts), R.mipmap.ic_contacts);
-        AHBottomNavigationItem topicItem = new AHBottomNavigationItem(LRUtils.getString(R.string.topic), R.mipmap.ic_topic);
-        AHBottomNavigationItem meItem = new AHBottomNavigationItem(LRUtils.getString(R.string.me), R.mipmap.ic_me);
+        AHBottomNavigationItem chatItem = new AHBottomNavigationItem(LRUtils.getString(R.string.chat), R.drawable.ic_chat);
+        AHBottomNavigationItem contactsItem = new AHBottomNavigationItem(LRUtils.getString(R.string.contacts), R.drawable.ic_contacts);
+        AHBottomNavigationItem topicItem = new AHBottomNavigationItem(LRUtils.getString(R.string.topic), R.drawable.ic_topic);
+        AHBottomNavigationItem meItem = new AHBottomNavigationItem(LRUtils.getString(R.string.me), R.drawable.ic_me);
 
         // Add items
         cvBottomNavigation.addItem(chatItem);
@@ -414,7 +414,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
         mCurrentUser = currentUser;
         LL.d(currentUser);
         if (TextUtils.isEmpty(currentUser.getAvatar())) {
-            cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+            cvCircleAvatar.setImageResource(R.drawable.img_default_face);
         } else {
             Glide.with(this).load(currentUser.getAvatar()).centerCrop().into(cvCircleAvatar);
         }

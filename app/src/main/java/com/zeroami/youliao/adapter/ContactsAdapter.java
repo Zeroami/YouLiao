@@ -34,7 +34,7 @@ public class ContactsAdapter extends BaseQuickAdapter<User> {
                 .setText(R.id.tv_signature, TextUtils.isEmpty(user.getSignature()) ? LRUtils.getString(R.string.friend_without_signature) : user.getSignature());
         LCircleImageView cvCircleAvatar = baseViewHolder.getView(R.id.cv_circle_avatar);
         if (TextUtils.isEmpty(user.getAvatar())) {
-             cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+             cvCircleAvatar.setImageResource(R.drawable.img_default_face);
         } else {
             Glide.with(mContext).load(user.getAvatar()).centerCrop().into(cvCircleAvatar);
         }

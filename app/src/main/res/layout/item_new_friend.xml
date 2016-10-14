@@ -55,7 +55,7 @@
             android:id="@+id/cv_circle_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@mipmap/img_default_face"
+            android:src="@drawable/img_default_face"
             app:border_color="@color/windowBackground"
             app:border_width="@dimen/dp_1" />
 

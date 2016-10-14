@@ -8,5 +8,5 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_margin="10dp"
-        android:src="@mipmap/emoji_0"/>
+        android:src="@drawable/emoji_0"/>
 </LinearLayout>

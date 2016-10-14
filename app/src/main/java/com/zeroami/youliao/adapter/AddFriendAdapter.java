@@ -31,7 +31,7 @@ public class AddFriendAdapter extends BaseQuickAdapter<User> {
                 .setText(R.id.tv_nickname, String.format(LRUtils.getString(R.string.format_nickname), user.getNickname()));
         LCircleImageView cvCircleAvatar = baseViewHolder.getView(R.id.cv_circle_avatar);
         if (TextUtils.isEmpty(user.getAvatar())) {
-            cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+            cvCircleAvatar.setImageResource(R.drawable.img_default_face);
         } else {
             Glide.with(mContext).load(user.getAvatar()).centerCrop().into(cvCircleAvatar);
         }

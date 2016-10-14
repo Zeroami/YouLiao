@@ -56,9 +56,9 @@ public class ImageActivity extends LBaseActivity {
     protected void initialize(Bundle savedInstanceState) {
         setSwipeBackEnable(true);
         if (TextUtils.isEmpty(mImageUrl)){
-            cvImage.setImageResource(R.mipmap.img_default_face);
+            cvImage.setImageResource(R.drawable.img_default_face);
         }else{
-            Glide.with(this).load(mImageUrl).placeholder(R.mipmap.img_placeholder).fitCenter().into(cvImage);
+            Glide.with(this).load(mImageUrl).placeholder(R.drawable.img_placeholder).fitCenter().into(cvImage);
         }
         // 这里指定了被共享的视图元素
         ViewCompat.setTransitionName(cvImage, SHARE_TRANSITION_NAME);

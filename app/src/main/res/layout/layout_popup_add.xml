@@ -24,7 +24,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
-                android:src="@mipmap/ic_person_add" />
+                android:src="@drawable/ic_person_add" />
 
             <TextView
                 android:layout_width="0dp"
@@ -55,7 +55,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
-                android:src="@mipmap/ic_person_add" />
+                android:src="@drawable/ic_person_add" />
 
             <TextView
                 android:layout_width="0dp"
@@ -86,7 +86,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
-                android:src="@mipmap/ic_group_add" />
+                android:src="@drawable/ic_group_add" />
 
             <TextView
                 android:layout_width="0dp"

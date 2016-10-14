@@ -25,7 +25,7 @@
             android:id="@+id/iv_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@mipmap/img_default_face"
+            android:src="@drawable/img_default_face"
             android:scaleType="centerCrop"/>
 
         <LinearLayout
@@ -48,10 +48,10 @@
                 android:textSize="@dimen/dp_12"/>
             <TextView
                 android:id="@+id/tv_message"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:background="@mipmap/bg_chat_recive"
+                android:background="@drawable/bg_chat_recive"
                 android:text="@string/test_message"
                 android:textColor="@color/main_content_text_color_1"
                 android:textSize="@dimen/dp_14"/>

@@ -7,14 +7,14 @@
         android:id="@+id/iv_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/img_splash" />
+        android:background="@drawable/img_splash" />
 
     <ImageView
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:src="@mipmap/img_splash_text" />
+        android:src="@drawable/img_splash_text" />
 
     <TextView
         android:id="@+id/tv_version_name"

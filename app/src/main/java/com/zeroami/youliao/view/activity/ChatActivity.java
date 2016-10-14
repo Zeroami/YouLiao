@@ -32,6 +32,11 @@ import java.util.List;
 
 import butterknife.Bind;
 
+/**
+ * <p>作者：Zeroami</p>
+ * <p>邮箱：826589183@qq.com</p>
+ * <p>描述：聊天页</p>
+ */
 public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implements ChatContract.View, View.OnClickListener {
 
     public static final String EXTRA_USER = "extra_user";
@@ -94,7 +99,7 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     }
 
     private void initToolbar() {
-        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");
         tvTitle.setText(mUser.getNickname());
         setSupportActionBar(toolbar);
@@ -144,9 +149,9 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     private void initExpressionViewPager() {
         List<List<Integer>> expressionPageList = new ArrayList<>();
         List<Integer> expressionIdList = new ArrayList<>();
-        for (int i=0;i< Constant.EXPRESS_TOTAL_COUNT;i++){
-            expressionIdList.add(LRUtils.getMipmapId(Constant.EXPRESS_PREFIX + i));
-            if ((i+1) % (Constant.EXPRESS_COL_SIZE * Constant.EXPRESS_ROW_SIZE) == 0){
+        for (int i=0;i< Constant.EXPRESSION_TOTAL_COUNT;i++){
+            expressionIdList.add(LRUtils.getDrawableId(Constant.EXPRESSION_PREFIX + i));
+            if ((i+1) % (Constant.EXPRESSION_COL_SIZE * Constant.EXPRESSION_ROW_SIZE) == 0){
                 expressionPageList.add(expressionIdList);
                 expressionIdList = new ArrayList<>();
             }

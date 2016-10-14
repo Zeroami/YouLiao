@@ -34,7 +34,7 @@ public class AddRequestAdapter extends BaseQuickAdapter<AddRequest> {
                 .addOnClickListener(R.id.tv_agree);
         LCircleImageView cvCircleAvatar = baseViewHolder.getView(R.id.cv_circle_avatar);
         if (TextUtils.isEmpty(addRequest.getFromUser().getAvatar())) {
-            cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+            cvCircleAvatar.setImageResource(R.drawable.img_default_face);
         } else {
             Glide.with(mContext).load(addRequest.getFromUser().getAvatar()).centerCrop().into(cvCircleAvatar);
         }

@@ -94,7 +94,7 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
     }
 
     private void initToolbar() {
-        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");
         tvTitle.setText(LRUtils.getString(R.string.persontal_info));
         setSupportActionBar(toolbar);
@@ -102,7 +102,7 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
 
     private void initView() {
         if (TextUtils.isEmpty(mUser.getAvatar())) {
-            cvCircleAvatar.setImageResource(R.mipmap.img_default_face);
+            cvCircleAvatar.setImageResource(R.drawable.img_default_face);
         } else {
             Glide.with(this).load(mUser.getAvatar()).centerCrop().into(cvCircleAvatar);
         }

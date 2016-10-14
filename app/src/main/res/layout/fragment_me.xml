@@ -21,7 +21,7 @@
             android:id="@+id/cv_circle_avatar"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:src="@mipmap/img_default_face"
+            android:src="@drawable/img_default_face"
             app:border_color="@color/windowBackground"
             app:border_width="@dimen/dp_1" />
 
@@ -70,7 +70,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_qrcode_black"/>
+            android:src="@drawable/ic_qrcode_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_photo_black"/>
+            android:src="@drawable/ic_photo_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -132,7 +132,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_collection_black"/>
+            android:src="@drawable/ic_collection_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -160,7 +160,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_settings_black"/>
+            android:src="@drawable/ic_settings_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -188,7 +188,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_exit_black"/>
+            android:src="@drawable/ic_exit_black"/>
 
         <TextView
             android:layout_width="wrap_content"

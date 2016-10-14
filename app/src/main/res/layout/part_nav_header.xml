@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/header_area_height"
-    android:background="@mipmap/img_nav_header"
+    android:background="@drawable/img_nav_header"
     android:orientation="vertical"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -37,7 +37,7 @@
         android:layout_height="72dp"
         android:layout_above="@id/tv_nickname"
         android:layout_marginBottom="16dp"
-        android:src="@mipmap/img_default_face" />
+        android:src="@drawable/img_default_face" />
 
     <TextView
         android:id="@+id/tv_username"

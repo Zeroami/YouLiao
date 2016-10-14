@@ -60,7 +60,7 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
                     PendingIntent pi = PendingIntent.getBroadcast(context,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                     // 发送通知
                     Notification notification = new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.mipmap.ic_logo)
+                            .setSmallIcon(R.drawable.ic_logo)
                             .setTicker(alertStr)
                             .setWhen(System.currentTimeMillis())
                             .setContentTitle(LRUtils.getString(R.string.app_name))

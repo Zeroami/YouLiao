@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.utils.LT;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.config.Constant;
@@ -57,7 +56,7 @@ public class ExpressionPageAdapter extends PagerAdapter{
     }
 
     private void initRecyclerView(RecyclerView recyclerView,List<Integer> expressionIdList) {
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, Constant.EXPRESS_COL_SIZE));
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, Constant.EXPRESSION_COL_SIZE));
         recyclerView.setAdapter(new ExpressionAdapter(expressionIdList));
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override

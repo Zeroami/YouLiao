@@ -5,22 +5,22 @@
         <item
             android:id="@+id/nav_topic_center"
             android:checkable="false"
-            android:icon="@mipmap/ic_topic"
+            android:icon="@drawable/ic_topic"
             android:title="@string/topic_center"/>
         <item
             android:id="@+id/nav_my_focus"
             android:checkable="false"
-            android:icon="@mipmap/ic_focus"
+            android:icon="@drawable/ic_focus"
             android:title="@string/my_focus"/>
         <item
             android:id="@+id/nav_my_photos"
             android:checkable="false"
-            android:icon="@mipmap/ic_photo"
+            android:icon="@drawable/ic_photo"
             android:title="@string/my_photos"/>
         <item
             android:id="@+id/nav_my_collection"
             android:checkable="false"
-            android:icon="@mipmap/ic_collection"
+            android:icon="@drawable/ic_collection"
             android:title="@string/my_collection"/>
     </group>
 
@@ -28,11 +28,11 @@
         <menu>
             <item
                 android:id="@+id/nav_about_author"
-                android:icon="@mipmap/ic_about"
+                android:icon="@drawable/ic_about"
                 android:title="@string/about_author"/>
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@mipmap/ic_exit"
+                android:icon="@drawable/ic_exit"
                 android:title="@string/logout"/>
         </menu>
     </item>

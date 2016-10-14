@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_qrcode_black"/>
+            android:src="@drawable/ic_qrcode_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_qrcode_black"/>
+            android:src="@drawable/ic_qrcode_black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@mipmap/ic_qrcode_black"/>
+            android:src="@drawable/ic_qrcode_black"/>
 
         <TextView
             android:layout_width="wrap_content"

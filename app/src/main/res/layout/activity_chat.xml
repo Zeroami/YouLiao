@@ -83,28 +83,28 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_expression_black" />
+                android:src="@drawable/ic_expression_black" />
 
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_photo_black" />
+                android:src="@drawable/ic_photo_black" />
 
             <ImageView
                 android:id="@+id/iv_voice"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_voice_black" />
+                android:src="@drawable/ic_voice_black" />
 
             <ImageView
                 android:id="@+id/iv_video"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_video_black" />
+                android:src="@drawable/ic_video_black" />
         </LinearLayout>
 
         <FrameLayout

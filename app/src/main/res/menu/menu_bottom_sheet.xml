@@ -4,17 +4,17 @@
         <item
             android:id="@+id/bs_check_update"
             android:checkable="false"
-            android:icon="@mipmap/ic_cloud_download_black"
+            android:icon="@drawable/ic_cloud_download_black"
             android:title="@string/check_update"/>
         <item
             android:id="@+id/bs_exit_app"
             android:checkable="false"
-            android:icon="@mipmap/ic_exit_black"
+            android:icon="@drawable/ic_exit_black"
             android:title="@string/exit_app"/>
         <item
             android:id="@+id/bs_cancel"
             android:checkable="false"
-            android:icon="@mipmap/ic_close_black"
+            android:icon="@drawable/ic_close_black"
             android:title="@string/cancel"/>
     </group>
 </menu>
