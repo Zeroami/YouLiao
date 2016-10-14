@@ -5,6 +5,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
+import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FollowCallback;
 import com.avos.avoscloud.SaveCallback;
@@ -23,11 +24,6 @@ import java.util.List;
 public class AddRequestManager {
     private static volatile AddRequestManager sInstance;
 
-    /**
-     * 用户端未读的邀请消息的数量
-     */
-    private int unreadAddRequestsCount = 0;
-
     private AddRequestManager() {
     }
 
@@ -43,29 +39,6 @@ public class AddRequestManager {
     }
 
     /**
-     * 是否有未读的消息
-     * @return
-     */
-    public boolean hasUnreadAddRequests() {
-        return unreadAddRequestsCount > 0;
-    }
-
-    /**
-     * 获取未读请求数量
-     * @return
-     */
-    public int getUnreadAddRequestsCount() {
-        return unreadAddRequestsCount;
-    }
-
-    /**
-     * 推送过来时自增
-     */
-    public void unreadAddRequestsIncrement() {
-        ++unreadAddRequestsCount;
-    }
-
-    /**
      * 从 server 获取未读消息的数量
      * @param countCallback
      */
@@ -77,7 +50,6 @@ public class AddRequestManager {
         addRequestAVQuery.countInBackground(new CountCallback() {
             @Override
             public void done(int i, AVException e) {
-                unreadAddRequestsCount = i;
                 if (null != countCallback) {
                     countCallback.done(i, e);
                 }
@@ -87,8 +59,9 @@ public class AddRequestManager {
 
     /**
      * 标记消息为已读，标记完后会刷新未读消息数量
+     * @param saveCallback
      */
-    public void markAddRequestsRead() {
+    public void markAddRequestsRead(final SaveCallback saveCallback) {
         AVQuery<AVObject> addRequestAVQuery = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
         addRequestAVQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
         addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());
@@ -96,18 +69,11 @@ public class AddRequestManager {
         addRequestAVQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                if (e == null){
+                if (e == null) {
                     for (AVObject avObject : list) {
                         avObject.put(Constant.AddRequest.IS_READ, true);
                     }
-                    AVObject.saveAllInBackground(list, new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            if (e == null) {
-                                countUnreadAddRequests(null);
-                            }
-                        }
-                    });
+                    AVObject.saveAllInBackground(list, saveCallback);
                 }
             }
         });
@@ -181,6 +147,41 @@ public class AddRequestManager {
         addRequest.setExtra(extra);
         addRequest.setIsRead(false);
         AddRequest.convertToAVObject(addRequest).saveInBackground(saveCallback);
+    }
+
+    /**
+     * 删除请求
+     * @param friendId
+     */
+    public void deleteAddRequest(String friendId){
+        // 1、我发起的添加请求
+        AVQuery<AVObject> q = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
+        q.whereEqualTo(Constant.AddRequest.FROM_USER_ID, UserManager.getInstance().getCurrentUserId());
+        q.whereEqualTo(Constant.AddRequest.TO_USER_ID, friendId);
+        q.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    if (list.size() > 0) {
+                        list.get(0).deleteInBackground();
+                    }
+                }
+            }
+        });
+        // 2、对方发起的添加请求
+        AVQuery<AVObject> q1 = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
+        q1.whereEqualTo(Constant.AddRequest.FROM_USER_ID, friendId);
+        q1.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());
+        q1.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    if (list.size() > 0) {
+                        list.get(0).deleteInBackground();
+                    }
+                }
+            }
+        });
     }
 
 }

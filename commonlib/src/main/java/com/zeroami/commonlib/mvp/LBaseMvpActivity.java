@@ -56,7 +56,7 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
     }
 
     @Override
-    public void showToast(CharSequence text) {
+    public void showMessage(CharSequence text) {
         LT.show(text);
     }
 

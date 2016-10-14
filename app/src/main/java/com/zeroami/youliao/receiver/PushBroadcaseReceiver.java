@@ -34,15 +34,20 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         LL.d(action);
-        receivePush(context, intent);
+        if (action.equals(Constant.Action.DELETE_FRIEND)) {
+            receivePushWithoutNotification(intent);
+        } else {
+            receivePushWithNotification(context, intent);
+        }
     }
 
+
     /**
-     * 接收到推送信息
+     * 接收到带通知的推送信息
      * @param context
      * @param intent
      */
-    private void receivePush(Context context, Intent intent){
+    private void receivePushWithNotification(Context context, Intent intent){
         String avosData = intent.getStringExtra(AVOS_DATA);
         if (!TextUtils.isEmpty(avosData)) {
             try {
@@ -74,5 +79,13 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
 
             LRxBus.getDefault().postTag(intent.getAction());    // 发送事件
         }
+    }
+
+
+    /**
+     * 接收到不带通知的推送信息
+     */
+    private void receivePushWithoutNotification(Intent intent) {
+        LRxBus.getDefault().postTag(intent.getAction());    // 发送事件
     }
 }

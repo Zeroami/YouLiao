@@ -1,8 +1,14 @@
 package com.zeroami.youliao.data.local;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.zeroami.commonlib.utils.LSPUtils;
 import com.zeroami.youliao.bean.User;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>作者：Zeroami</p>
@@ -14,6 +20,7 @@ public class SPManager {
     private static final String KEY_IS_LOGIN = "is_login";
     private static final String KEY_IS_EXIT_APP = "is_exit_app";
     private static final String KEY_CURRENT_USER = "current_user";
+    private static final String KEY_CONVERSATION_IDS = "conversation_ids";
 
     private static volatile SPManager sInstace;
 
@@ -91,6 +98,38 @@ public class SPManager {
      */
     public void exitApp() {
         LSPUtils.put(KEY_IS_EXIT_APP, true);
+    }
+
+    /**
+     * 保存会话
+     * @param conversationId
+     */
+    public void saveConversationId(String conversationId){
+        List<String> conversationIds = getConversationIds();
+        conversationIds.add(conversationId);
+        saveConversationIds(conversationIds);
+    }
+
+    /**
+     * 保存会话
+     * @param conversationIds
+     */
+    public void saveConversationIds(List<String> conversationIds){
+        String str = TextUtils.join(",", conversationIds);
+        LSPUtils.put(KEY_CONVERSATION_IDS,str);
+    }
+
+    /**
+     * 获取会话
+     * @return
+     */
+    public List<String> getConversationIds(){
+        String str = LSPUtils.get(KEY_CONVERSATION_IDS,"");
+        if (TextUtils.isEmpty(str)){
+            return new ArrayList<>();
+        }else{
+            return Arrays.asList(str.split(","));
+        }
     }
 
 }

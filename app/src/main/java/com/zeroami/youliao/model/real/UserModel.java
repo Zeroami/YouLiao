@@ -8,9 +8,14 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.zeroami.commonlib.utils.LFileUtils;
+import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 
@@ -23,6 +28,11 @@ import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.IUserModel;
 import com.zeroami.youliao.model.callback.SuccessBeforeCallback;
 import com.zeroami.youliao.utils.RandomUtils;
+import com.zeroami.youliao.utils.StorageUtils;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>作者：Zeroami</p>
@@ -77,6 +87,7 @@ public class UserModel extends BaseModel implements IUserModel {
     @Override
     public void logout() {
         mPushManager.unsubscribePushChannel(User.convertToAVUser(getCurrentUser()));
+        mUserManager.disconnectServer(null);
         mUserManager.logout();
         mSPManager.logout();
     }
@@ -88,13 +99,38 @@ public class UserModel extends BaseModel implements IUserModel {
 
     @Override
     public void connectServer(final LeanCallback callback) {
-        // 与服务器连接，启动PushService与服务器保持通讯
-        AVIMClient.getInstance(getCurrentUserId()).open(new AVIMClientCallback() {
-            @Override
-            public void done(AVIMClient avimClient, AVIMException e) {
-                handleCallback(null, e, callback, null);
-            }
-        });
+       mUserManager.connectServer(new AVIMClientCallback(){
+
+           @Override
+           public void done(final AVIMClient avimClient, AVIMException e) {
+               handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
+                   @Override
+                   public void call(Object data) {
+
+                       StorageUtils.setAVIMClient(avimClient);
+//                        Map map = new HashMap();
+//                        map.put("type", 1);
+//                        avimClient.createConversation(Arrays.asList("57ea21360bd1d0005b177198","57ea214bc4c971005f81a9b5"),"", map,false,true, new AVIMConversationCreatedCallback() {
+//                            @Override
+//                            public void done(AVIMConversation avimConversation, AVIMException e) {
+//                                AVIMTextMessage msg = new AVIMTextMessage();
+//                                msg.setText("啦啦啦！");
+//                                // 发送消息
+//                                avimConversation.sendMessage(msg, new AVIMConversationCallback() {
+//
+//                                    @Override
+//                                    public void done(AVIMException e) {
+//                                        if (e == null) {
+//                                            LL.d( "发送成功！");
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        });
+                   }
+               });
+           }
+       });
     }
 
     @Override

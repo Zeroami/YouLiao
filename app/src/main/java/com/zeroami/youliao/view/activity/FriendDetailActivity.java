@@ -10,13 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.widget.LCircleImageView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.contract.FriendDetailContract;
-import com.zeroami.youliao.presenter.FriendDetailPresenter;
+import com.zeroami.youliao.contract.activity.FriendDetailContract;
+import com.zeroami.youliao.presenter.activity.FriendDetailPresenter;
 
 import butterknife.Bind;
 import me.drakeet.materialdialog.MaterialDialog;
@@ -48,6 +49,8 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     TextView tvSendMessage;
     @Bind(R.id.tv_already_send_request_tips)
     TextView tvAlreadySendRequestTips;
+    @Bind(R.id.tv_delete_friend)
+    TextView tvDeleteFriend;
 
     private User mUser;
     private String mExtra = "";
@@ -108,6 +111,7 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
         cvCircleAvatar.setOnClickListener(this);
         tvAddFriend.setOnClickListener(this);
         tvSendMessage.setOnClickListener(this);
+        tvDeleteFriend.setOnClickListener(this);
     }
 
     @Override
@@ -127,6 +131,12 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
                 break;
             case R.id.tv_add_friend:
                 getMvpPresenter().doEditExtra();
+                break;
+            case R.id.tv_send_message:
+                getMvpPresenter().doSendMessage();
+                break;
+            case R.id.tv_delete_friend:
+                getMvpPresenter().doDeleteFriend();
                 break;
         }
     }
@@ -196,6 +206,16 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     }
 
     @Override
+    public void showDeleteFriend() {
+        tvDeleteFriend.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDeleteFriend() {
+        tvDeleteFriend.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showAlreadSendRequestTips() {
         tvAlreadySendRequestTips.setVisibility(View.VISIBLE);
     }
@@ -208,5 +228,12 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
     @Override
     public void gotoImage() {
         ImageActivity.launch(this,cvCircleAvatar,mUser.getAvatar());
+    }
+
+    @Override
+    public void gotoChat() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ChatActivity.EXTRA_USER,mUser);
+        LPageUtils.startActivity(this, ChatActivity.class, bundle, false);
     }
 }

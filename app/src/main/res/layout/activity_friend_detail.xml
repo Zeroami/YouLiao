@@ -167,6 +167,23 @@
             android:visibility="gone" />
 
         <TextView
+            android:id="@+id/tv_delete_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_list_item"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp"
+            android:text="@string/delete_friend"
+            android:textColor="@color/main_content_text_color"
+            android:textSize="@dimen/dp_14"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tv_already_send_request_tips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

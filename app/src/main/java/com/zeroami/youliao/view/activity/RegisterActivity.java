@@ -8,8 +8,8 @@ import android.widget.EditText;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
-import com.zeroami.youliao.contract.RegisterContract;
-import com.zeroami.youliao.presenter.RegisterPresenter;
+import com.zeroami.youliao.contract.activity.RegisterContract;
+import com.zeroami.youliao.presenter.activity.RegisterPresenter;
 
 import butterknife.Bind;
 import me.drakeet.materialdialog.MaterialDialog;

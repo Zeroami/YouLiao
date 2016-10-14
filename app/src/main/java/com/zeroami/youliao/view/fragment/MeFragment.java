@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.utils.LT;
@@ -16,9 +15,8 @@ import com.zeroami.commonlib.widget.LCircleImageView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpFragment;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.config.Constant;
-import com.zeroami.youliao.contract.MeContract;
-import com.zeroami.youliao.presenter.MePresenter;
+import com.zeroami.youliao.contract.fragment.MeContract;
+import com.zeroami.youliao.presenter.fragment.MePresenter;
 import com.zeroami.youliao.view.activity.LoginActivity;
 import com.zeroami.youliao.view.activity.PersonalInfoActivity;
 

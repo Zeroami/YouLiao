@@ -19,6 +19,7 @@ public class LRUtils {
     public static final String COLOR = "color";
     public static final String DIMEN = "dimen";
     public static final String DRAWABLE = "drawable";
+    public static final String MIPMAP = "mipmap";
     public static final String ID = "id";
     public static final String LAYOUT = "layout";
     public static final String MENU = "menu";
@@ -153,6 +154,24 @@ public class LRUtils {
                     .forName(
                             CommonLib.getContext().getPackageName() + POINT + R + JOIN
                                     + DRAWABLE).getDeclaredField(name)
+                    .get(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
+     * 根据字符串获取Id
+     * @param name
+     * @return
+     */
+    public static int getMipmapId(String name) {
+        try {
+            return (Integer) Class
+                    .forName(
+                            CommonLib.getContext().getPackageName() + POINT + R + JOIN
+                                    + MIPMAP).getDeclaredField(name)
                     .get(null);
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,15 +17,14 @@ import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.recycleview.LAutoLoadOnScrollListener;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LRUtils;
-import com.zeroami.commonlib.utils.LT;
 import com.zeroami.commonlib.utils.LUtils;
 import com.zeroami.commonlib.widget.LCircleProgressView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.AddFriendAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.contract.AddFriendContract;
-import com.zeroami.youliao.presenter.AddFriendPresenter;
+import com.zeroami.youliao.contract.activity.AddFriendContract;
+import com.zeroami.youliao.presenter.activity.AddFriendPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,8 +207,8 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
 
     @Override
     public void hideInputMethod() {
-        LUtils.closeInputMethod(etUsername);
-        LUtils.closeInputMethod(etNickname);
+        LUtils.hideInputMethod(etUsername);
+        LUtils.hideInputMethod(etNickname);
     }
 
     @Override

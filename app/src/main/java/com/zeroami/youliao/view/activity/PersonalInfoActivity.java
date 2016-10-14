@@ -13,22 +13,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
-import com.zeroami.commonlib.utils.LT;
 import com.zeroami.commonlib.widget.LCircleImageView;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.config.Constant;
-import com.zeroami.youliao.contract.PersonalInfoContract;
-import com.zeroami.youliao.presenter.PersonalInfoPresenter;
+import com.zeroami.youliao.contract.activity.PersonalInfoContract;
+import com.zeroami.youliao.presenter.activity.PersonalInfoPresenter;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.drakeet.materialdialog.MaterialDialog;
 import me.iwf.photopicker.PhotoPicker;
 

@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.utils.LThreadUtils;
@@ -21,7 +22,6 @@ import com.zeroami.youliao.model.IFriendModel;
 import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.callback.SuccessBeforeCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -84,9 +84,8 @@ public class FriendModel extends BaseModel implements IFriendModel {
     }
 
     @Override
-    public void findFriendById(String objectId, final LeanCallback callback) {
-        AVUser avUser = mUserManager.getCurrentUser();
-        mUserManager.findFriendById(avUser, objectId, new FindCallback<AVUser>() {
+    public void findFriendByObjectId(String objectId, final LeanCallback callback) {
+        mUserManager.findFriendByObjectId(objectId, new FindCallback<AVUser>() {
             @Override
             public void done(List<AVUser> list, AVException e) {
                 handleCallback(User.convertToUserList(list), e, callback, null);
@@ -115,23 +114,13 @@ public class FriendModel extends BaseModel implements IFriendModel {
     }
 
     @Override
-    public int getUnreadAddRequestsCount() {
-        return mAddRequestManager.getUnreadAddRequestsCount();
-    }
-
-    @Override
-    public void unreadAddRequestsIncrement() {
-        mAddRequestManager.unreadAddRequestsIncrement();
-    }
-
-    @Override
-    public boolean hasUnreadAddRequests() {
-        return mAddRequestManager.hasUnreadAddRequests();
-    }
-
-    @Override
-    public void markAddRequestsRead() {
-        mAddRequestManager.markAddRequestsRead();
+    public void markAddRequestsRead(final LeanCallback callback) {
+        mAddRequestManager.markAddRequestsRead(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleCallback(null,e,callback,null);
+            }
+        });
     }
 
     @Override
@@ -187,6 +176,7 @@ public class FriendModel extends BaseModel implements IFriendModel {
                 handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
                     @Override
                     public void call(Object data) {
+                        LRxBus.getDefault().postTag(Constant.Action.NEW_FRIEND_ADDED);  // 发送一个事件告诉自己有新朋友被添加
                         // 发送一条推送告诉对方，我同意添加了你
                         mPushManager.pushMessage(addRequest.getFromUserId(),
                                 String.format(LRUtils.getString(R.string.format_agree_add_request), mSPManager.getCurrentUser().getNickname()),
@@ -203,6 +193,25 @@ public class FriendModel extends BaseModel implements IFriendModel {
             @Override
             public void done(final List<AVUser> list, AVException e) {
                 handleCallback(User.convertToUserList(list),e,callback,null);
+            }
+        });
+    }
+
+    @Override
+    public void deleteFriend(final String friendId, final LeanCallback callback) {
+        mUserManager.deleteFriend(friendId, new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
+                    @Override
+                    public void call(Object data) {
+                        LRxBus.getDefault().postTag(Constant.Action.DELETE_FRIEND); // 发送一个事件告诉自己有朋友被删除
+                        // 发送一条推送告诉对方，我删除了你
+                        mPushManager.pushMessage(friendId,
+                                "push",
+                                Constant.Action.DELETE_FRIEND);
+                    }
+                });
             }
         });
     }

@@ -72,7 +72,7 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
     }
 
     @Override
-    public void showToast(CharSequence text) {
+    public void showMessage(CharSequence text) {
         LT.show(text);
     }
 

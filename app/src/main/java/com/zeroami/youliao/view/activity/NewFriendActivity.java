@@ -11,17 +11,14 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.recycleview.LAutoLoadOnScrollListener;
-import com.zeroami.commonlib.rx.rxbus.LRxBus;
-import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.AddRequestAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.AddRequest;
-import com.zeroami.youliao.config.Constant;
-import com.zeroami.youliao.contract.NewFriendContract;
-import com.zeroami.youliao.presenter.NewFriendPresenter;
+import com.zeroami.youliao.contract.activity.NewFriendContract;
+import com.zeroami.youliao.presenter.activity.NewFriendPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +145,6 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
     @Override
     public void notifyDataSetChanged() {
         mAdapter.notifyDataSetChanged();
-        LRxBus.getDefault().postTag(Constant.Action.NEW_FRIEND_ADDED);
     }
 
     @Override

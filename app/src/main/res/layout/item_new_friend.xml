@@ -32,7 +32,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:clickable="true"
-                android:background="@drawable/bg_agree_add_request"
+                android:background="@drawable/bg_round_btn_black"
                 android:text="@string/agree"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dp_14"/>

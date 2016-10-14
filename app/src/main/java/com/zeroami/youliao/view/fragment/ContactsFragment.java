@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
-import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LT;
 import com.zeroami.commonlib.utils.LViewFinder;
@@ -22,8 +22,9 @@ import com.zeroami.youliao.adapter.ContactsAdapter;
 import com.zeroami.youliao.base.BaseMvpFragment;
 import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.config.Constant;
-import com.zeroami.youliao.contract.ContactsContract;
-import com.zeroami.youliao.presenter.ContactsPresenter;
+import com.zeroami.youliao.contract.fragment.ContactsContract;
+import com.zeroami.youliao.presenter.fragment.ContactsPresenter;
+import com.zeroami.youliao.view.activity.FriendDetailActivity;
 import com.zeroami.youliao.view.activity.MainActivity;
 import com.zeroami.youliao.view.activity.NewFriendActivity;
 
@@ -39,8 +40,8 @@ import butterknife.Bind;
  */
 public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter> implements ContactsContract.View, View.OnClickListener {
 
-    @Bind(R.id.swlRefresh)
-    SwipeRefreshLayout swlRefresh;
+    @Bind(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.rv_friend)
     RecyclerView rvFriend;
 
@@ -52,6 +53,7 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
 
     private ContactsAdapter mAdapter;
     private ArrayList<User> mFriendList;
+    private int mPosition;
 
     public static ContactsFragment newInstance() {
         return new ContactsFragment();
@@ -81,14 +83,14 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     }
 
     private void initSwipeRefreshLayout() {
-        swlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getMvpPresenter().doViewInitialized();
-                swlRefresh.postDelayed(new Runnable() {
+                swipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swlRefresh.setRefreshing(false);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 2000);
             }
@@ -105,25 +107,11 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     private void initRecyclerView() {
         rvFriend.setLayoutManager(new LinearLayoutManager(getAttachActivity()));
         rvFriend.setAdapter(mAdapter);
-        rvFriend.addOnItemTouchListener(new SimpleClickListener() {
+        rvFriend.addOnItemTouchListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                LT.show(i);
-            }
-
-            @Override
-            public void onItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
-            }
-
-            @Override
-            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
-            }
-
-            @Override
-            public void onItemChildLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
+            public void SimpleOnItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                mPosition = i;
+                getMvpPresenter().doFriendClick();
             }
         });
     }
@@ -157,6 +145,13 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
                         onReceiveNewFriendAdded();
                     }
                 });
+        LRxBus.getDefault().toTagObservable(Constant.Action.DELETE_FRIEND)
+                .subscribe(new LRxBusSubscriber<Object>() {
+                    @Override
+                    protected void call(Object o) {
+                        onReceiveDeleteFriend();
+                    }
+                });
     }
 
     /**
@@ -171,6 +166,19 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
      */
     private void onReceiveNewFriendAdded() {
         getMvpPresenter().doReceiveNewFriendAdded();
+    }
+
+    /**
+     * 接收到删除朋友
+     */
+    private void onReceiveDeleteFriend() {
+        getMvpPresenter().doReceiveDeleteFriend();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getMvpPresenter().doOnResume();
     }
 
     @Override
@@ -215,5 +223,12 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     @Override
     public void gotoNewFriend() {
         LPageUtils.startActivity(getAttachActivity(), NewFriendActivity.class, false);
+    }
+
+    @Override
+    public void gotoFriendDetail() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(FriendDetailActivity.EXTRA_USER,mFriendList.get(mPosition));
+        LPageUtils.startActivity(getAttachActivity(), FriendDetailActivity.class, bundle, false);
     }
 }

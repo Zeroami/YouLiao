@@ -52,11 +52,11 @@ public class LUtils {
     }
 
     /**
-     * 关闭输入法
+     * 隐藏输入法
      *
      * @param view
      */
-    public static void closeInputMethod(View view) {
+    public static void hideInputMethod(View view) {
         InputMethodManager imm = (InputMethodManager) CommonLib.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm.isActive()) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

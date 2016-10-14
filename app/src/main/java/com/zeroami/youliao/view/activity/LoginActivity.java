@@ -8,8 +8,8 @@ import android.widget.EditText;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
-import com.zeroami.youliao.contract.LoginContract;
-import com.zeroami.youliao.presenter.LoginPresenter;
+import com.zeroami.youliao.contract.activity.LoginContract;
+import com.zeroami.youliao.presenter.activity.LoginPresenter;
 
 import butterknife.Bind;
 

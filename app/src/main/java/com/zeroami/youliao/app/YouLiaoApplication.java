@@ -1,8 +1,11 @@
 package com.zeroami.youliao.app;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.zeroami.commonlib.app.LBaseApplication;
 import com.zeroami.youliao.BuildConfig;
+import com.zeroami.youliao.data.handler.ChatMessageHandler;
 import com.zeroami.youliao.data.http.PushManager;
 
 /**
@@ -18,6 +21,7 @@ public class YouLiaoApplication extends LBaseApplication{
         //Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
         AVOSCloud.initialize(this, "c1McCc3Q0HqGImWbP2wxcIgg-gzGzoHsz", "ESrhp4jt9ERi5qY8Fm9Fg25W");
         PushManager.getInstance().initialize(this);
+        AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class,new ChatMessageHandler());
     }
 
     @Override

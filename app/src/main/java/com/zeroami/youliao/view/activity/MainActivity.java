@@ -26,7 +26,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.kennyc.bottomsheet.BottomSheet;
-import com.kennyc.bottomsheet.BottomSheetListener;
 import com.zeroami.commonlib.utils.LDisplayUtils;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -38,9 +37,9 @@ import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.MainContentAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.contract.MainContract;
-import com.zeroami.youliao.presenter.MainPresenter;
-import com.zeroami.youliao.view.fragment.ChatFragment;
+import com.zeroami.youliao.contract.activity.MainContract;
+import com.zeroami.youliao.presenter.activity.MainPresenter;
+import com.zeroami.youliao.view.fragment.ChatListFragment;
 import com.zeroami.youliao.view.fragment.ContactsFragment;
 import com.zeroami.youliao.view.fragment.MeFragment;
 import com.zeroami.youliao.view.fragment.TopicFragment;
@@ -90,7 +89,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     private TextView tvNickname;
     private TextView tvSignature;
     private boolean mIsDrawerHeaderViewCreated;
-    private ChatFragment mChatFragment;
+    private ChatListFragment mChatListFragment;
     private ContactsFragment mContactsFragment;
     private TopicFragment mTopicFragment;
     private MeFragment mMeFragment;
@@ -217,11 +216,11 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
 
     private void initData() {
         mFragmentList = new ArrayList<>();
-        mChatFragment = ChatFragment.newInstance();
+        mChatListFragment = ChatListFragment.newInstance();
         mContactsFragment = ContactsFragment.newInstance();
         mTopicFragment = TopicFragment.newInstance();
         mMeFragment = MeFragment.newInstance();
-        mFragmentList.add(mChatFragment);
+        mFragmentList.add(mChatListFragment);
         mFragmentList.add(mContactsFragment);
         mFragmentList.add(mTopicFragment);
         mFragmentList.add(mMeFragment);

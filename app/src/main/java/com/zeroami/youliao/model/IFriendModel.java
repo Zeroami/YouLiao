@@ -41,7 +41,7 @@ public interface IFriendModel extends LMvpModel {
      * @param objectId
      * @param callback
      */
-    void findFriendById(String objectId, LeanCallback callback);
+    void findFriendByObjectId(String objectId, LeanCallback callback);
 
     /**
      * 查找我向某个人发起的朋友添加请求
@@ -57,24 +57,10 @@ public interface IFriendModel extends LMvpModel {
     void countUnreadAddRequests(LeanCallback callback);
 
     /**
-     * 获取新的朋友未读添加请求数
-     */
-    int getUnreadAddRequestsCount();
-
-    /**
-     * 新的朋友未读添加请求加一
-     */
-    void unreadAddRequestsIncrement();
-
-    /**
-     * 是否有未读朋友添加请求
-     */
-    boolean hasUnreadAddRequests();
-
-    /**
      * 标记所有朋友添加请求为已读
+     * @param callback
      */
-    void markAddRequestsRead();
+    void markAddRequestsRead(LeanCallback callback);
 
     /**
      * 查找朋友添加请求
@@ -96,5 +82,12 @@ public interface IFriendModel extends LMvpModel {
      * @param callback
      */
     void findFriends(LeanCallback callback);
+
+    /**
+     * 删除我的朋友
+     * @param friendId
+     * @param callback
+     */
+    void deleteFriend(String friendId, LeanCallback callback);
 
 }

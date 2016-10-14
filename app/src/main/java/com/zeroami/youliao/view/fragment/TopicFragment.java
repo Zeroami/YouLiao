@@ -5,8 +5,7 @@ import android.view.View;
 
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpFragment;
-import com.zeroami.youliao.contract.ChatContract;
-import com.zeroami.youliao.contract.TopicContract;
+import com.zeroami.youliao.contract.fragment.TopicContract;
 
 /**
  * <p>作者：Zeroami</p>

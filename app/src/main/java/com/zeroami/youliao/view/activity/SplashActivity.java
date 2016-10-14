@@ -4,18 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.youliao.R;
 import com.zeroami.youliao.base.BaseMvpActivity;
-import com.zeroami.youliao.contract.SplashContract;
-import com.zeroami.youliao.presenter.SplashPresenter;
+import com.zeroami.youliao.contract.activity.SplashContract;
+import com.zeroami.youliao.presenter.activity.SplashPresenter;
 
 import butterknife.Bind;
 

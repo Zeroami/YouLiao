@@ -21,6 +21,6 @@ public interface LMvpView {
      * 显示提示信息
      * @param text
      */
-    void showToast(CharSequence text);
+    void showMessage(CharSequence text);
 
 }

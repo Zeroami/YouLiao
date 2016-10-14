@@ -20,5 +20,6 @@
     <color name="main_content_text_color_2">#9e9e9e</color>
     <color name="tips_remain_word">#f23737</color>
     <color name="black">#000</color>
+    <color name="black_1">#9000</color>
 
 </resources>
