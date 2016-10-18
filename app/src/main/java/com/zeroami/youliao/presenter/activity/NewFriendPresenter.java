@@ -58,7 +58,7 @@ public class NewFriendPresenter extends LBasePresenter<NewFriendContract.View, I
     @Override
     public void doLoadMore() {
         mCurrentPage++;
-        getMvpModel().findAddRequests(mCurrentPage * Constant.PAGE_SIZE, Constant.PAGE_SIZE, new LeanCallback<List<AddRequest>>() {
+        getMvpModel().loadAddRequests(mCurrentPage * Constant.PAGE_SIZE, Constant.PAGE_SIZE, new LeanCallback<List<AddRequest>>() {
             @Override
             public void onSuccess(List<AddRequest> data) {
                 if (data.size() > 0) {
@@ -105,7 +105,7 @@ public class NewFriendPresenter extends LBasePresenter<NewFriendContract.View, I
      * 初始化添加请求列表
      */
     private void initAddRequestList() {
-        getMvpModel().findAddRequests(0, Constant.INIT_SIZE, new LeanCallback<List<AddRequest>>() {
+        getMvpModel().loadAddRequests(0, Constant.INIT_SIZE, new LeanCallback<List<AddRequest>>() {
             @Override
             public void onSuccess(List<AddRequest> data) {
                 getMvpView().updateAddRequestList(data);

@@ -114,7 +114,7 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
         rvFriend.addOnItemTouchListener(new SimpleClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                getMvpPresenter().doListItemClick(i);
+                getMvpPresenter().doFriendItemClick(i);
             }
 
             @Override
@@ -186,12 +186,12 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
     }
 
     @Override
-    public void showList() {
+    public void showFriendList() {
         rvFriend.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideList() {
+    public void hideFriendList() {
         rvFriend.setVisibility(View.GONE);
     }
 

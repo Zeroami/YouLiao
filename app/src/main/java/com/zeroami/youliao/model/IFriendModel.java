@@ -63,12 +63,12 @@ public interface IFriendModel extends LMvpModel {
     void markAddRequestsRead(LeanCallback callback);
 
     /**
-     * 查找朋友添加请求
+     * 加载朋友添加请求
      * @param skip
      * @param limit
      * @param callback
      */
-    void findAddRequests(int skip,int limit,LeanCallback callback);
+    void loadAddRequests(int skip, int limit, LeanCallback callback);
 
     /**
      * 同意朋友添加请求
@@ -78,10 +78,10 @@ public interface IFriendModel extends LMvpModel {
     void agreeAddRequest(AddRequest addRequest,LeanCallback callback);
 
     /**
-     * 查找我的朋友
+     * 加载我的朋友
      * @param callback
      */
-    void findFriends(LeanCallback callback);
+    void loadFriends(LeanCallback callback);
 
     /**
      * 删除我的朋友

@@ -3,6 +3,7 @@ package com.zeroami.youliao.data.local;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LSPUtils;
 import com.zeroami.youliao.bean.User;
 
@@ -111,25 +112,79 @@ public class SPManager {
     }
 
     /**
-     * 保存会话
+     * 删除会话
+     * @param conversationId
+     */
+    public void removeConversationId(String conversationId){
+        List<String> conversationIds = getConversationIds();
+        conversationIds.remove(conversationId);
+        saveConversationIds(conversationIds);
+    }
+
+    /**
+     * 保存会话列表
      * @param conversationIds
      */
     public void saveConversationIds(List<String> conversationIds){
         String str = TextUtils.join(",", conversationIds);
-        LSPUtils.put(KEY_CONVERSATION_IDS,str);
+        LSPUtils.put(KEY_CONVERSATION_IDS, str);
     }
 
     /**
-     * 获取会话
+     * 获取会话列表
      * @return
      */
     public List<String> getConversationIds(){
-        String str = LSPUtils.get(KEY_CONVERSATION_IDS,"");
+        String str = LSPUtils.get(KEY_CONVERSATION_IDS, "");
         if (TextUtils.isEmpty(str)){
             return new ArrayList<>();
         }else{
             return Arrays.asList(str.split(","));
         }
+    }
+
+    /**
+     * 通过成员id保存会话
+     * @param memberId
+     * @param conversationId
+     */
+    public void saveConversationIdByMemberId(String memberId,String conversationId){
+        LSPUtils.put(memberId,conversationId);
+    }
+
+    /**
+     * 通过成员id获取会话
+     * @param memberId
+     * @return
+     */
+    public String getConversationIdByMemberId(String memberId){
+        return LSPUtils.get(memberId,"");
+    }
+
+    /**
+     * 获取会话未读数量
+     * @param conversationId
+     * @return
+     */
+    public int getConversationUnreadCount(String conversationId){
+        return LSPUtils.get(conversationId,0);
+    }
+
+    /**
+     * 会话未读数量加一
+     * @param conversationId
+     */
+    public void increamentConversationUnreadCount(String conversationId){
+        int count = LSPUtils.get(conversationId,0);
+        LSPUtils.put(conversationId,++count);
+    }
+
+    /**
+     * 标记会话为已读
+     * @param conversationId
+     */
+    public void markConversationRead(String conversationId){
+        LSPUtils.remove(conversationId);
     }
 
 }

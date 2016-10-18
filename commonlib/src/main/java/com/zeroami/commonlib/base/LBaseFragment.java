@@ -25,6 +25,8 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
 
     private LSubscriptionManager mSubscriptionManager;
 
+    private boolean mIsViewDestoryed = false;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -36,12 +38,14 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSubscriptionManager = new LSubscriptionManager();
+        initializeRxBusListener();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLayoutView = inflater.inflate(getLayoutId(), container, false);
         ButterKnife.bind(this, mLayoutView);
+        mIsViewDestoryed = false;
         initialize(mLayoutView, savedInstanceState);
         onInitialized();
         return mLayoutView;
@@ -49,11 +53,16 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
 
     @Override
     public void onDestroyView() {
-        mSubscriptionManager.unsubscribeAllSubscription();
         ButterKnife.unbind(this);
+        mIsViewDestoryed = true;
         super.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        mSubscriptionManager.unsubscribeAllSubscription();
+        super.onDestroy();
+    }
 
     /**
      * 获取布局文件id
@@ -67,6 +76,11 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
      */
     protected abstract void initialize(View layoutView,Bundle savedInstanceState);
 
+    /**
+     * 初始化RxBus监听
+     */
+    protected void initializeRxBusListener() {
+    }
 
     /**
      * initialize完成
@@ -88,6 +102,14 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
      */
     public View getLayoutView(){
         return mLayoutView;
+    }
+
+    /**
+     * View是否已经被销毁
+     * @return
+     */
+    public boolean isViewDestoryed(){
+        return mIsViewDestoryed;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.zeroami.commonlib.app;
+package com.zeroami.commonlib.glide;
 
 import android.content.Context;
 

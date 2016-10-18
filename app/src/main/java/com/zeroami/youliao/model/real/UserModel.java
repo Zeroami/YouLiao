@@ -106,8 +106,6 @@ public class UserModel extends BaseModel implements IUserModel {
                handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
                    @Override
                    public void call(Object data) {
-
-                       StorageUtils.setAVIMClient(avimClient);
 //                        Map map = new HashMap();
 //                        map.put("type", 1);
 //                        avimClient.createConversation(Arrays.asList("57ea21360bd1d0005b177198","57ea214bc4c971005f81a9b5"),"", map,false,true, new AVIMConversationCreatedCallback() {

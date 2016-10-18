@@ -57,10 +57,10 @@ public class FriendDetailPresenter extends LBasePresenter<FriendDetailContract.V
      * @param toUser
      */
     private void checkIsMyFriend(final User toUser) {
-        getMvpModel().findFriendByObjectId(toUser.getObjectId(), new LeanCallback<List<User>>() {
+        getMvpModel().findFriendByObjectId(toUser.getObjectId(), new LeanCallback<User>() {
             @Override
-            public void onSuccess(List<User> data) {
-                if (data.size() > 0) {       // 已添加为朋友，显示发送信息和删除朋友按钮
+            public void onSuccess(User data) {
+                if (data != null) {       // 已添加为朋友，显示发送信息和删除朋友按钮
                     getMvpView().showSendMessage();
                     getMvpView().showDeleteFriend();
                 } else {                      // 未添加为朋友，判断是否已经发送过添加请求

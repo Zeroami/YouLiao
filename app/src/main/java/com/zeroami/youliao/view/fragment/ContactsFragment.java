@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -74,7 +73,31 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
         initSwipeRefreshLayout();
         initAdapter();
         initRecyclerView();
-        initRxBusListener();
+    }
+
+    @Override
+    protected void initializeRxBusListener() {
+        addSubscription(LRxBus.getDefault().toTagObservable(Constant.Action.ADD_FRIEND)
+                .subscribe(new LRxBusSubscriber<Object>() {
+                    @Override
+                    protected void call(Object o) {
+                        onReceiveNewFriendRequest();
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toTagObservable(Constant.Action.NEW_FRIEND_ADDED)
+                .subscribe(new LRxBusSubscriber<Object>() {
+                    @Override
+                    protected void call(Object o) {
+                        onReceiveNewFriendAdded();
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toTagObservable(Constant.Action.DELETE_FRIEND)
+                .subscribe(new LRxBusSubscriber<Object>() {
+                    @Override
+                    protected void call(Object o) {
+                        onReceiveDeleteFriend();
+                    }
+                }));
     }
 
     @Override
@@ -87,12 +110,6 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
             @Override
             public void onRefresh() {
                 getMvpPresenter().doViewInitialized();
-                swipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2000);
             }
         });
     }
@@ -111,7 +128,7 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
             @Override
             public void SimpleOnItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 mPosition = i;
-                getMvpPresenter().doFriendClick();
+                getMvpPresenter().doFriendItemClick();
             }
         });
     }
@@ -127,31 +144,6 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
         llNewFriend.setOnClickListener(this);
         llMyGroup.setOnClickListener(this);
         llRobotZero.setOnClickListener(this);
-    }
-
-
-    private void initRxBusListener() {
-        LRxBus.getDefault().toTagObservable(Constant.Action.ADD_FRIEND)
-                .subscribe(new LRxBusSubscriber<Object>() {
-                    @Override
-                    protected void call(Object o) {
-                        onReceiveNewFriendRequest();
-                    }
-                });
-        LRxBus.getDefault().toTagObservable(Constant.Action.NEW_FRIEND_ADDED)
-                .subscribe(new LRxBusSubscriber<Object>() {
-                    @Override
-                    protected void call(Object o) {
-                        onReceiveNewFriendAdded();
-                    }
-                });
-        LRxBus.getDefault().toTagObservable(Constant.Action.DELETE_FRIEND)
-                .subscribe(new LRxBusSubscriber<Object>() {
-                    @Override
-                    protected void call(Object o) {
-                        onReceiveDeleteFriend();
-                    }
-                });
     }
 
     /**
@@ -198,26 +190,35 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
 
     @Override
     public void updateFriendList(List<User> friendList) {
-        mFriendList.clear();
-        mFriendList.addAll(friendList);
-        mAdapter.notifyDataSetChanged();
+        if (!isViewDestoryed()){
+            mFriendList.clear();
+            mFriendList.addAll(friendList);
+            mAdapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
     public void updateNewFriendUnread(int count) {
         ((MainActivity) getAttachActivity()).setBottomNotificationCount(1, count);
-        String countStr = count == 0 ? "" : count > 99 ? "99+" : count + "";
-        tvNewFriendUnread.setText(countStr);
+        if (!isViewDestoryed()){
+            String countStr = count == 0 ? "" : count > 99 ? "99+" : count + "";
+            tvNewFriendUnread.setText(countStr);
+        }
     }
 
     @Override
     public void showNewFriendUnread() {
-        tvNewFriendUnread.setVisibility(View.VISIBLE);
+        if (!isViewDestoryed()){
+            tvNewFriendUnread.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideNewFriendUnread() {
-        tvNewFriendUnread.setVisibility(View.GONE);
+        if (!isViewDestoryed()){
+            tvNewFriendUnread.setVisibility(View.GONE);
+        }
     }
 
     @Override

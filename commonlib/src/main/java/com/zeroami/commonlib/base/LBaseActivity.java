@@ -58,6 +58,7 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         }
         setSwipeBackEnable(false);      // 默认不带滑动退出的效果，让子类根据需要设置
         initialize(savedInstanceState);
+        initializeRxBusListener();
         onInitialized();
     }
 
@@ -114,6 +115,12 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
      * setContentView完成
      */
     protected void onViewCreated() {
+    }
+
+    /**
+     * 初始化RxBus监听
+     */
+    protected void initializeRxBusListener() {
     }
 
     /**

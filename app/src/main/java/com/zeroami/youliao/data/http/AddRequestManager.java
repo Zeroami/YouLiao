@@ -61,7 +61,7 @@ public class AddRequestManager {
      * 标记消息为已读，标记完后会刷新未读消息数量
      * @param saveCallback
      */
-    public void markAddRequestsRead(final SaveCallback saveCallback) {
+    public void markAllAddRequestsRead(final SaveCallback saveCallback) {
         AVQuery<AVObject> addRequestAVQuery = new AVQuery<>(Constant.AddRequest.CLASS_NAME);
         addRequestAVQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ONLY);
         addRequestAVQuery.whereEqualTo(Constant.AddRequest.TO_USER_ID, UserManager.getInstance().getCurrentUserId());

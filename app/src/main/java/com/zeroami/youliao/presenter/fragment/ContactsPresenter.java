@@ -8,6 +8,7 @@ import com.zeroami.youliao.model.IFriendModel;
 import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.real.FriendModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class ContactsPresenter extends LBasePresenter<ContactsContract.View, IFr
     }
 
     @Override
-    public void doFriendClick() {
+    public void doFriendItemClick() {
         getMvpView().gotoFriendDetail();
     }
 
@@ -71,7 +72,7 @@ public class ContactsPresenter extends LBasePresenter<ContactsContract.View, IFr
      * 初始化朋友列表
      */
     private void initFriendList() {
-        getMvpModel().findFriends(new LeanCallback<List<User>>() {
+        getMvpModel().loadFriends(new LeanCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> data) {
                 if (getMvpView() != null) {
@@ -81,7 +82,9 @@ public class ContactsPresenter extends LBasePresenter<ContactsContract.View, IFr
 
             @Override
             public void onError(int code, AVException e) {
-
+                if (getMvpView() != null) {
+                    getMvpView().updateFriendList(new ArrayList<User>());
+                }
             }
         });
     }

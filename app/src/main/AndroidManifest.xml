@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="com.zeroami.commonlib.app.LDefaultGlideModule"
+            android:name="com.zeroami.commonlib.glide.LDefaultGlideModule"
             android:value="GlideModule" />
 
         <!-- 自定义区域Start -->

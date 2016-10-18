@@ -15,6 +15,7 @@ import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.real.FriendModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,18 +71,18 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
             return ;
         }
         getMvpView().hideInputMethod();
-        getMvpView().hideList();
+        getMvpView().hideFriendList();
         getMvpView().hideEmpty();
         getMvpView().showLoading();
-        getMvpModel().findUserByUsername(username, new LeanCallback<List<User>>() {
+        getMvpModel().findUserByUsername(username, new LeanCallback<User>() {
             @Override
-            public void onSuccess(List<User> data) {
+            public void onSuccess(User data) {
                 getMvpView().hideLoading();
-                if (data.size() == 0) {
+                if (data == null) {
                     getMvpView().showEmpty();
                 } else {
-                    getMvpView().showList();
-                    getMvpView().updateFriendList(data);
+                    getMvpView().showFriendList();
+                    getMvpView().updateFriendList(Arrays.asList(data));
                 }
             }
 
@@ -108,7 +109,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
         }
         mCurrentPage = 0;
         getMvpView().hideInputMethod();
-        getMvpView().hideList();
+        getMvpView().hideFriendList();
         getMvpView().hideEmpty();
         getMvpView().showLoading();
         getMvpModel().findUsersByNickname(mNickname, 0, Constant.INIT_SIZE, new LeanCallback<List<User>>() {
@@ -118,7 +119,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
                 if (data.size() == 0) {
                     getMvpView().showEmpty();
                 } else {
-                    getMvpView().showList();
+                    getMvpView().showFriendList();
                     getMvpView().updateFriendList(data);
                 }
             }
@@ -154,7 +155,7 @@ public class AddFriendPresenter extends LBasePresenter<AddFriendContract.View,IF
     }
 
     @Override
-    public void doListItemClick(int position) {
+    public void doFriendItemClick(int position) {
         getMvpView().gotoFriendDetail(position);
     }
 }

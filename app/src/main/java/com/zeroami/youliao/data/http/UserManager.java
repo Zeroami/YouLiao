@@ -306,6 +306,8 @@ public class UserManager {
             final AVQuery<AVUser> followerQuery = getCurrentUser().followerQuery(AVUser.class);
             followeeQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
             followerQuery.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            followeeQuery.include(Constant.Followee.FOLLOWEE);
+            followerQuery.include(Constant.Follower.FOLLOWER);
             followeeQuery.whereEqualTo(Constant.Followee.FOLLOWEE, AVUser.createWithoutData("_User", friendId));
             followerQuery.whereEqualTo(Constant.Follower.FOLLOWER, AVUser.createWithoutData("_User", friendId));
             followeeQuery.findInBackground(new FindCallback<AVUser>() {
@@ -375,5 +377,4 @@ public class UserManager {
         q.whereEqualTo(AVObject.OBJECT_ID, objectId);
         q.findInBackground(findCallback);
     }
-
 }

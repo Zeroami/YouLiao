@@ -81,4 +81,5 @@ public class MainPresenter extends LBasePresenter<MainContract.View, IUserModel>
     public void doAddFriend() {
         getMvpView().gotoAddFriend();
     }
+
 }

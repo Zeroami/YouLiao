@@ -35,14 +35,14 @@ public interface AddFriendContract {
         void hideNicknameSearch();
 
         /**
-         * 显示列表
+         * 显示朋友列表
          */
-        void showList();
+        void showFriendList();
 
         /**
-         * 隐藏列表
+         * 隐藏朋友列表
          */
-        void hideList();
+        void hideFriendList();
 
         /**
          * 显示空布局
@@ -113,9 +113,9 @@ public interface AddFriendContract {
         void doSearchByNicknameLoadMore();
 
         /**
-         * 处理列表item点击
+         * 处理朋友item点击
          * @param position
          */
-        void doListItemClick(int position);
+        void doFriendItemClick(int position);
     }
 }

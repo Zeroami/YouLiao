@@ -14,11 +14,4 @@ public class StorageUtils {
 
     private static Map<Class,Object> mMap = new HashMap<>();
 
-    public static void setAVIMClient(AVIMClient avimClient){
-        mMap.put(AVIMClient.class,avimClient);
-    }
-
-    public static AVIMClient getAVIMClient(){
-        return (AVIMClient) mMap.get(AVIMClient.class);
-    }
 }

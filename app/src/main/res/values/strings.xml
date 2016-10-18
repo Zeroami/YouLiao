@@ -92,4 +92,10 @@
     <string name="test_time">2016-01-01 00:00:00</string>
     <string name="test_message">明月几时有？把酒问青天。不知天上宫阙，今夕是何年。我欲乘风归去，又恐琼楼玉宇，高处不胜寒。起舞弄清影，何似在人间？转朱阁，低绮户，照无眠。不应有恨，何事长向别时圆？人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟。</string>
     <!--<string name="test_message">明月几时有？把酒问青天。</string>-->
+    <string name="send_failure">发送失败</string>
+    <string name="file_text">[文件]</string>
+    <string name="image_text">[图片]</string>
+    <string name="audio_text">[语音]</string>
+    <string name="video_text">[视频]</string>
+    <string name="format_last_message" formatted="false">%s：%s</string>
 </resources>

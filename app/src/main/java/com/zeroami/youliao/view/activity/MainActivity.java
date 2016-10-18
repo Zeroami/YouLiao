@@ -26,6 +26,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.kennyc.bottomsheet.BottomSheet;
+import com.zeroami.commonlib.rx.rxbus.LRxBus;
+import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
 import com.zeroami.commonlib.utils.LDisplayUtils;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -37,9 +39,10 @@ import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.MainContentAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
+import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.activity.MainContract;
 import com.zeroami.youliao.presenter.activity.MainPresenter;
-import com.zeroami.youliao.view.fragment.ChatListFragment;
+import com.zeroami.youliao.view.fragment.ConversationFragment;
 import com.zeroami.youliao.view.fragment.ContactsFragment;
 import com.zeroami.youliao.view.fragment.MeFragment;
 import com.zeroami.youliao.view.fragment.TopicFragment;
@@ -89,7 +92,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     private TextView tvNickname;
     private TextView tvSignature;
     private boolean mIsDrawerHeaderViewCreated;
-    private ChatListFragment mChatListFragment;
+    private ConversationFragment mConversationFragment;
     private ContactsFragment mContactsFragment;
     private TopicFragment mTopicFragment;
     private MeFragment mMeFragment;
@@ -216,11 +219,11 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
 
     private void initData() {
         mFragmentList = new ArrayList<>();
-        mChatListFragment = ChatListFragment.newInstance();
+        mConversationFragment = ConversationFragment.newInstance();
         mContactsFragment = ContactsFragment.newInstance();
         mTopicFragment = TopicFragment.newInstance();
         mMeFragment = MeFragment.newInstance();
-        mFragmentList.add(mChatListFragment);
+        mFragmentList.add(mConversationFragment);
         mFragmentList.add(mContactsFragment);
         mFragmentList.add(mTopicFragment);
         mFragmentList.add(mMeFragment);
@@ -360,29 +363,19 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == event.KEYCODE_MENU){
+        if (keyCode == event.KEYCODE_MENU) {
             getMvpPresenter().doMenuKeyDown();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * 设置底部通知数量
-     * @param itemPosition
-     * @param count
-     */
-    public void setBottomNotificationCount(int itemPosition, int count) {
-        String countStr = count == 0 ? "" : count > 99 ? "99+" : count + "";
-        cvBottomNavigation.setNotification(countStr, itemPosition);
     }
 
     // ---------------------------------- MVP View接口 ----------------------------------------------
 
     @Override
     public void showBottomSheet() {
-        if (mBottomSheet == null){
+        if (mBottomSheet == null) {
             final BottomSheet.Builder builder = new BottomSheet.Builder(this);
-            View view = LayoutInflater.from(this).inflate(R.layout.layout_bottom_sheet,null);
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_bottom_sheet, null);
             NavigationView navigationView = (NavigationView) view.findViewById(R.id.nv_bottom_sheet);
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -401,8 +394,8 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
             });
             mBottomSheet = builder.setView(view).create();
             mBottomSheet.show();
-        }else{
-            if (!mBottomSheet.isShowing()){
+        } else {
+            if (!mBottomSheet.isShowing()) {
                 mBottomSheet.show();
             }
         }
@@ -460,5 +453,9 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
         finish();
     }
 
+    public void setBottomNotificationCount(int itemPosition, int count) {
+        String countStr = count == 0 ? "" : count > 99 ? "99+" : count + "";
+        cvBottomNavigation.setNotification(countStr, itemPosition);
+    }
 
 }

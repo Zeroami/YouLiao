@@ -48,11 +48,22 @@ public class Constant {
     public static final int EXPRESSION_ROW_SIZE = 3;
     public static final String EXPRESSION_PREFIX = "emoji_";
 
+    public static final int AVATAR_ROUND_SIZE = 10;
+
     public static final class Action{
+        /**
+         * receiver和tag使用
+         */
         public static final String ADD_FRIEND = "com.zeroami.youliao.action.ADD_FRIEND";
         public static final String NEW_FRIEND_ADDED = "com.zeroami.youliao.action.NEW_FRIEND_ADDED";
-        public static final String RECEIVE_CHAT_MESSAGE = "com.zeroami.youliao.action.RECEIVE_CHAT_MESSAGE";
         public static final String DELETE_FRIEND = "com.zeroami.youliao.action.DELETE_FRIEND";
+
+
+        /**
+         * 仅tag使用
+         */
+        public static final String RECEIVE_CHAT_MESSAGE = "com.zeroami.youliao.action.RECEIVE_CHAT_MESSAGE";
+        public static final String UPDATE_CONVERSATION = "com.zeroami.youliao.action.UPDATE_CONVERSATION";
     }
 
 }

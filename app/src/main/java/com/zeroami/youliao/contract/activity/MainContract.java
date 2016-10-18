@@ -52,7 +52,6 @@ public interface MainContract {
          * 跳转到添加朋友页
          */
         void gotoAddFriend();
-
     }
 
     interface Presenter extends LMvpPresenter<View> {

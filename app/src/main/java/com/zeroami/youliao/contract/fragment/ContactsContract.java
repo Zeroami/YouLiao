@@ -75,8 +75,8 @@ public interface ContactsContract {
         void doNewFriendClick();
 
         /**
-         * 处理朋友点击
+         * 处理朋友item点击
          */
-        void doFriendClick();
+        void doFriendItemClick();
     }
 }

@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.zeroami.commonlib.rx.rxbus.LRxBus;
+import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
+import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.utils.LT;
 import com.zeroami.commonlib.utils.LUtils;
@@ -21,8 +25,13 @@ import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.ChatMessageAdapter;
 import com.zeroami.youliao.adapter.ExpressionPageAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
+import com.zeroami.youliao.bean.AudioMessage;
 import com.zeroami.youliao.bean.ChatMessage;
+import com.zeroami.youliao.bean.FileMessage;
+import com.zeroami.youliao.bean.ImageMessage;
+import com.zeroami.youliao.bean.TextMessage;
 import com.zeroami.youliao.bean.User;
+import com.zeroami.youliao.bean.VideoMessage;
 import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.activity.ChatContract;
 import com.zeroami.youliao.presenter.activity.ChatPresenter;
@@ -61,6 +70,8 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     ImageView ivVoice;
     @Bind(R.id.iv_video)
     ImageView ivVideo;
+    @Bind(R.id.iv_file)
+    ImageView ivFile;
     @Bind(R.id.fl_bottom_layout)
     FrameLayout flBottomLayout;
     @Bind(R.id.ll_expression_layout)
@@ -69,9 +80,11 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     ViewPager vpExpression;
 
     private User mUser;
+    private AVIMMessage mReceiveMessage;
 
     private List<ChatMessage> mChatMessageList;
     private ChatMessageAdapter mChatMessageAdapter;
+    private LinearLayoutManager mLinearManager;
 
     @Override
     protected ChatContract.Presenter createPresenter() {
@@ -98,6 +111,50 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
         initExpressionViewPager();
     }
 
+    @Override
+    protected void initializeRxBusListener() {
+        addSubscription(LRxBus.getDefault().toObservable(TextMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
+                .subscribe(new LRxBusSubscriber<TextMessage>() {
+                    @Override
+                    protected void call(TextMessage textMessage) {
+                        onReceiveTextMessage(textMessage);
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toObservable(FileMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
+                .subscribe(new LRxBusSubscriber<FileMessage>() {
+                    @Override
+                    protected void call(FileMessage fileMessage) {
+                        onReceiveFileMessage(fileMessage);
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toObservable(ImageMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
+                .subscribe(new LRxBusSubscriber<ImageMessage>() {
+                    @Override
+                    protected void call(ImageMessage imageMessage) {
+                        onReceiveImageMessage(imageMessage);
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toObservable(AudioMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
+                .subscribe(new LRxBusSubscriber<AudioMessage>() {
+                    @Override
+                    protected void call(AudioMessage audioMessage) {
+                        onReceiveAudioMessage(audioMessage);
+                    }
+                }));
+        addSubscription(LRxBus.getDefault().toObservable(VideoMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
+                .subscribe(new LRxBusSubscriber<VideoMessage>() {
+                    @Override
+                    protected void call(VideoMessage videoMessage) {
+                        onReceiveVideoMessage(videoMessage);
+                    }
+                }));
+    }
+
+    @Override
+    protected void onInitialized() {
+        getMvpPresenter().doViewInitialized();
+    }
+
     private void initToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");
@@ -117,26 +174,26 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     }
 
     private void initListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getMvpPresenter().doLoadMoreHistoryMessages();
+            }
+        });
+        tvSend.setOnClickListener(this);
         ivExpression.setOnClickListener(this);
         ivPhoto.setOnClickListener(this);
         ivVoice.setOnClickListener(this);
         ivVideo.setOnClickListener(this);
-        tvSend.setOnClickListener(this);
+        ivFile.setOnClickListener(this);
     }
 
     private void initRecyclerView() {
         mChatMessageList = new ArrayList<>();
-        for (int i=0;i<10;i++){
-            if (i % 3 == 0){
-                mChatMessageList.add(new ChatMessage(null,0,null, ChatMessage.ChatMessageType.SEND));
-            }else{
-                mChatMessageList.add(new ChatMessage(null,0,null, ChatMessage.ChatMessageType.RECEIVE));
-            }
-        }
         mChatMessageAdapter = new ChatMessageAdapter(this,mChatMessageList);
-        rvMessage.setLayoutManager(new LinearLayoutManager(this));
+        mLinearManager = new LinearLayoutManager(this);
+        rvMessage.setLayoutManager(mLinearManager);
         rvMessage.setAdapter(mChatMessageAdapter);
-        rvMessage.scrollToPosition(10);
         rvMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -160,12 +217,36 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
         if (expressionIdList.size() != 0){
             expressionPageList.add(expressionIdList);
         }
-        vpExpression.setAdapter(new ExpressionPageAdapter(this,expressionPageList));
+        vpExpression.setAdapter(new ExpressionPageAdapter(this, expressionPageList));
+    }
+
+    private void onReceiveTextMessage(TextMessage textMessage) {
+        mReceiveMessage = textMessage.getTextMessage();
+        getMvpPresenter().doReceiveMessage();
+    }
+
+    private void onReceiveFileMessage(FileMessage fileMessage) {
+        LT.show("onReceiveFileMessage");
+    }
+
+    private void onReceiveImageMessage(ImageMessage imageMessage) {
+        LT.show("onReceiveImageMessage");
+    }
+
+    private void onReceiveAudioMessage(AudioMessage audioMessage) {
+        LT.show("onReceiveAudioMessage");
+    }
+
+    private void onReceiveVideoMessage(VideoMessage videoMessage) {
+        LT.show("onReceiveVideoMessage");
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()){
+            case R.id.tv_send:
+                getMvpPresenter().doSendMessage();
+                break;
             case R.id.iv_expression:
                 getMvpPresenter().doExpressionClick();
                 break;
@@ -178,10 +259,15 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
             case R.id.iv_video:
                 LT.show("video");
                 break;
-            case R.id.tv_send:
-                LT.show("send");
+            case R.id.iv_file:
+                LT.show("file");
                 break;
         }
+    }
+
+    @Override
+    public User getUser() {
+        return mUser;
     }
 
     @Override
@@ -212,5 +298,43 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     @Override
     public void clearEditTextFocus() {
         etChatMessage.clearFocus();
+    }
+
+    @Override
+    public void clearEditText() {
+        etChatMessage.setText("");
+    }
+
+    @Override
+    public String getSendMessage() {
+        return etChatMessage.getText().toString();
+    }
+
+    @Override
+    public void prependChatMessageList(List<ChatMessage> chatMessageList) {
+        mChatMessageList.addAll(0, chatMessageList);
+        mChatMessageAdapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+        rvMessage.scrollToPosition(chatMessageList.size() - 1);
+    }
+
+    @Override
+    public void appendChatMessage(ChatMessage chatMessage) {
+        mChatMessageList.add(chatMessage);
+        mChatMessageAdapter.notifyDataSetChanged();
+        rvMessage.scrollToPosition(mChatMessageList.size()-1);
+    }
+
+    @Override
+    public AVIMMessage getReceiveMessage() {
+        return mReceiveMessage;
+    }
+
+    @Override
+    public AVIMMessage getFirstMessage() {
+        if (mChatMessageList.size() > 0){
+            return mChatMessageList.get(0).getMessage();
+        }
+        return null;
     }
 }
