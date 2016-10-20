@@ -44,20 +44,20 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
 
     /**
      * 接收到带通知的推送信息
+     *
      * @param context
      * @param intent
      */
-    private void receivePushWithNotification(Context context, Intent intent){
+    private void receivePushWithNotification(Context context, Intent intent) {
         String avosData = intent.getStringExtra(AVOS_DATA);
         if (!TextUtils.isEmpty(avosData)) {
             try {
                 JSONObject json = new JSONObject(avosData);
-                LL.d(json);
-                if (null != json) {
+                if (json != null) {
                     String alertStr = json.getString(PushManager.PUSH_DATA_ALERT);
                     Intent notificationIntent = new Intent(context, NotificationDispatcherBroadcastReceiver.class);
                     notificationIntent.putExtra(NotificationDispatcherBroadcastReceiver.EXTRA_ACTION, intent.getAction());
-                    PendingIntent pi = PendingIntent.getBroadcast(context,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pi = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     // 发送通知
                     Notification notification = new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_logo)
@@ -71,7 +71,7 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
                             .build();
 
                     NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    manager.notify(new Random().nextInt(),notification);
+                    manager.notify(new Random().nextInt(), notification);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -86,6 +86,18 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
      * 接收到不带通知的推送信息
      */
     private void receivePushWithoutNotification(Intent intent) {
-        LRxBus.getDefault().postTag(intent.getAction());    // 发送事件
+        String avosData = intent.getStringExtra(AVOS_DATA);
+        String friendId = "";
+        if (!TextUtils.isEmpty(avosData)) {
+            try {
+                JSONObject json = new JSONObject(avosData);
+                if (json != null) {
+                    friendId = json.getString(PushManager.PUSH_DATA_ALERT);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            LRxBus.getDefault().post(friendId, intent.getAction());    // 发送事件
+        }
     }
 }

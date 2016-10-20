@@ -9,10 +9,10 @@ import android.view.View;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
-import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LT;
 import com.zeroami.youliao.R;
@@ -23,7 +23,6 @@ import com.zeroami.youliao.bean.Conversation;
 import com.zeroami.youliao.bean.FileMessage;
 import com.zeroami.youliao.bean.ImageMessage;
 import com.zeroami.youliao.bean.TextMessage;
-import com.zeroami.youliao.bean.User;
 import com.zeroami.youliao.bean.VideoMessage;
 import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.fragment.ConversationContract;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import me.drakeet.materialdialog.MaterialDialog;
 
 /**
  * <p>作者：Zeroami</p>
@@ -52,8 +52,8 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
     private ConversationAdapter mAdapter;
     private AVIMConversation mReceiveConversation;
     private AVIMMessage mReceiveMessage;
-    private User mUser;
     private String mSendConversationId;
+    private Conversation mClickConversation;
 
     public static ConversationFragment newInstance() {
         return new ConversationFragment();
@@ -132,26 +132,11 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
         mAdapter = new ConversationAdapter(getAttachActivity(),mConversationList);
         rvConversation.setLayoutManager(new LinearLayoutManager(getAttachActivity()));
         rvConversation.setAdapter(mAdapter);
-        rvConversation.addOnItemTouchListener(new SimpleClickListener() {
+        rvConversation.addOnItemTouchListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                mUser = mConversationList.get(i).getMembers().get(0);
+            public void SimpleOnItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                mClickConversation = mConversationList.get(i);
                 getMvpPresenter().doConversationItemClick();
-            }
-
-            @Override
-            public void onItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                LT.show("long click delete");
-            }
-
-            @Override
-            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
-            }
-
-            @Override
-            public void onItemChildLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
             }
         });
     }
@@ -228,9 +213,14 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
     }
 
     @Override
+    public Conversation getClickConversation() {
+        return mClickConversation;
+    }
+
+    @Override
     public void gotoChat() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ChatActivity.EXTRA_USER,mUser);
+        bundle.putSerializable(ChatActivity.EXTRA_USER, mClickConversation.getMembers().get(0));
         LPageUtils.startActivity(getAttachActivity(), ChatActivity.class, bundle, false);
     }
 }

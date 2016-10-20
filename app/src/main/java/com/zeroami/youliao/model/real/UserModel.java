@@ -59,6 +59,7 @@ public class UserModel extends BaseModel implements IUserModel {
                 handleCallback(User.convertToUser(avUser), e, callback, new SuccessBeforeCallback<User>() {
                     @Override
                     public void call(User data) {
+                        mSPManager.initSPFileName(data.getObjectId());
                         mSPManager.login();
                         mSPManager.saveCurrentUser(data);
                         mPushManager.subscribePushChannel(avUser);
@@ -103,30 +104,7 @@ public class UserModel extends BaseModel implements IUserModel {
 
            @Override
            public void done(final AVIMClient avimClient, AVIMException e) {
-               handleCallback(null, e, callback, new SuccessBeforeCallback<Object>() {
-                   @Override
-                   public void call(Object data) {
-//                        Map map = new HashMap();
-//                        map.put("type", 1);
-//                        avimClient.createConversation(Arrays.asList("57ea21360bd1d0005b177198","57ea214bc4c971005f81a9b5"),"", map,false,true, new AVIMConversationCreatedCallback() {
-//                            @Override
-//                            public void done(AVIMConversation avimConversation, AVIMException e) {
-//                                AVIMTextMessage msg = new AVIMTextMessage();
-//                                msg.setText("啦啦啦！");
-//                                // 发送消息
-//                                avimConversation.sendMessage(msg, new AVIMConversationCallback() {
-//
-//                                    @Override
-//                                    public void done(AVIMException e) {
-//                                        if (e == null) {
-//                                            LL.d( "发送成功！");
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                        });
-                   }
-               });
+               handleCallback(null, e, callback,null);
            }
        });
     }

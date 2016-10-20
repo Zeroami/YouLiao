@@ -65,7 +65,7 @@ public class ConversationPresenter extends LBasePresenter<ConversationContract.V
                 Collections.sort(data, mComparator);
                 getMvpView().updateConversationList(data);
                 int count = 0;
-                for (Conversation conversation : data){
+                for (Conversation conversation : data) {
                     count += conversation.getMessageUnreadCount();
                 }
                 getMvpView().updateBottomNatificationCount(count);
@@ -84,8 +84,8 @@ public class ConversationPresenter extends LBasePresenter<ConversationContract.V
             @Override
             public void onSuccess(Conversation data) {
                 List<Conversation> list = new ArrayList<>(getMvpView().getConversationList());
-                for (Conversation c :list){
-                    if (c.getConversationId().equals(data.getConversationId())){
+                for (Conversation c : list) {
+                    if (c.getConversationId().equals(data.getConversationId())) {
                         list.remove(c);
                         break;
                     }
@@ -93,7 +93,7 @@ public class ConversationPresenter extends LBasePresenter<ConversationContract.V
                 list.add(0, data);
                 getMvpView().updateConversationList(list);
                 int count = 0;
-                for (Conversation conversation : list){
+                for (Conversation conversation : list) {
                     count += conversation.getMessageUnreadCount();
                 }
                 getMvpView().updateBottomNatificationCount(count);
@@ -171,6 +171,24 @@ public class ConversationPresenter extends LBasePresenter<ConversationContract.V
 
     @Override
     public void doConversationItemClick() {
+        List<Conversation> list = new ArrayList<>(getMvpView().getConversationList());
+        for (Conversation c :list){
+            if (c.getConversationId().equals(getMvpView().getClickConversation().getConversationId())){
+                c.setMessageUnreadCount(0);
+                break;
+            }
+        }
+        getMvpView().updateConversationList(list);
+        int count = 0;
+        for (Conversation conversation : list){
+            count += conversation.getMessageUnreadCount();
+        }
+        getMvpView().updateBottomNatificationCount(count);
         getMvpView().gotoChat();
+    }
+
+    @Override
+    public void doDeleteConversation() {
+
     }
 }

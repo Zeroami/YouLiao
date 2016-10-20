@@ -20,22 +20,39 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_message"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical">
+                android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/tv_not_friend_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bg_not_friend_tips"
+                    android:gravity="center_horizontal"
+                    android:padding="4dp"
+                    android:text="@string/notice_not_friend"
+                    android:textColor="@color/main_content_text_color"
+                    android:textSize="@dimen/dp_12"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/tv_not_friend_tips"
+                    android:scrollbars="vertical" />
+
+            </RelativeLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="6dp"
             android:orientation="horizontal">
 
             <EditText
@@ -127,11 +144,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/vp_expression"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
+
                 <LinearLayout
                     android:id="@+id/ll_expression_dots"
                     android:layout_width="match_parent"

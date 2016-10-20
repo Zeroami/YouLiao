@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.zeroami.commonlib.mvp.LBasePresenter;
+import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LNetUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
@@ -13,9 +14,11 @@ import com.zeroami.youliao.bean.ChatMessage;
 import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.activity.ChatContract;
 import com.zeroami.youliao.model.IChatModel;
+import com.zeroami.youliao.model.IFriendModel;
 import com.zeroami.youliao.model.IUserModel;
 import com.zeroami.youliao.model.callback.LeanCallback;
 import com.zeroami.youliao.model.real.ChatModel;
+import com.zeroami.youliao.model.real.FriendModel;
 import com.zeroami.youliao.model.real.UserModel;
 
 import java.util.ArrayList;
@@ -31,12 +34,14 @@ import java.util.List;
 public class ChatPresenter extends LBasePresenter<ChatContract.View,IChatModel> implements ChatContract.Presenter {
 
     private IUserModel mUserModel;
+    private IFriendModel mFriendModel;
 
     private Comparator<ChatMessage> mComparator;
 
     public ChatPresenter(ChatContract.View view) {
         super(view);
         mUserModel = new UserModel();
+        mFriendModel = new FriendModel();
         // 按时间戳从小到大排序
         mComparator = new Comparator<ChatMessage>() {
             @Override
@@ -64,11 +69,29 @@ public class ChatPresenter extends LBasePresenter<ChatContract.View,IChatModel> 
 
     @Override
     public void doViewInitialized() {
+        mFriendModel.findFriendByObjectId(getMvpView().getUser().getObjectId(), new LeanCallback() {
+            @Override
+            public void onSuccess(Object data) {
+                if (data == null){
+                    getMvpView().showNotFriendTips();
+                }
+            }
+
+            @Override
+            public void onError(int code, AVException e) {
+
+            }
+        });
         getMvpModel().createSingleConversation(getMvpView().getUser().getObjectId(), new LeanCallback() {
             @Override
             public void onSuccess(Object data) {
-                // 加载历史消息记录
-                loadHistoryMessages("",0, Constant.INIT_SIZE);
+                getMvpModel().markConversationRead();
+                if (getMvpView().isFromNewFriend()){
+                    doSendMessage();
+                }else {
+                    // 加载历史消息记录
+                    loadHistoryMessages("", 0, Constant.INIT_SIZE);
+                }
             }
 
             @Override
@@ -170,6 +193,7 @@ public class ChatPresenter extends LBasePresenter<ChatContract.View,IChatModel> 
             @Override
             public void onSuccess(List<ChatMessage> data) {
                 Collections.sort(data,mComparator);
+                LL.d(data);
                 getMvpView().prependChatMessageList(data);
             }
 

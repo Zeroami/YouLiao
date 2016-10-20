@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -49,6 +50,7 @@ import butterknife.Bind;
 public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implements ChatContract.View, View.OnClickListener {
 
     public static final String EXTRA_USER = "extra_user";
+    public static final String EXTRA_IS_FROM_NEW_FRIEND = "extra_is_from_new_friend";
 
     @Bind(R.id.tv_title)
     TextView tvTitle;
@@ -56,6 +58,8 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     Toolbar toolbar;
     @Bind(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.tv_not_friend_tips)
+    TextView tvNotFriendTips;
     @Bind(R.id.rv_message)
     RecyclerView rvMessage;
     @Bind(R.id.et_chat_message)
@@ -80,6 +84,7 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     ViewPager vpExpression;
 
     private User mUser;
+    private boolean mIsFromNewFriend;
     private AVIMMessage mReceiveMessage;
 
     private List<ChatMessage> mChatMessageList;
@@ -94,6 +99,7 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     @Override
     protected void handleExtras(Bundle extras) {
         mUser = (User) extras.getSerializable(EXTRA_USER);
+        mIsFromNewFriend = extras.getBoolean(EXTRA_IS_FROM_NEW_FRIEND,false);
     }
 
     @Override
@@ -171,6 +177,9 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
                 }
             }
         });
+        if (mIsFromNewFriend){
+            etChatMessage.setText(LRUtils.getString(R.string.new_friend_default_message));
+        }
     }
 
     private void initListener() {
@@ -271,6 +280,11 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     }
 
     @Override
+    public boolean isFromNewFriend() {
+        return mIsFromNewFriend;
+    }
+
+    @Override
     public void showBottomLayout() {
         flBottomLayout.setVisibility(View.VISIBLE);
     }
@@ -336,5 +350,10 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
             return mChatMessageList.get(0).getMessage();
         }
         return null;
+    }
+
+    @Override
+    public void showNotFriendTips() {
+        tvNotFriendTips.setVisibility(View.VISIBLE);
     }
 }

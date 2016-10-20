@@ -58,9 +58,11 @@ public class ChatModel extends BaseModel implements IChatModel {
             mChatManager.createSingleConversation(memberId, new AVIMConversationCreatedCallback() {
                 @Override
                 public void done(final AVIMConversation avimConversation, AVIMException e) {
-                    mAVIMConversation = avimConversation;
-                    mSPManager.saveConversationIdByMemberId(memberId, avimConversation.getConversationId());
-                    mSPManager.saveConversationId(avimConversation.getConversationId());
+                    if (avimConversation != null){
+                        mAVIMConversation = avimConversation;
+                        mSPManager.saveConversationIdByMemberId(memberId, avimConversation.getConversationId());
+                        mSPManager.saveConversationId(avimConversation.getConversationId());
+                    }
                     handleCallback(null, e, callback, null);
                 }
             });
@@ -138,7 +140,7 @@ public class ChatModel extends BaseModel implements IChatModel {
         if (TextUtils.isEmpty(messageId)) {
             mChatManager.queryMessages(mAVIMConversation, limit, avimMessagesQueryCallback);
         } else {
-            mChatManager.queryMessages(mAVIMConversation, messageId, timestamp - 1, limit, avimMessagesQueryCallback);
+            mChatManager.queryMessages(mAVIMConversation, messageId, timestamp, limit, avimMessagesQueryCallback);
         }
     }
 
@@ -156,7 +158,6 @@ public class ChatModel extends BaseModel implements IChatModel {
                         for (String conversationId : conversationIds) {
                             final Conversation conversation = new Conversation();
                             AVIMConversation avimConversation = mChatManager.getConversationById(conversationId);
-                            LL.d(avimConversation.getMembers());
                             final List<User> members = new ArrayList<>();
                             final CountDownLatch countDownLatch = new CountDownLatch(avimConversation.getMembers().size() + 1);
                             for (String memberId : avimConversation.getMembers()) {
@@ -293,7 +294,17 @@ public class ChatModel extends BaseModel implements IChatModel {
     }
 
     @Override
-    public void markConversationRead(String conversationId) {
-        mSPManager.markConversationRead(conversationId);
+    public void markConversationRead() {
+        mSPManager.markConversationRead(mAVIMConversation.getConversationId());
+    }
+
+    @Override
+    public String getConversationIdByMemberId(String memberId) {
+        return mSPManager.getConversationIdByMemberId(memberId);
+    }
+
+    @Override
+    public void deleteConversationId(String conversationId) {
+        mSPManager.deleteConversationId(conversationId);
     }
 }

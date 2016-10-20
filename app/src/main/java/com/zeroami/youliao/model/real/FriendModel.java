@@ -215,10 +215,10 @@ public class FriendModel extends BaseModel implements IFriendModel {
                     @Override
                     public void call(Object data) {
                         // 发送一个事件告诉自己有朋友被删除
-                        LRxBus.getDefault().postTag(Constant.Action.DELETE_FRIEND);
+                        LRxBus.getDefault().post(friendId,Constant.Action.DELETE_FRIEND);
                         // 发送一条推送告诉对方，我删除了你
                         mPushManager.pushMessage(friendId,
-                                "push",
+                                mUserManager.getCurrentUserId(),
                                 Constant.Action.DELETE_FRIEND);
                     }
                 });

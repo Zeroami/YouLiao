@@ -151,6 +151,7 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
     public void gotoChat() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ChatActivity.EXTRA_USER,mAddRequest.getFromUser());
+        bundle.putBoolean(ChatActivity.EXTRA_IS_FROM_NEW_FRIEND,true);
         LPageUtils.startActivity(this,ChatActivity.class,bundle,false);
     }
 }

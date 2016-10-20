@@ -23,6 +23,8 @@ public interface ChatContract {
          */
         User getUser();
 
+        boolean isFromNewFriend();
+
         /**
          * 显示底部布局
          */
@@ -87,6 +89,11 @@ public interface ChatContract {
          * @return
          */
         AVIMMessage getFirstMessage();
+
+        /**
+         * 显示不是朋友提示
+         */
+        void showNotFriendTips();
     }
 
     interface Presenter extends LMvpPresenter<View> {

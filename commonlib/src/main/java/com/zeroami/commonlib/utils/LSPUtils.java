@@ -18,10 +18,14 @@ public class LSPUtils {
     /**
      * 保存在手机里面的文件名
      */
-    public static final String FILE_NAME = "share_data";
+    private static String sFileName = "share_data";
 
     private LSPUtils() {
         throw new UnsupportedOperationException("cannot be instantiated");
+    }
+
+    public static void initialize(String fileName){
+        sFileName = fileName;
     }
 
     /**
@@ -32,7 +36,7 @@ public class LSPUtils {
      */
     public static void put(String key, Object object) {
 
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
@@ -60,7 +64,7 @@ public class LSPUtils {
      * @return
      */
     public static <T> T get(String key, T defaultValue) {
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         if (defaultValue instanceof String) {
             return (T) sp.getString(key, (String) defaultValue);
@@ -83,7 +87,7 @@ public class LSPUtils {
      * @param key
      */
     public static void remove(String key) {
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(key);
@@ -94,7 +98,7 @@ public class LSPUtils {
      * 清除所有数据
      */
     public static void clear() {
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
@@ -108,7 +112,7 @@ public class LSPUtils {
      * @return
      */
     public static boolean contains(String key) {
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         return sp.contains(key);
     }
@@ -119,7 +123,7 @@ public class LSPUtils {
      * @return
      */
     public static Map<String, ?> getAll() {
-        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(FILE_NAME,
+        SharedPreferences sp = CommonLib.getContext().getSharedPreferences(sFileName,
                 Context.MODE_PRIVATE);
         return sp.getAll();
     }

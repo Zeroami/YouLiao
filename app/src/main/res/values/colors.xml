@@ -21,5 +21,6 @@
     <color name="tips_remain_word">#f23737</color>
     <color name="black">#000</color>
     <color name="black_1">#9000</color>
+    <color name="bg_not_friend_tips">#ffca28</color>
 
 </resources>

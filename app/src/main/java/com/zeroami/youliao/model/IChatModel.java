@@ -59,7 +59,20 @@ public interface IChatModel extends LMvpModel {
 
     /**
      * 标记会话为已读
+     */
+    void markConversationRead();
+
+    /**
+     * 根据成员id获取会话id
+     * @param memberId
+     * @return
+     */
+    String getConversationIdByMemberId(String memberId);
+
+    /**
+     * 删除会话id
      * @param conversationId
      */
-    void markConversationRead(String conversationId);
+    void deleteConversationId(String conversationId);
+
 }

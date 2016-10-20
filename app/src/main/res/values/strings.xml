@@ -98,4 +98,6 @@
     <string name="audio_text">[语音]</string>
     <string name="video_text">[视频]</string>
     <string name="format_last_message" formatted="false">%s：%s</string>
+    <string name="new_friend_default_message">我们已经是朋友了，开始聊天吧～</string>
+    <string name="notice_not_friend">你们还不是朋友，聊天时请注意！</string>
 </resources>

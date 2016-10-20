@@ -40,6 +40,14 @@ public class SPManager {
     }
 
     /**
+     * 初始化SharedPreferences文件名
+     * @param fileName
+     */
+    public void initSPFileName(String fileName){
+        LSPUtils.initialize(fileName);
+    }
+
+    /**
      * 登陆
      */
     public void login(){
@@ -106,7 +114,7 @@ public class SPManager {
      * @param conversationId
      */
     public void saveConversationId(String conversationId){
-        List<String> conversationIds = getConversationIds();
+        List<String> conversationIds = new ArrayList<>(getConversationIds());
         conversationIds.add(conversationId);
         saveConversationIds(conversationIds);
     }
@@ -115,8 +123,8 @@ public class SPManager {
      * 删除会话
      * @param conversationId
      */
-    public void removeConversationId(String conversationId){
-        List<String> conversationIds = getConversationIds();
+    public void deleteConversationId(String conversationId){
+        List<String> conversationIds = new ArrayList<>(getConversationIds());
         conversationIds.remove(conversationId);
         saveConversationIds(conversationIds);
     }
@@ -149,6 +157,7 @@ public class SPManager {
      * @param conversationId
      */
     public void saveConversationIdByMemberId(String memberId,String conversationId){
+        LL.d(memberId + "-" + conversationId);
         LSPUtils.put(memberId,conversationId);
     }
 

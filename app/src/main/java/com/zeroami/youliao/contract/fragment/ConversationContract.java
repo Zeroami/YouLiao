@@ -16,13 +16,13 @@ import java.util.List;
 public interface ConversationContract {
     interface View extends LMvpView{
         /**
-         * 更新聊天会话列表
+         * 更新会话列表
          * @param conversationList
          */
         void updateConversationList(List<Conversation> conversationList);
 
         /**
-         * 获取聊天会话列表
+         * 获取会话列表
          * @return
          */
         List<Conversation> getConversationList();
@@ -48,6 +48,11 @@ public interface ConversationContract {
         void updateBottomNatificationCount(int count);
 
         /**
+         * 获取点击的会话
+         */
+        Conversation getClickConversation();
+
+        /**
          * 跳转到聊天页
          */
         void gotoChat();
@@ -55,7 +60,7 @@ public interface ConversationContract {
 
     interface Presenter extends LMvpPresenter<View>{
         /**
-         * 处理更新聊天会话
+         * 处理更新会话
          */
         void doReceiveUpdateConversation();
 
@@ -68,5 +73,10 @@ public interface ConversationContract {
          * 处理会话item点击
          */
         void doConversationItemClick();
+
+        /**
+         * 处理删除会话
+         */
+        void doDeleteConversation();
     }
 }
