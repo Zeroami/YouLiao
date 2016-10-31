@@ -32,6 +32,12 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         super.onCreate(savedInstanceState);
         LActivityUtils.addActivity(this);
         mSubscriptionManager = new LSubscriptionManager();
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+            if (getIntent().getExtras() != null) {
+                handleExtras(getIntent().getExtras());
+            }
+        }
         if (isFullScreenLayout()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Window window = getWindow();
@@ -43,12 +49,6 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         onViewCreated();
-        if (getIntent() != null) {
-            handleIntent(getIntent());
-            if (getIntent().getExtras() != null) {
-                handleExtras(getIntent().getExtras());
-            }
-        }
         //避免重复添加Fragment
         if (getSupportFragmentManager().getFragments() == null) {
             Fragment firstFragment = getFirstFragment();
@@ -58,7 +58,7 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         }
         setSwipeBackEnable(false);      // 默认不带滑动退出的效果，让子类根据需要设置
         initialize(savedInstanceState);
-        initializeRxBusListener();
+        subscribeRxBus();
         onInitialized();
     }
 
@@ -90,6 +90,22 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     protected abstract void initialize(Bundle savedInstanceState);
 
     /**
+     * 处理Intent
+     *
+     * @param intent
+     */
+    protected void handleIntent(Intent intent) {
+    }
+
+    /**
+     * 处理携带的数据
+     *
+     * @param extras
+     */
+    protected void handleExtras(Bundle extras) {
+    }
+
+    /**
      * 在setContentView之前
      */
     protected void onSetContentViewBefore(){}
@@ -118,9 +134,9 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     }
 
     /**
-     * 初始化RxBus监听
+     * 订阅RxBus
      */
-    protected void initializeRxBusListener() {
+    protected void subscribeRxBus() {
     }
 
     /**
@@ -129,21 +145,6 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     protected void onInitialized() {
     }
 
-    /**
-     * 处理Intent
-     *
-     * @param intent
-     */
-    protected void handleIntent(Intent intent) {
-    }
-
-    /**
-     * 处理携带的数据
-     *
-     * @param extras
-     */
-    protected void handleExtras(Bundle extras) {
-    }
 
     /**
      * 获取显示的第一个Fragment

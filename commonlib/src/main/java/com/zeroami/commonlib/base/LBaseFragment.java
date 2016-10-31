@@ -38,7 +38,7 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSubscriptionManager = new LSubscriptionManager();
-        initializeRxBusListener();
+        subscribeRxBus();
     }
 
     @Override
@@ -77,9 +77,9 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     protected abstract void initialize(View layoutView,Bundle savedInstanceState);
 
     /**
-     * 初始化RxBus监听
+     * 订阅RxBus
      */
-    protected void initializeRxBusListener() {
+    protected void subscribeRxBus() {
     }
 
     /**

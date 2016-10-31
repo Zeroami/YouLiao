@@ -1,4 +1,4 @@
-package com.zeroami.commonlib.module.versionupdate;
+package com.zeroami.commonlib.http;
 
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 
@@ -15,30 +15,32 @@ import okio.Okio;
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：定制ResponseBody，发送下载进度信息</p>
+ * <p>描述：定制ResponseBody，发送下载进度信息的事件</p>
  */
-public class LFileResponseBody extends ResponseBody {
+public class LProgressResponseBody extends ResponseBody {
 
-    private Response originalResponse;
-    private LDownloadProgressInfo mDownloadProgressInfo = new LDownloadProgressInfo();
+    private Response mOriginalResponse;
+    private String mEventTag;
+    private LProgressInfo mDownloadProgressInfo = new LProgressInfo();
 
-    public LFileResponseBody(Response originalResponse) {
-        this.originalResponse = originalResponse;
+    public LProgressResponseBody(Response originalResponse,String eventTag) {
+        this.mOriginalResponse = originalResponse;
+        this.mEventTag = eventTag;
     }
 
     @Override
     public MediaType contentType() {
-        return originalResponse.body().contentType();
+        return mOriginalResponse.body().contentType();
     }
 
     @Override
     public long contentLength() {
-        return originalResponse.body().contentLength();
+        return mOriginalResponse.body().contentLength();
     }
 
     @Override
     public BufferedSource source() {
-        return Okio.buffer(new ForwardingSource(originalResponse.body().source()) {
+        return Okio.buffer(new ForwardingSource(mOriginalResponse.body().source()) {
             long bytesReaded = 0;
 
             @Override
@@ -47,7 +49,7 @@ public class LFileResponseBody extends ResponseBody {
                 bytesReaded += bytesRead == -1 ? 0 : bytesRead;
                 mDownloadProgressInfo.setProgress(bytesReaded);
                 mDownloadProgressInfo.setTotal(contentLength());
-                LRxBus.getDefault().post(mDownloadProgressInfo);
+                LRxBus.getDefault().post(mDownloadProgressInfo,mEventTag);
                 return bytesRead;
             }
         });

@@ -7,11 +7,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * <p>作者：Zeroami</p>
@@ -21,11 +16,11 @@ import rx.schedulers.Schedulers;
 public class LBaseApi {
 
 
-    private static Map<String,Retrofit> sRetrofitMap = new HashMap<>(); // 子类共用
+    private static Map<String, Retrofit> sRetrofitMap = new HashMap<>(); // 子类共用
 
-    protected LBaseApi(String baseUrl){
+    protected LBaseApi(String baseUrl) {
         Retrofit retrofit = sRetrofitMap.get(baseUrl);
-        if (retrofit == null){
+        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -38,6 +33,7 @@ public class LBaseApi {
 
     /**
      * 创建Retrofit使用的OkHttpClient
+     *
      * @return
      */
     protected OkHttpClient createOkHttpClient() {
@@ -47,6 +43,7 @@ public class LBaseApi {
 
     /**
      * 获取Retrofit实例
+     *
      * @param baseUrl
      * @return
      */

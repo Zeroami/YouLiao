@@ -1,4 +1,4 @@
-package com.zeroami.commonlib.module.versionupdate;
+package com.zeroami.commonlib.http;
 
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 
@@ -20,7 +20,7 @@ import rx.subscriptions.CompositeSubscription;
  * <p>邮箱：826589183@qq.com</p>
  * <p>描述：下载文件的回调，使用RxBus订阅下载过程进度信息</p>
  */
-public abstract class LDownloadFileCallback implements Callback<ResponseBody> {
+public abstract class LProgressCallback implements Callback<ResponseBody> {
     /**
      * 订阅下载进度
      */
@@ -34,9 +34,15 @@ public abstract class LDownloadFileCallback implements Callback<ResponseBody> {
      */
     private String mDestFileName;
 
-    public LDownloadFileCallback(String destFileDir, String destFileName) {
+    /**
+     * 订阅的事件tag
+     */
+    private String mSubscribeEventTag;
+
+    public LProgressCallback(String destFileDir, String destFileName, String subscribeEventTag) {
         this.mDestFileDir = destFileDir;
         this.mDestFileName = destFileName;
+        this.mSubscribeEventTag = subscribeEventTag;
         subscribeLoadProgress();
     }
     /**
@@ -93,13 +99,13 @@ public abstract class LDownloadFileCallback implements Callback<ResponseBody> {
      */
     private void subscribeLoadProgress() {
         mCompositeSubscription.add(LRxBus.getDefault()
-                .toObservable(LDownloadProgressInfo.class)
+                .toObservable(LProgressInfo.class,mSubscribeEventTag)
                 .onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<LDownloadProgressInfo>() {
+                .subscribe(new Action1<LProgressInfo>() {
                     @Override
-                    public void call(LDownloadProgressInfo progressInfo) {
+                    public void call(LProgressInfo progressInfo) {
                         onLoading(progressInfo.getProgress(), progressInfo.getTotal());
                     }
                 }));

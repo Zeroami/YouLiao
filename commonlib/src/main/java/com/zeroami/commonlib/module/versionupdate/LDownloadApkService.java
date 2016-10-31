@@ -8,6 +8,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import com.zeroami.commonlib.http.LHttpLoggingInterceptor;
+import com.zeroami.commonlib.http.LOkHttpClientFactory;
+import com.zeroami.commonlib.http.LProgressCallback;
+import com.zeroami.commonlib.http.LProgressResponseBody;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.utils.LAppUtils;
 import com.zeroami.commonlib.utils.LL;
@@ -35,6 +39,7 @@ public class LDownloadApkService extends Service {
     /**
      * 下载时发生的事件
      */
+    public static final String EVENT_APK_DOWNLOAD_PROGRESS = "event_apk_download_progress";
     public static final String EVENT_APK_DOWNLOAD_SUCCESS = "event_apk_download_success";
     public static final String EVENT_APK_DOWNLOAD_LOADING = "event_apk_download_loading";
     public static final String EVENT_APK_DOWNLOAD_FAILURE = "event_apk_download_failure";
@@ -133,7 +138,7 @@ public class LDownloadApkService extends Service {
                 .build()
                 .create(LDownloadService.class)
                 .downloadFile(mRequestUrlFilePart)
-                .enqueue(new LDownloadFileCallback(mDestFileDir, mDestFileName) {
+                .enqueue(new LProgressCallback(mDestFileDir, mDestFileName, EVENT_APK_DOWNLOAD_PROGRESS) {
 
                     @Override
                     public void onSuccess(File file) {
@@ -167,17 +172,17 @@ public class LDownloadApkService extends Service {
     private OkHttpClient initOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(10, TimeUnit.SECONDS);
-        builder.networkInterceptors().add(new Interceptor() {
+        builder.addNetworkInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Response originalResponse = chain.proceed(chain.request());
                 return originalResponse
                         .newBuilder()
-                        .body(new LFileResponseBody(originalResponse))
+                        .body(new LProgressResponseBody(originalResponse, EVENT_APK_DOWNLOAD_PROGRESS))
                         .build();
             }
         });
-
+        builder.addInterceptor(new LHttpLoggingInterceptor());
         return builder.build();
     }
 

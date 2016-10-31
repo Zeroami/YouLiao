@@ -76,7 +76,7 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
     }
 
     @Override
-    protected void initializeRxBusListener() {
+    protected void subscribeRxBus() {
         addSubscription(LRxBus.getDefault().toObservable(String.class, Constant.Action.UPDATE_CONVERSATION)
                 .subscribe(new LRxBusSubscriber<String>() {
                     @Override

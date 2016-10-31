@@ -76,7 +76,7 @@ public class ContactsFragment extends BaseMvpFragment<ContactsContract.Presenter
     }
 
     @Override
-    protected void initializeRxBusListener() {
+    protected void subscribeRxBus() {
         addSubscription(LRxBus.getDefault().toTagObservable(Constant.Action.ADD_FRIEND)
                 .subscribe(new LRxBusSubscriber<Object>() {
                     @Override

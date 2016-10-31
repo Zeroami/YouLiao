@@ -18,73 +18,30 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
 
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：OkHttp工厂类</p>
+ * <p>描述：OkHttpClient工厂类</p>
  */
 public class LOkHttpClientFactory {
 
     private static SparseArray<OkHttpClient> sClientPool = new SparseArray<>();
-    private static Map<LClientConfig,OkHttpClient> sCustomClientPool = new HashMap<>();
+    private static Map<LClientConfig, OkHttpClient> sCustomClientPool = new HashMap<>();
     private static final String CACHE_DIRNAME = "cache_data";
     private static final int CACHE_SIZE = 10485760; // 10M
     private static final int CONNECT_TIMEOUT = 10;
     private static final int READ_TIMEOUT = 30;
     private static final int WRITE_TIMEOUT = 30;
     private static final int MAX_STALE = 60;    // 有网络时默认缓存的时间
-
-
-    /**
-     * 日志拦截器，打印日志
-     */
-    private static Interceptor ｍLoggingInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            long t1 = System.nanoTime();
-            String requestBody = "";
-            try {
-                Request newRequest = request.newBuilder().build();
-                Buffer buffer = new Buffer();
-                newRequest.body().writeTo(buffer);
-                if (isPlaintext(buffer)) {
-                    requestBody = buffer.readUtf8() + "\n\n" + newRequest.body().contentLength() + " byte body";
-                }else{
-                    requestBody = "binary " + newRequest.body().contentLength() + " byte body";
-                }
-
-            } catch (Exception e) {
-            }
-            LL.i(String.format("Sending request %s by %s%n%n%s%n%s",
-                    request.url(), request.method(), request.headers(),requestBody));
-
-            Response response = chain.proceed(request);
-            long t2 = System.nanoTime();
-            String resonseBody = "";
-            try {
-                BufferedSource source = response.body().source();
-                source.request(Long.MAX_VALUE);
-                Buffer buffer = source.buffer().clone();
-                if (isPlaintext(buffer)){
-                    resonseBody = buffer.readString(Charset.forName("UTF-8")) + "\n\n" + response.body().contentLength() + " byte body";
-                }else{
-                    resonseBody = "binary " + buffer.size() + " byte body";
-                }
-            } catch (Exception e) {
-            }
-            LL.i(String.format("Received response for %s in %.1fms%n%n%s %s %s%n%n%s%n%s",
-                    response.request().url(), (t2 - t1) / 1e6d, response.protocol(), response.code(), response.message(), response.headers(), resonseBody));
-
-            return response;
-        }
-    };
 
     private LOkHttpClientFactory() {
         throw new UnsupportedOperationException("cannot be instantiated");
@@ -124,11 +81,12 @@ public class LOkHttpClientFactory {
 
     /**
      * 根据ClientConfig返回定制的OkHttpClient
-     * @param clientConfig  创建Client使用的配置
+     *
+     * @param clientConfig 创建Client使用的配置
      * @return
      */
     public static OkHttpClient getCustomClient(LClientConfig clientConfig) {
-        if (clientConfig == null){
+        if (clientConfig == null) {
             throw new RuntimeException("clientConfig is null");
         }
         OkHttpClient client = sCustomClientPool.get(clientConfig);
@@ -137,7 +95,7 @@ public class LOkHttpClientFactory {
                 if (client == null) {
                     client = createCustomClient(clientConfig);
                     if (client != null) {
-                        sCustomClientPool.put(clientConfig,client);
+                        sCustomClientPool.put(clientConfig, client);
                     }
                 }
             }
@@ -171,20 +129,21 @@ public class LOkHttpClientFactory {
      * @return
      */
     private static OkHttpClient createDefaultClient() {
-        return getCustomClient(LClientConfig.get());
+        return getCustomClient(LClientConfig.create());
     }
 
     /**
      * 创建带缓存Client，离线可以缓存，在线在max-stale时间内读取缓存，过期获取最新数据
      *
-     * @return OkHttpClient
+     * @return
      */
     private static OkHttpClient createCacheInMaxStaleClient() {
-        return getCustomClient(LClientConfig.get().clientType(LClientType.TYPE_CACHE_IN_MAX_STALE));
+        return getCustomClient(LClientConfig.create().clientType(LClientType.TYPE_CACHE_IN_MAX_STALE));
     }
 
     /**
      * 创建自定义Client
+     *
      * @param clientConfig
      * @return
      */
@@ -202,11 +161,11 @@ public class LOkHttpClientFactory {
                             .build();
                 } else {
                     if (TextUtils.isEmpty(cacheControl)) {  // 如果用户没有设置
-                        if (clientConfig.getClientType() == LClientType.TYPE_DEFAULT){  // 强制从网络获取
+                        if (clientConfig.getClientType() == LClientType.TYPE_DEFAULT) {  // 强制从网络获取
                             request = request.newBuilder()
                                     .cacheControl(CacheControl.FORCE_NETWORK)
                                     .build();
-                        } else if(clientConfig.getClientType() == LClientType.TYPE_CACHE_IN_MAX_STALE){ // 在max-stale时间内读取缓存
+                        } else if (clientConfig.getClientType() == LClientType.TYPE_CACHE_IN_MAX_STALE) { // 在max-stale时间内读取缓存
                             request = request.newBuilder()
                                     .header("Cache-Control", "public, max-stale=" + clientConfig.getMaxStale()).removeHeader("Pragma")
                                     .build();
@@ -224,7 +183,7 @@ public class LOkHttpClientFactory {
                 .writeTimeout(clientConfig.getWriteTimeout(), TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .addNetworkInterceptor(interceptor) // Network -> NetworkInterceptor -> Cache -> Interceptor , NetworkInterceptor更快执行，可用于修改定制Response的头信息
-                .addInterceptor(ｍLoggingInterceptor)
+                .addInterceptor(new LHttpLoggingInterceptor())
                 .cache(cache)
                 .build();
 
@@ -232,38 +191,7 @@ public class LOkHttpClientFactory {
         return client;
     }
 
-    /**
-     * 判断返回数据时候为文本类型
-     * @param buffer
-     * @return
-     */
-    private static boolean isPlaintext(Buffer buffer) {
-        try {
-            Buffer prefix = new Buffer();
-            long byteCount = buffer.size() < 64 ? buffer.size() : 64;
-            buffer.copyTo(prefix, 0, byteCount);
-            for (int i = 0; i < 16; i++) {
-                if (prefix.exhausted()) {
-                    break;
-                }
-                int codePoint = prefix.readUtf8CodePoint();
-                if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (EOFException e) {
-            return false; // Truncated UTF-8 sequence.
-        }
-    }
 
-    public static Interceptor getLoggingInterceptor() {
-        return ｍLoggingInterceptor;
-    }
-
-    /**
-     * 常量类，表示OkHttpClient的类型
-     */
     public static class LClientType {
         public static final int TYPE_DEFAULT = 1;       // 默认Client，离线可以缓存，在线就获取最新数据
         public static final int TYPE_CACHE_IN_MAX_STALE = 2;  // 带缓存Client，离线可以缓存，在线在max-stale时间内读取缓存，过期获取最新数据
@@ -276,7 +204,7 @@ public class LOkHttpClientFactory {
      * <p>邮箱：826589183@qq.com</p>
      * <p>描述：OkHttpClient配置</p>
      */
-    public static class LClientConfig{
+    public static class LClientConfig {
         private String cacheDirName;
         private int cacheSize;
         private int connectTimeout;
@@ -285,9 +213,10 @@ public class LOkHttpClientFactory {
         private int clientType;
         private int maxStale;
 
-        private LClientConfig(){}
+        private LClientConfig() {
+        }
 
-        public static LClientConfig get(){
+        public static LClientConfig create() {
             return new LClientConfig()
                     .cacheDirName(CACHE_DIRNAME)
                     .cacheSize(CACHE_SIZE)
@@ -298,39 +227,39 @@ public class LOkHttpClientFactory {
                     .maxStale(MAX_STALE);
         }
 
-        public LClientConfig cacheDirName(String cacheDirName){
-            if (cacheDirName != null){
+        public LClientConfig cacheDirName(String cacheDirName) {
+            if (cacheDirName != null) {
                 this.cacheDirName = cacheDirName;
             }
             return this;
         }
 
-        public LClientConfig cacheSize(int cacheSize){
+        public LClientConfig cacheSize(int cacheSize) {
             this.cacheSize = cacheSize;
             return this;
         }
 
-        public LClientConfig connectTimeout(int connectTimeout){
+        public LClientConfig connectTimeout(int connectTimeout) {
             this.connectTimeout = connectTimeout;
             return this;
         }
 
-        public LClientConfig readTimeout(int readTimeout){
+        public LClientConfig readTimeout(int readTimeout) {
             this.readTimeout = readTimeout;
             return this;
         }
 
-        public LClientConfig writeTimeout(int writeTimeout){
+        public LClientConfig writeTimeout(int writeTimeout) {
             this.writeTimeout = writeTimeout;
             return this;
         }
 
-        public LClientConfig clientType(int clientType){
+        public LClientConfig clientType(int clientType) {
             this.clientType = clientType;
             return this;
         }
 
-        public LClientConfig maxStale(int maxStale){
+        public LClientConfig maxStale(int maxStale) {
             this.maxStale = maxStale;
             return this;
         }
@@ -355,11 +284,11 @@ public class LOkHttpClientFactory {
             return writeTimeout;
         }
 
-        public int getClientType(){
+        public int getClientType() {
             return clientType;
         }
 
-        public int getMaxStale(){
+        public int getMaxStale() {
             return maxStale;
         }
 
@@ -371,7 +300,7 @@ public class LOkHttpClientFactory {
 
         @Override
         public boolean equals(Object o) {
-            if (o instanceof LClientConfig){
+            if (o instanceof LClientConfig) {
                 LClientConfig clientConfig = (LClientConfig) o;
                 return this.cacheDirName.equals(clientConfig.cacheDirName)
                         && this.cacheSize == clientConfig.cacheSize
@@ -380,7 +309,7 @@ public class LOkHttpClientFactory {
                         && this.writeTimeout == clientConfig.writeTimeout
                         && this.clientType == clientConfig.clientType
                         && this.maxStale == clientConfig.maxStale;
-            }else{
+            } else {
                 return false;
             }
         }

@@ -118,7 +118,7 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     }
 
     @Override
-    protected void initializeRxBusListener() {
+    protected void subscribeRxBus() {
         addSubscription(LRxBus.getDefault().toObservable(TextMessage.class, Constant.Action.RECEIVE_CHAT_MESSAGE)
                 .subscribe(new LRxBusSubscriber<TextMessage>() {
                     @Override

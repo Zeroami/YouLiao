@@ -1,22 +1,22 @@
-package com.zeroami.commonlib.module.versionupdate;
+package com.zeroami.commonlib.http;
 
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：下载进度信息</p>
+ * <p>描述：上传下载进度信息</p>
  */
-public class LDownloadProgressInfo {
+public class LProgressInfo {
     /**
      * 文件大小
      */
     long total;
     /**
-     * 已下载大小
+     * 已上传下载大小
      */
     long progress;
 
 
-    public LDownloadProgressInfo(){}
+    public LProgressInfo(){}
 
     public void setTotal(long total) {
         this.total = total;
@@ -34,7 +34,7 @@ public class LDownloadProgressInfo {
         this.progress = progress;
     }
 
-    public LDownloadProgressInfo(long total, long progress) {
+    public LProgressInfo(long total, long progress) {
         this.total = total;
         this.progress = progress;
     }

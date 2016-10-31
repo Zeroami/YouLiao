@@ -67,6 +67,7 @@ public class ChatPresenter extends LBasePresenter<ChatContract.View,IChatModel> 
         return null;
     }
 
+
     @Override
     public void doViewInitialized() {
         mFriendModel.findFriendByObjectId(getMvpView().getUser().getObjectId(), new LeanCallback() {
