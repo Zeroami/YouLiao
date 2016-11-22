@@ -1,9 +1,11 @@
 package com.zeroami.commonlib.utils;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -19,6 +21,10 @@ import java.lang.reflect.Type;
  * <p>描述：通用工具类</p>
  */
 public class LUtils {
+
+    private LUtils(){
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
 
     /**
      * 根据子类的字节码获取泛型参数类型，如 new ArrayList<String>(){}.getClass();
@@ -51,15 +57,5 @@ public class LUtils {
         }
     }
 
-    /**
-     * 隐藏输入法
-     *
-     * @param view
-     */
-    public static void hideInputMethod(View view) {
-        InputMethodManager imm = (InputMethodManager) CommonLib.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isActive()) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
+
 }

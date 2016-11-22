@@ -22,6 +22,10 @@ public class LCircularAnimUtils {
     public static final long PERFECT_MILLS = 618;
     public static final int MINI_RADIUS = 0;
 
+    private LCircularAnimUtils(){
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
+
     /**
      * 向四周伸张，直到完成显示。
      * @param myView

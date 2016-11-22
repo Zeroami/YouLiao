@@ -10,4 +10,16 @@ import com.zeroami.commonlib.mvp.LMvpPresenter;
  */
 public abstract class BaseMvpActivity<P extends LMvpPresenter> extends LBaseMvpActivity<P>{
 
+    @Override
+    public void finish() {
+        super.finish();
+        setupExitAnimation();
+    }
+
+    /**
+     * 设置退出默认动画
+     */
+    protected void setupExitAnimation(){
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }

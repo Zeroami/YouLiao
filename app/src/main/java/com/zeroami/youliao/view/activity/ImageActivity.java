@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.zeroami.commonlib.base.LBaseActivity;
+import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.youliao.R;
 
 import butterknife.Bind;
@@ -24,7 +25,7 @@ import butterknife.Bind;
 public class ImageActivity extends LBaseActivity {
 
     private static final String EXTRA_IMAGE_URL = "extra_image_url";
-    private static final String SHARE_TRANSITION_NAME = "share_image";
+//    private static final String SHARE_TRANSITION_NAME = LRUtils.getString(R.string.transition_share_image);
 
     @Bind(R.id.cv_image)
     ImageView cvImage;
@@ -35,11 +36,12 @@ public class ImageActivity extends LBaseActivity {
         Intent intent = new Intent(activity, ImageActivity.class);
         intent.putExtra(EXTRA_IMAGE_URL, imageUrl);
 
-        // 这里指定了共享的视图元素
-        ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity, transitionView, SHARE_TRANSITION_NAME);
-
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+//        // 这里指定了共享的视图元素
+//        ActivityOptionsCompat options = ActivityOptionsCompat
+//                .makeSceneTransitionAnimation(activity, transitionView, SHARE_TRANSITION_NAME);
+//
+//        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        activity.startActivity(intent);
     }
 
     @Override
@@ -53,14 +55,18 @@ public class ImageActivity extends LBaseActivity {
     }
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         if (TextUtils.isEmpty(mImageUrl)){
             cvImage.setImageResource(R.drawable.img_default_face);
         }else{
             Glide.with(this).load(mImageUrl).placeholder(R.drawable.img_placeholder).fitCenter().into(cvImage);
         }
-        // 这里指定了被共享的视图元素
-        ViewCompat.setTransitionName(cvImage, SHARE_TRANSITION_NAME);
+//        // 这里指定了被共享的视图元素
+//        ViewCompat.setTransitionName(cvImage, SHARE_TRANSITION_NAME);
     }
 }

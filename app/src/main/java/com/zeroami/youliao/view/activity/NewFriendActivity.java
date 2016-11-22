@@ -56,8 +56,12 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
     }
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         initToolbar();
         initRecyclerView();
     }

@@ -16,8 +16,8 @@ import okio.Buffer;
 import okio.BufferedSource;
 
 /**
- * <p>作者：linzebiao</p>
- * <p>日期：16-10-31</p>
+ * <p>作者：Zeroami</p>
+ * <p>邮箱：826589183@qq.com</p>
  * <p>描述：Http请求日志拦截器</p>
  */
 public class LHttpLoggingInterceptor implements Interceptor {

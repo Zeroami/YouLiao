@@ -20,6 +20,10 @@ public class LThreadUtils {
 
     private final static ExecutorService EXECUTOR = Executors.newCachedThreadPool(new LInnerThreadFactory());
 
+    private LThreadUtils() {
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
+
     public static void doInBackground(final Runnable r) {
         doInBackground(r, null);
     }

@@ -23,13 +23,4 @@ public class LBaseModel<P extends LMvpPresenter> implements LMvpModel{
             ((LRxSupport)mMvpPresenter).addSubscription(subscription);
         }
     }
-
-    /**
-     * 获取MvpPresenter
-     *
-     * @return
-     */
-    public P getMvpPresenter(){
-        return mMvpPresenter;
-    }
 }

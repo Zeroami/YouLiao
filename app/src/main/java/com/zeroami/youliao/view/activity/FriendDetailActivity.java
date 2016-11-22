@@ -71,10 +71,13 @@ public class FriendDetailActivity extends BaseMvpActivity<FriendDetailContract.P
         return R.layout.activity_friend_detail;
     }
 
+    @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
 
     @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         initToolbar();
         initView();
         initListener();

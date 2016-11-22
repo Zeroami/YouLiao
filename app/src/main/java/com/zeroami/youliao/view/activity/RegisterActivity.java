@@ -39,8 +39,12 @@ public class RegisterActivity extends BaseMvpActivity<RegisterContract.Presenter
     }
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         btnRegister.setOnClickListener(this);
     }
 

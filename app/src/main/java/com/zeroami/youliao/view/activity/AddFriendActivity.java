@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.recycleview.LAutoLoadOnScrollListener;
+import com.zeroami.commonlib.utils.LInputMethodUtils;
 import com.zeroami.commonlib.utils.LPageUtils;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.utils.LUtils;
@@ -79,8 +80,12 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
 
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         initToolbar();
         initListener();
         initRecycleView();
@@ -207,8 +212,8 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
 
     @Override
     public void hideInputMethod() {
-        LUtils.hideInputMethod(etUsername);
-        LUtils.hideInputMethod(etNickname);
+        LInputMethodUtils.hideInputMethod(etUsername);
+        LInputMethodUtils.hideInputMethod(etNickname);
     }
 
     @Override

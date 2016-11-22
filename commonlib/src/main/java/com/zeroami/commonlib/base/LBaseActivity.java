@@ -56,7 +56,7 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
                 replaceFragment(firstFragment, false);
             }
         }
-        setSwipeBackEnable(false);      // 默认不带滑动退出的效果，让子类根据需要设置
+        setSwipeBackEnable(isSwipeBackEnable());      // 默认不带滑动退出的效果，让子类根据需要设置
         initialize(savedInstanceState);
         subscribeRxBus();
         onInitialized();
@@ -67,12 +67,6 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         mSubscriptionManager.unsubscribeAllSubscription();
         LActivityUtils.removeActivity(this);
         super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        setupExitAnimation();
     }
 
     /**
@@ -119,6 +113,14 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     }
 
     /**
+     * 是否启动滑动返回
+     * @return
+     */
+    protected boolean isSwipeBackEnable(){
+        return false;
+    }
+
+    /**
      * 获取Fragment容器id
      *
      * @return
@@ -154,15 +156,6 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     protected Fragment getFirstFragment() {
         return null;
     }
-
-
-    /**
-     * 设置退出默认动画
-     */
-    protected void setupExitAnimation(){
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
-
 
     /**
      * 添加fragment

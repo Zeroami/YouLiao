@@ -87,8 +87,12 @@ public class PersonalInfoActivity extends BaseMvpActivity<PersonalInfoContract.P
 
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         initToolbar();
         initView();
     }

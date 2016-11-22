@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
+import com.zeroami.commonlib.utils.LInputMethodUtils;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LRUtils;
 import com.zeroami.commonlib.utils.LT;
@@ -108,14 +109,20 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
     }
 
     @Override
+    protected boolean isSwipeBackEnable() {
+        return true;
+    }
+
+    @Override
     protected void initialize(Bundle savedInstanceState) {
-        setSwipeBackEnable(true);
         initToolbar();
         initView();
         initListener();
         initRecyclerView();
         initExpressionViewPager();
     }
+
+
 
     @Override
     protected void subscribeRxBus() {
@@ -306,7 +313,7 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
 
     @Override
     public void hideInputMethod() {
-        LUtils.hideInputMethod(etChatMessage);
+        LInputMethodUtils.hideInputMethod(etChatMessage);
     }
 
     @Override

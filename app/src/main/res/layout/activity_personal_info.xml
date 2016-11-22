@@ -30,6 +30,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:src="@drawable/img_default_face"
+                android:transitionName="@string/transition_share_image"
                 app:border_color="@color/windowBackground"
                 app:border_width="@dimen/dp_1" />
 
