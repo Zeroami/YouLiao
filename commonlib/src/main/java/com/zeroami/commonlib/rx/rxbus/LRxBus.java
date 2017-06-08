@@ -17,20 +17,20 @@ import rx.subjects.Subject;
  */
 public class LRxBus {
 
-    public static final Object EMPTY = new Object();
-    public static final Class<Object> EMPTY_TYPE = Object.class;
+    public static final LNull NULL = new LNull();
+    public static final Class<LNull> NULL_TYPE = LNull.class;
 
     private static volatile LRxBus sInstance;
     private final Subject<Object, Object> mSubject;
 
     private final Map<Class<?>, Object> mStickyEventMap;
-    private final Map<String, Object> mStickyTagEventMap;
+    private final Map<String, Object> mStickyActionEventMap;
 
     public LRxBus() {
         // PublishSubject: 只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
         mSubject = new SerializedSubject<>(PublishSubject.create());
         mStickyEventMap = new ConcurrentHashMap<>();
-        mStickyTagEventMap = new ConcurrentHashMap<>();
+        mStickyActionEventMap = new ConcurrentHashMap<>();
     }
 
     public static LRxBus getDefault() {
@@ -54,22 +54,22 @@ public class LRxBus {
     }
 
     /**
-     * 发送一个带tag的事件
+     * 发送一个带action的事件
      *
      * @param event
-     * @param tag
+     * @param action
      */
-    public void post(Object event, String tag) {
-        mSubject.onNext(new LRxBusEvent(tag, event));
+    public void post(Object event, String action) {
+        mSubject.onNext(new LRxBusEvent(action, event));
     }
 
     /**
-     * 发送一个带tag的空事件
+     * 发送一个带action的空事件
      *
-     * @param tag
+     * @param action
      */
-    public void postTag(String tag) {
-        mSubject.onNext(new LRxBusEvent(tag, EMPTY));
+    public void postAction(String action) {
+        mSubject.onNext(new LRxBusEvent(action, NULL));
     }
 
     /**
@@ -84,20 +84,20 @@ public class LRxBus {
     }
 
     /**
-     * 关注事件类型且满足tag标志
+     * 关注事件类型且满足action标志
      *
      * @param eventType
-     * @param tag
+     * @param action
      * @param <T>
      * @return
      */
-    public <T> Observable<T> toObservable(final Class<T> eventType, final String tag) {
+    public <T> Observable<T> toObservable(final Class<T> eventType, final String action) {
         return mSubject.filter(new Func1<Object, Boolean>() {
             @Override
             public Boolean call(Object o) {
                 if (!(o instanceof LRxBusEvent)) return false;
                 LRxBusEvent event = (LRxBusEvent) o;
-                return eventType.isInstance(event.getData()) && tag != null && tag.equals(event.getTag());
+                return eventType.isInstance(event.getData()) && action != null && action.equals(event.getAction());
             }
         }).map(new Func1<Object, T>() {
             @Override
@@ -109,13 +109,13 @@ public class LRxBus {
     }
 
     /**
-     * 仅关注tag对应的事件
+     * 仅关注action对应的事件
      *
-     * @param tag
+     * @param action
      * @return
      */
-    public Observable<Object> toTagObservable(String tag) {
-        return toObservable(EMPTY_TYPE, tag);
+    public Observable<LNull> toActionObservable(String action) {
+        return toObservable(NULL_TYPE, action);
     }
 
 
@@ -132,26 +132,26 @@ public class LRxBus {
     }
 
     /**
-     * 发送一个带tag的Sticky事件
+     * 发送一个带action的Sticky事件
      * @param event
-     * @param tag
+     * @param action
      */
-    public void postSticky(Object event, String tag) {
-        synchronized (mStickyTagEventMap) {
-            mStickyTagEventMap.put(event.getClass().toString() + tag, event);
+    public void postSticky(Object event, String action) {
+        synchronized (mStickyActionEventMap) {
+            mStickyActionEventMap.put(event.getClass().toString() + action, event);
         }
-        post(event, tag);
+        post(event, action);
     }
 
     /**
-     * 发送一个带tag的Sticky空事件
-     * @param tag
+     * 发送一个带action的Sticky空事件
+     * @param action
      */
-    public void postTagSticky(String tag) {
-        synchronized (mStickyTagEventMap) {
-            mStickyTagEventMap.put(EMPTY.getClass().toString() + tag, EMPTY);
+    public void postActionSticky(String action) {
+        synchronized (mStickyActionEventMap) {
+            mStickyActionEventMap.put(NULL.getClass().toString() + action, NULL);
         }
-        post(EMPTY, tag);
+        post(NULL, action);
     }
 
     /**
@@ -180,17 +180,17 @@ public class LRxBus {
     }
 
     /**
-     * 关注事件类型且满足tag标志
+     * 关注事件类型且满足action标志
      *
      * @param eventType
-     * @param tag
+     * @param action
      * @param <T>
      * @return
      */
-    public <T> Observable<T> toStickyObservable(final Class<T> eventType, final String tag) {
-        synchronized (mStickyTagEventMap) {
-            Observable<T> observable = toObservable(eventType, tag);
-            final Object event = mStickyTagEventMap.get(eventType.toString() + tag);
+    public <T> Observable<T> toStickyObservable(final Class<T> eventType, final String action) {
+        synchronized (mStickyActionEventMap) {
+            Observable<T> observable = toObservable(eventType, action);
+            final Object event = mStickyActionEventMap.get(eventType.toString() + action);
 
             if (event != null) {
                 return observable.mergeWith(Observable.create(new Observable.OnSubscribe<T>() {
@@ -206,13 +206,13 @@ public class LRxBus {
     }
 
     /**
-     * 仅关注tag对应的事件
+     * 仅关注action对应的事件
      *
-     * @param tag
+     * @param action
      * @return
      */
-    public Observable<Object> toTagStickyObservable(String tag) {
-        return toStickyObservable(EMPTY_TYPE, tag);
+    public Observable<LNull> toActionStickyObservable(String action) {
+        return toStickyObservable(NULL_TYPE, action);
     }
 
     /**
@@ -229,16 +229,16 @@ public class LRxBus {
     }
 
     /**
-     * 根据eventType和tag获取Sticky事件
+     * 根据eventType和action获取Sticky事件
      *
      * @param eventType
-     * @param tag
+     * @param action
      * @param <T>
      * @return
      */
-    public <T> T getStickyEvent(Class<T> eventType, String tag) {
-        synchronized (mStickyTagEventMap) {
-            return eventType.cast(mStickyTagEventMap.get(eventType.toString() + tag));
+    public <T> T getStickyEvent(Class<T> eventType, String action) {
+        synchronized (mStickyActionEventMap) {
+            return eventType.cast(mStickyActionEventMap.get(eventType.toString() + action));
         }
     }
 
@@ -259,13 +259,13 @@ public class LRxBus {
      * 移除指定eventType的Sticky事件
      *
      * @param eventType
-     * @param tag
+     * @param action
      * @param <T>
      * @return
      */
-    public <T> T removeStickyEvent(Class<T> eventType, String tag) {
-        synchronized (mStickyTagEventMap) {
-            return eventType.cast(mStickyTagEventMap.remove(eventType.toString() + tag));
+    public <T> T removeStickyEvent(Class<T> eventType, String action) {
+        synchronized (mStickyActionEventMap) {
+            return eventType.cast(mStickyActionEventMap.remove(eventType.toString() + action));
         }
     }
 
@@ -276,8 +276,8 @@ public class LRxBus {
         synchronized (mStickyEventMap) {
             mStickyEventMap.clear();
         }
-        synchronized (mStickyTagEventMap) {
-            mStickyTagEventMap.clear();
+        synchronized (mStickyActionEventMap) {
+            mStickyActionEventMap.clear();
         }
     }
 

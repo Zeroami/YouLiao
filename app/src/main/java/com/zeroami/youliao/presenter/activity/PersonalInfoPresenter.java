@@ -24,12 +24,12 @@ public class PersonalInfoPresenter extends LBasePresenter<PersonalInfoContract.V
     }
 
     @Override
-    protected IUserModel getRealModel() {
+    protected IUserModel createRealModel() {
         return new UserModel();
     }
 
     @Override
-    protected IUserModel getTestModel() {
+    protected IUserModel createTestModel() {
         return null;
     }
 

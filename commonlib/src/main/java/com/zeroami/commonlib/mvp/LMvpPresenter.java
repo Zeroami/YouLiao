@@ -1,6 +1,8 @@
 package com.zeroami.commonlib.mvp;
 
 
+import android.os.Bundle;
+
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
@@ -23,5 +25,11 @@ public interface LMvpPresenter<V extends LMvpView> {
      * View初始化完成
      */
     void doViewInitialized();
+
+    /**
+     * 处理携带数据
+     * @param extras
+     */
+    void doHandleExtras(Bundle extras);
 
 }

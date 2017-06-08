@@ -29,12 +29,12 @@ public class NewFriendPresenter extends LBasePresenter<NewFriendContract.View, I
     }
 
     @Override
-    protected IFriendModel getRealModel() {
+    protected IFriendModel createRealModel() {
         return new FriendModel();
     }
 
     @Override
-    protected IFriendModel getTestModel() {
+    protected IFriendModel createTestModel() {
         return null;
     }
 

@@ -1,71 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <attr name="border_width" format="dimension" />
+    <attr name="border_color" format="color" />
+    <attr name="radius" format="dimension" />
+
     <!--圆形图片控件-->
     <declare-styleable name="LCircleImageView">
-        <attr name="border_width" format="dimension" />
-        <attr name="border_color" format="color" />
+        <attr name="border_width" />
+        <attr name="border_color" />
         <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+
+    <!--圆角图片控件-->
+    <declare-styleable name="LRoundImageView">
+        <attr name="radius" />
+        <attr name="border_width" />
+        <attr name="border_color" />
     </declare-styleable>
 
     <!--进度条-->
     <declare-styleable name="LCircleProgressView">
-        <attr name="progressIndeterminate" format="boolean"/>
-        <attr name="barColor" format="color"/>
-        <attr name="rimColor" format="color"/>
-        <attr name="rimWidth" format="dimension"/>
-        <attr name="spinSpeed" format="float"/>
-        <attr name="barSpinCycleTime" format="integer"/>
-        <attr name="circleRadius" format="dimension"/>
-        <attr name="fillRadius" format="boolean"/>
-        <attr name="barWidth" format="dimension"/>
-        <attr name="linearProgress" format="boolean"/>
+        <attr name="progressIndeterminate" format="boolean" />
+        <attr name="barColor" format="color" />
+        <attr name="rimColor" format="color" />
+        <attr name="rimWidth" format="dimension" />
+        <attr name="spinSpeed" format="float" />
+        <attr name="barSpinCycleTime" format="integer" />
+        <attr name="circleRadius" format="dimension" />
+        <attr name="fillRadius" format="boolean" />
+        <attr name="barWidth" format="dimension" />
+        <attr name="linearProgress" format="boolean" />
     </declare-styleable>
 
     <!-- 侧滑返回Layout-->
     <declare-styleable name="SwipeBackLayout">
-        <attr name="edge_size" format="dimension"/>
+        <attr name="edge_size" format="dimension" />
         <attr name="edge_flag">
-            <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
-            <enum name="bottom" value="2"/>
-            <enum name="all" value="3"/>
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="bottom" value="2" />
+            <enum name="all" value="3" />
         </attr>
-        <attr name="shadow_left" format="reference"/>
-        <attr name="shadow_right" format="reference"/>
-        <attr name="shadow_bottom" format="reference"/>
+        <attr name="shadow_left" format="reference" />
+        <attr name="shadow_right" format="reference" />
+        <attr name="shadow_bottom" format="reference" />
     </declare-styleable>
 
-    <attr name="SwipeBackLayoutStyle" format="reference"/>
+    <attr name="SwipeBackLayoutStyle" format="reference" />
 
     <!-- 状态按钮 -->
     <declare-styleable name="LStateButton">
 
         <!--text color-->
-        <attr name="normalTextColor" format="color|reference"/>
-        <attr name="pressedTextColor" format="color|reference"/>
-        <attr name="unableTextColor" format="color|reference"/>
+        <attr name="normalTextColor" format="color|reference" />
+        <attr name="pressedTextColor" format="color|reference" />
+        <attr name="unableTextColor" format="color|reference" />
 
         <!--stroke width and color, dash width, dash gap-->
-        <attr name="strokeDashWidth" format="dimension|reference"/>
-        <attr name="strokeDashGap" format="dimension|reference"/>
-        <attr name="normalStrokeWidth" format="dimension|reference"/>
-        <attr name="pressedStrokeWidth" format="dimension|reference"/>
-        <attr name="unableStrokeWidth" format="dimension|reference"/>
-        <attr name="normalStrokeColor" format="color|reference"/>
-        <attr name="pressedStrokeColor" format="color|reference"/>
-        <attr name="unableStrokeColor" format="color|reference"/>
+        <attr name="strokeDashWidth" format="dimension|reference" />
+        <attr name="strokeDashGap" format="dimension|reference" />
+        <attr name="normalStrokeWidth" format="dimension|reference" />
+        <attr name="pressedStrokeWidth" format="dimension|reference" />
+        <attr name="unableStrokeWidth" format="dimension|reference" />
+        <attr name="normalStrokeColor" format="color|reference" />
+        <attr name="pressedStrokeColor" format="color|reference" />
+        <attr name="unableStrokeColor" format="color|reference" />
 
         <!--background color-->
-        <attr name="normalBackgroundColor" format="color|reference"/>
-        <attr name="pressedBackgroundColor" format="color|reference"/>
-        <attr name="unableBackgroundColor" format="color|reference"/>
+        <attr name="normalBackgroundColor" format="color|reference" />
+        <attr name="pressedBackgroundColor" format="color|reference" />
+        <attr name="unableBackgroundColor" format="color|reference" />
 
         <!--background radius-->
-        <attr name="radius" format="dimension|reference"/>
-        <attr name="round" format="boolean|reference"/>
+        <attr name="radius" />
+        <attr name="round" format="boolean|reference" />
 
         <!--animation duration-->
-        <attr name="animationDuration" format="integer|reference"/>
+        <attr name="animationDuration" format="integer|reference" />
 
     </declare-styleable>
 </resources>

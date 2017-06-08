@@ -20,12 +20,12 @@ public class SplashPresenter extends LBasePresenter<SplashContract.View,IUserMod
     }
 
     @Override
-    protected IUserModel getRealModel() {
+    protected IUserModel createRealModel() {
         return new UserModel();
     }
 
     @Override
-    protected IUserModel getTestModel() {
+    protected IUserModel createTestModel() {
         return null;
     }
 

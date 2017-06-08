@@ -26,8 +26,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.kennyc.bottomsheet.BottomSheet;
-import com.zeroami.commonlib.rx.rxbus.LRxBus;
-import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
 import com.zeroami.commonlib.utils.LDisplayUtils;
 import com.zeroami.commonlib.utils.LL;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -39,14 +37,13 @@ import com.zeroami.youliao.R;
 import com.zeroami.youliao.adapter.MainContentAdapter;
 import com.zeroami.youliao.base.BaseMvpActivity;
 import com.zeroami.youliao.bean.User;
-import com.zeroami.youliao.config.Constant;
 import com.zeroami.youliao.contract.activity.MainContract;
 import com.zeroami.youliao.presenter.activity.MainPresenter;
 import com.zeroami.youliao.view.fragment.ConversationFragment;
 import com.zeroami.youliao.view.fragment.ContactsFragment;
 import com.zeroami.youliao.view.fragment.MeFragment;
 import com.zeroami.youliao.view.fragment.TopicFragment;
-import com.zeroami.youliao.widget.RelativePopupWindow;
+import com.zeroami.commonlib.widget.LRelativePopupWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +78,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
     private int mCurrentPosition = -1;
 
     private View mAddPopupView;
-    private RelativePopupWindow mAddPopupWindow;
+    private LRelativePopupWindow mAddPopupWindow;
     private int mAddPopupViewWidth;
 
     private User mCurrentUser;
@@ -118,6 +115,11 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
         initViewPager();
         initBottomNavigation();
         setTabSelected(0);
+    }
+
+    @Override
+    protected void onInitialized() {
+
     }
 
     private void initToolbar() {
@@ -212,7 +214,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
         viewFinder.onClick(R.id.ll_add_friend, this);
         viewFinder.onClick(R.id.ll_add_group, this);
 
-        mAddPopupWindow = new RelativePopupWindow(mAddPopupView,
+        mAddPopupWindow = new LRelativePopupWindow(mAddPopupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mAddPopupWindow.setBackgroundDrawable(LRUtils.getDrawable(R.drawable.bg_popup));
     }
@@ -428,7 +430,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.Presenter> implem
 
     @Override
     public void showAddView() {
-        mAddPopupWindow.showOnAnchor(toolbar, RelativePopupWindow.VerticalPosition.BELOW, RelativePopupWindow.HorizontalPosition.RIGHT, -mAddPopupViewWidth - LDisplayUtils.dip2px(2), LDisplayUtils.dip2px(2));
+        mAddPopupWindow.showOnAnchor(toolbar, LRelativePopupWindow.HorizontalPosition.RIGHT, LRelativePopupWindow.VerticalPosition.BELOW, -mAddPopupViewWidth - LDisplayUtils.dip2px(2), LDisplayUtils.dip2px(2));
     }
 
     @Override

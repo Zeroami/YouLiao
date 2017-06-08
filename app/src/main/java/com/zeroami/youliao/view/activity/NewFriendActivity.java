@@ -66,11 +66,6 @@ public class NewFriendActivity extends BaseMvpActivity<NewFriendContract.Present
         initRecyclerView();
     }
 
-    @Override
-    protected void onInitialized() {
-        getMvpPresenter().doViewInitialized();
-    }
-
     private void initToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");

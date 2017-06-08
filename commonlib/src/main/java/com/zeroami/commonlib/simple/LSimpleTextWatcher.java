@@ -7,7 +7,7 @@ import android.text.TextWatcher;
  * <p>邮箱：826589183@qq.com</p>
  * <p>描述：TextWatcher适配器</p>
  */
-public abstract class SimpleTextWatcher implements TextWatcher {
+public abstract class LSimpleTextWatcher implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         

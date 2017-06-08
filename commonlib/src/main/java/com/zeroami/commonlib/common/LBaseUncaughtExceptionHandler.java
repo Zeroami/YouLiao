@@ -1,4 +1,4 @@
-package com.zeroami.commonlib.app;
+package com.zeroami.commonlib.common;
 
 /**
  * <p>作者：Zeroami</p>

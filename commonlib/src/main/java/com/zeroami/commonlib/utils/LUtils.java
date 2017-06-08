@@ -57,5 +57,25 @@ public class LUtils {
         }
     }
 
+    /**
+     * 判断事件点是否在控件内
+     * @param view
+     * @param x
+     * @param y
+     * @return
+     */
+    public static boolean isTouchPointInView(View view, float x, float y) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int left = location[0];
+        int top = location[1];
+        int right = left + view.getMeasuredWidth();
+        int bottom = top + view.getMeasuredHeight();
+        if (y >= top && y <= bottom && x >= left
+                && x <= right) {
+            return true;
+        }
+        return false;
+    }
 
 }

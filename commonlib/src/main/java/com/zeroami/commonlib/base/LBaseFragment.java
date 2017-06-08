@@ -25,7 +25,7 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
 
     private LSubscriptionManager mSubscriptionManager;
 
-    private boolean mIsViewDestoryed = false;
+    private boolean mIsViewDestroyed = false;
 
 
     @Override
@@ -38,6 +38,9 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSubscriptionManager = new LSubscriptionManager();
+        if (getArguments() != null) {
+            handleArguments(getArguments());
+        }
         subscribeRxBus();
     }
 
@@ -45,7 +48,8 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLayoutView = inflater.inflate(getLayoutId(), container, false);
         ButterKnife.bind(this, mLayoutView);
-        mIsViewDestoryed = false;
+        onViewCreated();
+        mIsViewDestroyed = false;
         initialize(mLayoutView, savedInstanceState);
         onInitialized();
         return mLayoutView;
@@ -54,7 +58,7 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(this);
-        mIsViewDestoryed = true;
+        mIsViewDestroyed = true;
         super.onDestroyView();
     }
 
@@ -66,15 +70,31 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
 
     /**
      * 获取布局文件id
+     *
      * @return
      */
     protected abstract int getLayoutId();
 
     /**
+     * setContentView完成
+     */
+    protected void onViewCreated() {
+    }
+
+    /**
      * 初始化操作
+     *
      * @param savedInstanceState
      */
-    protected abstract void initialize(View layoutView,Bundle savedInstanceState);
+    protected abstract void initialize(View layoutView, Bundle savedInstanceState);
+
+    /**
+     * 处理携带的数据
+     *
+     * @param arguments
+     */
+    protected void handleArguments(Bundle arguments) {
+    }
 
     /**
      * 订阅RxBus
@@ -90,30 +110,34 @@ public abstract class LBaseFragment extends Fragment implements LRxSupport {
 
     /**
      * 获取宿主Activity
+     *
      * @return
      */
-    public Activity getAttachActivity(){
+    public Activity getAttachActivity() {
         return mActivity;
     }
 
     /**
      * 获取布局View
+     *
      * @return
      */
-    public View getLayoutView(){
+    public View getLayoutView() {
         return mLayoutView;
     }
 
     /**
      * View是否已经被销毁
+     *
      * @return
      */
-    public boolean isViewDestoryed(){
-        return mIsViewDestoryed;
+    public boolean isViewDestroyed() {
+        return mIsViewDestroyed;
     }
 
     /**
      * 添加一个订阅
+     *
      * @param subscription
      */
     @Override

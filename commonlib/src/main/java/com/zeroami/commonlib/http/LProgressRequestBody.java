@@ -19,11 +19,11 @@ public class LProgressRequestBody extends RequestBody {
     //实际的待包装请求体
     private final RequestBody mRequestBody;
     //进度回调接口
-    private final LUploadProgressListener mProgressListener;
+    private final LProgressListener mProgressListener;
     //包装完成的BufferedSink
     private BufferedSink mBufferedSink;
 
-    public LProgressRequestBody(RequestBody requestBody, LUploadProgressListener progressListener) {
+    public LProgressRequestBody(RequestBody requestBody, LProgressListener progressListener) {
         this.mRequestBody = requestBody;
         this.mProgressListener = progressListener;
     }

@@ -20,10 +20,10 @@ public class LPageUtils {
 	 * 不带数据的跳转
 	 * @param context
 	 * @param cls
-	 * @param isFisish
+	 * @param isFinish
 	 */
-	public static void startActivity(Context context, Class<?> cls, boolean isFisish) {
-		startActivity(context, cls, null, isFisish);
+	public static void startActivity(Context context, Class<?> cls, boolean isFinish) {
+		startActivity(context, cls, null, isFinish);
 	}
 
 	/**
@@ -31,15 +31,15 @@ public class LPageUtils {
 	 * @param context
 	 * @param cls
 	 * @param bundle
-	 * @param isFisish
+	 * @param isFinish
 	 */
-	public static void startActivity(Context context, Class<?> cls, Bundle bundle, boolean isFisish) {
+	public static void startActivity(Context context, Class<?> cls, Bundle bundle, boolean isFinish) {
 		Intent intent = new Intent(context,cls);
 		if (bundle != null) {
 			intent.putExtras(bundle);
 		}
 		context.startActivity(intent);
-		if (isFisish) {
+		if (isFinish) {
 			((Activity)context).finish();
 		}
 	}

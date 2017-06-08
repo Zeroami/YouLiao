@@ -105,6 +105,55 @@ public class LOkHttpClientFactory {
 
 
     /**
+     * 创建创建自定义Client的Builder
+     *
+     * @param clientConfig
+     * @return
+     */
+    public static OkHttpClient.Builder createCustomClientBuilder(final LClientConfig clientConfig) {
+        if (clientConfig == null) {
+            throw new RuntimeException("clientConfig is null");
+        }
+        File cacheDirectory = new File(CommonLib.getContext().getCacheDir().getAbsolutePath(), clientConfig.getCacheDirName());
+        final Cache cache = new Cache(cacheDirectory, clientConfig.getCacheSize());
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                String cacheControl = request.cacheControl().toString();
+                if (!LNetUtils.isNetworkConnected()) {  // 没有网络，强制从缓存中读取
+                    request = request.newBuilder()
+                            .cacheControl(CacheControl.FORCE_CACHE)
+                            .build();
+                } else {
+                    if (TextUtils.isEmpty(cacheControl)) {  // 如果用户没有设置
+                        if (clientConfig.getClientType() == LClientType.TYPE_DEFAULT) {  // 强制从网络获取
+                            request = request.newBuilder()
+                                    .cacheControl(CacheControl.FORCE_NETWORK)
+                                    .build();
+                        } else if (clientConfig.getClientType() == LClientType.TYPE_CACHE_IN_MAX_STALE) { // 在max-stale时间内读取缓存
+                            request = request.newBuilder()
+                                    .header("Cache-Control", "public, max-stale=" + clientConfig.getMaxStale()).removeHeader("Pragma")
+                                    .build();
+                        }
+                    }
+                }
+
+                return chain.proceed(request);
+            }
+        };
+
+        return new OkHttpClient.Builder()
+                .connectTimeout(clientConfig.getConnectTimeout(), TimeUnit.SECONDS)
+                .readTimeout(clientConfig.getReadTimeout(), TimeUnit.SECONDS)
+                .writeTimeout(clientConfig.getWriteTimeout(), TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .addNetworkInterceptor(interceptor) // Network -> NetworkInterceptor -> Cache -> Interceptor , NetworkInterceptor更快执行，可用于修改定制Response的头信息
+                .addInterceptor(new LHttpLoggingInterceptor())
+                .cache(cache);
+    }
+
+    /**
      * 根据ClientType创建OkHttpClient
      *
      * @param clientType
@@ -147,48 +196,8 @@ public class LOkHttpClientFactory {
      * @param clientConfig
      * @return
      */
-    private static OkHttpClient createCustomClient(final LClientConfig clientConfig) {
-        File cacheDirectory = new File(CommonLib.getContext().getCacheDir().getAbsolutePath(), clientConfig.getCacheDirName());
-        final Cache cache = new Cache(cacheDirectory, clientConfig.getCacheSize());
-        Interceptor interceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                String cacheControl = request.cacheControl().toString();
-                if (!LNetUtils.isNetworkConnected()) {  // 没有网络，强制从缓存中读取
-                    request = request.newBuilder()
-                            .cacheControl(CacheControl.FORCE_CACHE)
-                            .build();
-                } else {
-                    if (TextUtils.isEmpty(cacheControl)) {  // 如果用户没有设置
-                        if (clientConfig.getClientType() == LClientType.TYPE_DEFAULT) {  // 强制从网络获取
-                            request = request.newBuilder()
-                                    .cacheControl(CacheControl.FORCE_NETWORK)
-                                    .build();
-                        } else if (clientConfig.getClientType() == LClientType.TYPE_CACHE_IN_MAX_STALE) { // 在max-stale时间内读取缓存
-                            request = request.newBuilder()
-                                    .header("Cache-Control", "public, max-stale=" + clientConfig.getMaxStale()).removeHeader("Pragma")
-                                    .build();
-                        }
-                    }
-                }
-
-                return chain.proceed(request);
-            }
-        };
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(clientConfig.getConnectTimeout(), TimeUnit.SECONDS)
-                .readTimeout(clientConfig.getReadTimeout(), TimeUnit.SECONDS)
-                .writeTimeout(clientConfig.getWriteTimeout(), TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .addNetworkInterceptor(interceptor) // Network -> NetworkInterceptor -> Cache -> Interceptor , NetworkInterceptor更快执行，可用于修改定制Response的头信息
-                .addInterceptor(new LHttpLoggingInterceptor())
-                .cache(cache)
-                .build();
-
-
-        return client;
+    private static OkHttpClient createCustomClient(LClientConfig clientConfig) {
+        return createCustomClientBuilder(clientConfig).build();
     }
 
 

@@ -1,8 +1,9 @@
 package com.zeroami.commonlib.mvp;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.zeroami.commonlib.R;
 import com.zeroami.commonlib.base.LBaseActivity;
 import com.zeroami.commonlib.utils.LT;
 
@@ -14,9 +15,7 @@ import com.zeroami.commonlib.utils.LT;
 public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseActivity implements LMvpView {
 
     private P mMvpPresenter;
-    private ProgressDialog mProgressDialog;
-    private CharSequence mProgressMessage = "正在加载...";
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +31,12 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
         super.onDestroy();
     }
 
+    @Override
+    protected void onViewCreated() {
+        super.onViewCreated();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+    }
+
     /**
      * 创建Presenter
      *
@@ -39,19 +44,27 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
      */
     protected abstract P createPresenter();
 
-
     @Override
     public void showLoading() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(mProgressMessage);
-        mProgressDialog.show();
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
     }
 
     @Override
     public void hideLoading() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -60,12 +73,19 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
         LT.show(text);
     }
 
-    /**
-     * 设置加载显示文字
-     * @param message
-     */
-    protected void setLoadingMessage(CharSequence message){
-        mProgressMessage = message;
+
+    @Override
+    protected void handleExtras(Bundle extras) {
+        if (mMvpPresenter != null) {
+            mMvpPresenter.doHandleExtras(extras);
+        }
+    }
+
+    @Override
+    protected void onInitialized() {
+        if (mMvpPresenter != null){
+            getMvpPresenter().doViewInitialized();
+        }
     }
 
     /**
@@ -73,8 +93,17 @@ public abstract class LBaseMvpActivity<P extends LMvpPresenter> extends LBaseAct
      *
      * @return
      */
-    public P getMvpPresenter() {
+    protected P getMvpPresenter() {
         return mMvpPresenter;
+    }
+
+    /**
+     * 获取SwipeRefreshLayout
+     *
+     * @return
+     */
+    protected SwipeRefreshLayout getSwipeRefreshLayout() {
+        return mSwipeRefreshLayout;
     }
 
 }

@@ -24,12 +24,12 @@ public class LoginPresenter extends LBasePresenter<LoginContract.View, IUserMode
     }
 
     @Override
-    protected IUserModel getRealModel() {
+    protected IUserModel createRealModel() {
         return new UserModel();
     }
 
     @Override
-    protected IUserModel getTestModel() {
+    protected IUserModel createTestModel() {
         return null;
     }
 

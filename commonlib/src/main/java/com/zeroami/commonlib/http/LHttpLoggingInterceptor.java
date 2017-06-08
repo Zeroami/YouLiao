@@ -2,6 +2,9 @@ package com.zeroami.commonlib.http;
 
 import com.zeroami.commonlib.utils.LL;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -44,7 +47,7 @@ public class LHttpLoggingInterceptor implements Interceptor {
                 request.url(), request.method(), request.headers(), requestBody));
         Response response = chain.proceed(request);
         long t2 = System.nanoTime();
-        String resonseBody = "";
+        String responseBody = "";
         try {
             ResponseBody body = response.body();
             boolean isProgressBody = body instanceof LProgressResponseBody;
@@ -55,15 +58,17 @@ public class LHttpLoggingInterceptor implements Interceptor {
                 buffer = source.buffer().clone();
             }
             if (!isProgressBody && isPlaintext(buffer)) {
-                resonseBody = buffer.readString(Charset.forName("UTF-8")) + "\n\n" + body.contentLength() + " byte body";
+                responseBody = buffer.readString(Charset.forName("UTF-8")) + "\n\n" + body.contentLength() + " byte body";
             } else {
-                resonseBody = "binary " + body.contentLength() + " byte body";
+                responseBody = "binary " + body.contentLength() + " byte body";
             }
         } catch (Exception e) {
         }
         LL.i(String.format("Received response for %s in %.1fms%n%n%s %s %s%n%n%s%n%s",
-                response.request().url(), (t2 - t1) / 1e6d, response.protocol(), response.code(), response.message(), response.headers(), resonseBody));
-
+                response.request().url(), (t2 - t1) / 1e6d, response.protocol(), response.code(), response.message(), response.headers(), responseBody));
+        if (isGoodJson(responseBody)) {
+            LL.json(responseBody);
+        }
         return response;
     }
 
@@ -91,6 +96,23 @@ public class LHttpLoggingInterceptor implements Interceptor {
             return true;
         } catch (EOFException e) {
             return false; // Truncated UTF-8 sequence.
+        }
+    }
+
+    /**
+     * 判断字符串是否为json格式
+     *
+     * @param json
+     * @return
+     */
+    private static boolean isGoodJson(String json) {
+
+        try {
+            new JSONObject(json.trim());
+            return true;
+        } catch (JSONException e) {
+            System.out.println("bad json: " + json);
+            return false;
         }
     }
 }

@@ -10,7 +10,6 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.chad.library.adapter.base.listener.SimpleClickListener;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.rx.rxbus.LRxBusSubscriber;
 import com.zeroami.commonlib.utils.LPageUtils;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import me.drakeet.materialdialog.MaterialDialog;
 
 /**
  * <p>作者：Zeroami</p>
@@ -122,10 +120,6 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
                 }));
     }
 
-    @Override
-    protected void onInitialized() {
-        getMvpPresenter().doViewInitialized();
-    }
 
     private void initRecycleView() {
         mConversationList = new ArrayList<>();
@@ -179,7 +173,7 @@ public class ConversationFragment extends BaseMvpFragment<ConversationContract.P
 
     @Override
     public void updateConversationList(List<Conversation> conversationList) {
-        if (!isViewDestoryed()){
+        if (!isViewDestroyed()){
             mConversationList.clear();
             mConversationList.addAll(conversationList);
             mAdapter.notifyDataSetChanged();

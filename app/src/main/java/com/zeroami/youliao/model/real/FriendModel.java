@@ -185,7 +185,7 @@ public class FriendModel extends BaseModel implements IFriendModel {
                     @Override
                     public void call(Object data) {
                         // 发送一个事件告诉自己有新朋友被添加
-                        LRxBus.getDefault().postTag(Constant.Action.NEW_FRIEND_ADDED);
+                        LRxBus.getDefault().postAction(Constant.Action.NEW_FRIEND_ADDED);
                         // 发送一条推送告诉对方，我同意添加了你
                         mPushManager.pushMessage(addRequest.getFromUserId(),
                                 String.format(LRUtils.getString(R.string.format_agree_add_request), mSPManager.getCurrentUser().getNickname()),

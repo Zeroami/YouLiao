@@ -256,7 +256,7 @@ public class AddFriendActivity extends BaseMvpActivity<AddFriendContract.Present
     @Override
     public void gotoFriendDetail(int position) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(FriendDetailActivity.EXTRA_USER,mFriendList.get(position));
+        bundle.putSerializable(FriendDetailActivity.EXTRA_USER, mFriendList.get(position));
         LPageUtils.startActivity(this, FriendDetailActivity.class, bundle, false);
     }
 }

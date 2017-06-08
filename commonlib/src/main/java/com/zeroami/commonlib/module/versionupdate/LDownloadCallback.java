@@ -1,5 +1,6 @@
-package com.zeroami.commonlib.http;
+package com.zeroami.commonlib.module.versionupdate;
 
+import com.zeroami.commonlib.http.LProgressInfo;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 
 import java.io.File;
@@ -18,13 +19,9 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * <p>作者：Zeroami</p>
  * <p>邮箱：826589183@qq.com</p>
- * <p>描述：下载文件的回调，使用RxBus订阅下载过程进度信息</p>
+ * <p>描述：下载文件的回调</p>
  */
-public abstract class LProgressCallback implements Callback<ResponseBody> {
-    /**
-     * 订阅下载进度
-     */
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+public abstract class LDownloadCallback implements Callback<ResponseBody> {
     /**
      * 目标文件存储的文件夹路径
      */
@@ -34,26 +31,14 @@ public abstract class LProgressCallback implements Callback<ResponseBody> {
      */
     private String mDestFileName;
 
-    /**
-     * 订阅的事件tag
-     */
-    private String mSubscribeEventTag;
-
-    public LProgressCallback(String destFileDir, String destFileName, String subscribeEventTag) {
+    public LDownloadCallback(String destFileDir, String destFileName) {
         this.mDestFileDir = destFileDir;
         this.mDestFileName = destFileName;
-        this.mSubscribeEventTag = subscribeEventTag;
-        subscribeLoadProgress();
     }
     /**
      * 成功后回调
      */
     public abstract void onSuccess(File file);
-
-    /**
-     * 下载过程回调
-     */
-    public abstract void onLoading(long progress, long total);
 
     /**
      * 请求成功后保存文件
@@ -87,35 +72,10 @@ public abstract class LProgressCallback implements Callback<ResponseBody> {
             }
 
             onSuccess(file);
-            unSubscribe();
             return file;
         }finally {
             in.close();
             out.close();
-        }
-    }
-    /**
-     * 订阅文件下载进度
-     */
-    private void subscribeLoadProgress() {
-        mCompositeSubscription.add(LRxBus.getDefault()
-                .toObservable(LProgressInfo.class,mSubscribeEventTag)
-                .onBackpressureBuffer()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<LProgressInfo>() {
-                    @Override
-                    public void call(LProgressInfo progressInfo) {
-                        onLoading(progressInfo.getProgress(), progressInfo.getTotal());
-                    }
-                }));
-    }
-    /**
-     * 取消订阅，防止内存泄漏
-     */
-    private void unSubscribe() {
-        if (!mCompositeSubscription.isUnsubscribed()) {
-            mCompositeSubscription.unsubscribe();
         }
     }
 }

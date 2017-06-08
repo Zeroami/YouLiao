@@ -1,11 +1,9 @@
 package com.zeroami.commonlib.mvp;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.zeroami.commonlib.R;
 import com.zeroami.commonlib.base.LBaseFragment;
 import com.zeroami.commonlib.utils.LT;
 
@@ -17,20 +15,12 @@ import com.zeroami.commonlib.utils.LT;
 public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFragment implements LMvpView {
 
     private P mMvpPresenter;
-    private ProgressDialog mProgressDialog;
-    private CharSequence mProgressMessage = "正在加载...";
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mMvpPresenter = createPresenter();
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mMvpPresenter = createPresenter();
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -41,6 +31,12 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
         super.onDestroy();
     }
 
+    @Override
+    protected void onViewCreated() {
+        super.onViewCreated();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getLayoutView().findViewById(R.id.swipe_refresh_layout);
+    }
+
     /**
      * 创建Presenter
      *
@@ -48,32 +44,46 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
      */
     protected abstract P createPresenter();
 
-    /**
-     * 设置加载显示文字
-     * @param message
-     */
-    protected void setLoadingMessage(CharSequence message){
-        mProgressMessage = message;
-    }
-
     @Override
     public void showLoading() {
-        mProgressDialog = new ProgressDialog(getAttachActivity());
-        mProgressDialog.setMessage(mProgressMessage);
-        mProgressDialog.show();
-    }
-
-    @Override
-    public void hideLoading() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
+        if (mSwipeRefreshLayout != null){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
         }
     }
 
     @Override
+    public void hideLoading() {
+        if (mSwipeRefreshLayout != null){
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
+    }
+    @Override
     public void showMessage(CharSequence text) {
         LT.show(text);
+    }
+
+    @Override
+    protected void handleArguments(Bundle arguments) {
+        if (mMvpPresenter != null){
+            mMvpPresenter.doHandleExtras(arguments);
+        }
+    }
+
+    @Override
+    protected void onInitialized() {
+        if (mMvpPresenter != null){
+            getMvpPresenter().doViewInitialized();
+        }
     }
 
     /**
@@ -81,7 +91,16 @@ public abstract class LBaseMvpFragment<P extends LMvpPresenter> extends LBaseFra
      *
      * @return
      */
-    public P getMvpPresenter() {
+    protected P getMvpPresenter() {
         return mMvpPresenter;
+    }
+
+    /**
+     * 获取SwipeRefreshLayout
+     *
+     * @return
+     */
+    protected SwipeRefreshLayout getSwipeRefreshLayout() {
+        return mSwipeRefreshLayout;
     }
 }

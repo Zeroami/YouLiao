@@ -6,20 +6,20 @@ package com.zeroami.commonlib.rx.rxbus;
  * <p>描述：RxBus事件的包装</p>
  */
 public class LRxBusEvent {
-    private String tag;
+    private String action;
     private Object data;
 
-    public LRxBusEvent(String tag, Object data) {
-        this.tag = tag;
+    public LRxBusEvent(String action, Object data) {
+        this.action = action;
         this.data = data;
     }
 
-    public String getTag() {
-        return tag;
+    public String getAction() {
+        return action;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public Object getData() {

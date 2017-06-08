@@ -11,12 +11,12 @@ public class LEmptyPresenter extends LBasePresenter<LEmptyContract.View,LMvpMode
     }
 
     @Override
-    protected LMvpModel getRealModel() {
+    protected LMvpModel createRealModel() {
         return null;
     }
 
     @Override
-    protected LMvpModel getTestModel() {
+    protected LMvpModel createTestModel() {
         return null;
     }
 }

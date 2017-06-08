@@ -50,11 +50,6 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.Presenter> im
     }
 
     @Override
-    protected void onInitialized() {
-        getMvpPresenter().doViewInitialized();
-    }
-
-    @Override
     public void startAnimation() {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(ivSplash, "scaleX", 1f, SCALE_END);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(ivSplash, "scaleY", 1f, SCALE_END);

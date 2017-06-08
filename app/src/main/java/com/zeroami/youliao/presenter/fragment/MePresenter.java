@@ -16,12 +16,12 @@ public class MePresenter extends LBasePresenter<MeContract.View,IUserModel> impl
     }
 
     @Override
-    protected IUserModel getRealModel() {
+    protected IUserModel createRealModel() {
         return new UserModel();
     }
 
     @Override
-    protected IUserModel getTestModel() {
+    protected IUserModel createTestModel() {
         return null;
     }
 

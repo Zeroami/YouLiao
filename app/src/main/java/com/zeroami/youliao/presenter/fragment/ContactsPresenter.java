@@ -23,12 +23,12 @@ public class ContactsPresenter extends LBasePresenter<ContactsContract.View, IFr
     }
 
     @Override
-    protected IFriendModel getRealModel() {
+    protected IFriendModel createRealModel() {
         return new FriendModel();
     }
 
     @Override
-    protected IFriendModel getTestModel() {
+    protected IFriendModel createTestModel() {
         return null;
     }
 

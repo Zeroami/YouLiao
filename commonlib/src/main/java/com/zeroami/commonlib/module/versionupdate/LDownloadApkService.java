@@ -9,8 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.zeroami.commonlib.http.LHttpLoggingInterceptor;
-import com.zeroami.commonlib.http.LOkHttpClientFactory;
-import com.zeroami.commonlib.http.LProgressCallback;
+import com.zeroami.commonlib.http.LProgressListener;
 import com.zeroami.commonlib.http.LProgressResponseBody;
 import com.zeroami.commonlib.rx.rxbus.LRxBus;
 import com.zeroami.commonlib.utils.LAppUtils;
@@ -138,7 +137,7 @@ public class LDownloadApkService extends Service {
                 .build()
                 .create(LDownloadService.class)
                 .downloadFile(mRequestUrlFilePart)
-                .enqueue(new LProgressCallback(mDestFileDir, mDestFileName, EVENT_APK_DOWNLOAD_PROGRESS) {
+                .enqueue(new LDownloadCallback(mDestFileDir, mDestFileName) {
 
                     @Override
                     public void onSuccess(File file) {
@@ -146,12 +145,6 @@ public class LDownloadApkService extends Service {
                         LRxBus.getDefault().post(file, EVENT_APK_DOWNLOAD_SUCCESS);
                         cancelNotification();
                         LAppUtils.installApk(file);
-                    }
-
-                    @Override
-                    public void onLoading(long progress, long total) {
-                        updateNotification(progress * 100 / total);
-
                     }
 
                     @Override
@@ -178,7 +171,12 @@ public class LDownloadApkService extends Service {
                 Response originalResponse = chain.proceed(chain.request());
                 return originalResponse
                         .newBuilder()
-                        .body(new LProgressResponseBody(originalResponse, EVENT_APK_DOWNLOAD_PROGRESS))
+                        .body(new LProgressResponseBody(originalResponse, new LProgressListener() {
+                            @Override
+                            public void onProgress(long currentBytesCount, long totalBytesCount) {
+                                updateNotification(currentBytesCount * 100 / totalBytesCount);
+                            }
+                        }))
                         .build();
             }
         });

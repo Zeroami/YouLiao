@@ -77,7 +77,7 @@ public class PushBroadcaseReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
 
-            LRxBus.getDefault().postTag(intent.getAction());    // 发送事件
+            LRxBus.getDefault().postAction(intent.getAction());    // 发送事件
         }
     }
 

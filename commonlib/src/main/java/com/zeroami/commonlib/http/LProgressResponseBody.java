@@ -1,7 +1,5 @@
 package com.zeroami.commonlib.http;
 
-import com.zeroami.commonlib.rx.rxbus.LRxBus;
-
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -20,12 +18,12 @@ import okio.Okio;
 public class LProgressResponseBody extends ResponseBody {
 
     private Response mOriginalResponse;
-    private String mEventTag;
-    private LProgressInfo mDownloadProgressInfo = new LProgressInfo();
+    //进度回调接口
+    private final LProgressListener mProgressListener;
 
-    public LProgressResponseBody(Response originalResponse,String eventTag) {
+    public LProgressResponseBody(Response originalResponse, LProgressListener progressListener) {
         this.mOriginalResponse = originalResponse;
-        this.mEventTag = eventTag;
+        this.mProgressListener = progressListener;
     }
 
     @Override
@@ -41,15 +39,18 @@ public class LProgressResponseBody extends ResponseBody {
     @Override
     public BufferedSource source() {
         return Okio.buffer(new ForwardingSource(mOriginalResponse.body().source()) {
-            long bytesReaded = 0;
-
+            long bytesReadedCount = 0L;
+            //总字节长度，避免多次调用contentLength()方法
+            long totalBytesCount = 0L;
             @Override
             public long read(Buffer sink, long byteCount) throws IOException {
                 long bytesRead = super.read(sink, byteCount);
-                bytesReaded += bytesRead == -1 ? 0 : bytesRead;
-                mDownloadProgressInfo.setProgress(bytesReaded);
-                mDownloadProgressInfo.setTotal(contentLength());
-                LRxBus.getDefault().post(mDownloadProgressInfo,mEventTag);
+                bytesReadedCount += bytesRead == -1 ? 0 : bytesRead;
+                //获得contentLength的值，后续不再调用
+                if (totalBytesCount == 0) {
+                    totalBytesCount = contentLength();
+                }
+                mProgressListener.onProgress(bytesReadedCount,totalBytesCount);
                 return bytesRead;
             }
         });

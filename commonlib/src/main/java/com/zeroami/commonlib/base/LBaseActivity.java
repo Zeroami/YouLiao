@@ -176,7 +176,7 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
     /**
      * 移除fragment
      */
-    public void removeFragment() {
+    public void removeFragmentFromBackStack() {
         if (getSupportFragmentManager().getBackStackEntryCount() >= 1) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -222,6 +222,19 @@ public abstract class LBaseActivity extends SwipeBackActivity implements LRxSupp
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .hide(fragment)
+                    .commit();
+        }
+    }
+
+    /**
+     * 移除fragment
+     *
+     * @param fragment
+     */
+    public void removeFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
                     .commit();
         }
     }

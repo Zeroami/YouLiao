@@ -2,7 +2,7 @@ package com.zeroami.youliao.app;
 
 import android.os.Looper;
 
-import com.zeroami.commonlib.app.LBaseUncaughtExceptionHandler;
+import com.zeroami.commonlib.common.LBaseUncaughtExceptionHandler;
 import com.zeroami.commonlib.utils.LT;
 
 /**

@@ -163,11 +163,6 @@ public class ChatActivity extends BaseMvpActivity<ChatContract.Presenter> implem
                 }));
     }
 
-    @Override
-    protected void onInitialized() {
-        getMvpPresenter().doViewInitialized();
-    }
-
     private void initToolbar() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setTitle("");

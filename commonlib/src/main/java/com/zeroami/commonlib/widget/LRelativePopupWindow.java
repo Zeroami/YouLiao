@@ -1,4 +1,4 @@
-package com.zeroami.youliao.widget;
+package com.zeroami.commonlib.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,8 +11,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupWindow;
 
-import com.zeroami.commonlib.utils.LL;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -20,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author kakajika
  * @since 2016/07/01
  */
-public class RelativePopupWindow extends PopupWindow {
+public class LRelativePopupWindow extends PopupWindow {
 
     @IntDef({
             VerticalPosition.CENTER,
@@ -54,83 +52,66 @@ public class RelativePopupWindow extends PopupWindow {
         int ALIGN_RIGHT = 4;
     }
 
-    public RelativePopupWindow(Context context) {
+    public LRelativePopupWindow(Context context) {
         super(context);
     }
 
-    public RelativePopupWindow(Context context, AttributeSet attrs) {
+    public LRelativePopupWindow(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RelativePopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LRelativePopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public RelativePopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public LRelativePopupWindow(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public RelativePopupWindow() {
+    public LRelativePopupWindow() {
         super();
     }
 
-    public RelativePopupWindow(View contentView) {
+    public LRelativePopupWindow(View contentView) {
         super(contentView);
     }
 
-    public RelativePopupWindow(int width, int height) {
+    public LRelativePopupWindow(int width, int height) {
         super(width, height);
     }
 
-    public RelativePopupWindow(View contentView, int width, int height) {
+    public LRelativePopupWindow(View contentView, int width, int height) {
         super(contentView, width, height);
     }
 
-    public RelativePopupWindow(View contentView, int width, int height, boolean focusable) {
+    public LRelativePopupWindow(View contentView, int width, int height, boolean focusable) {
         super(contentView, width, height, focusable);
     }
 
     /**
      * Show at relative position to anchor View.
      * @param anchor Anchor View
-     * @param vertPos Vertical Position Flag
      * @param horizPos Horizontal Position Flag
+     * @param vertPos Vertical Position Flag
      */
-    public void showOnAnchor(@NonNull View anchor, @VerticalPosition int vertPos, @HorizontalPosition int horizPos) {
-        showOnAnchor(anchor, vertPos, horizPos, 0, 0);
+    public void showOnAnchor(@NonNull View anchor, @HorizontalPosition int horizPos, @VerticalPosition int vertPos) {
+        showOnAnchor(anchor, horizPos, vertPos, 0, 0);
     }
 
     /**
      * Show at relative position to anchor View with translation.
      * @param anchor Anchor View
-     * @param vertPos Vertical Position Flag
      * @param horizPos Horizontal Position Flag
+     * @param vertPos Vertical Position Flag
      * @param x Translation X
      * @param y Translation Y
      */
-    public void showOnAnchor(@NonNull View anchor, @VerticalPosition int vertPos, @HorizontalPosition int horizPos, int x, int y) {
+    public void showOnAnchor(@NonNull View anchor, @HorizontalPosition int horizPos, @VerticalPosition int vertPos, int x, int y) {
         View contentView = getContentView();
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         final int measuredW = contentView.getMeasuredWidth();
         final int measuredH = contentView.getMeasuredHeight();
-        switch (vertPos) {
-            case VerticalPosition.ABOVE:
-                y -= measuredH + anchor.getHeight();
-                break;
-            case VerticalPosition.ALIGN_BOTTOM:
-                y -= measuredH;
-                break;
-            case VerticalPosition.CENTER:
-                y -= anchor.getHeight()/2 + measuredH/2;
-                break;
-            case VerticalPosition.ALIGN_TOP:
-                y -= anchor.getHeight();
-                break;
-            case VerticalPosition.BELOW:
-                // Default position.
-                break;
-        }
         switch (horizPos) {
             case HorizontalPosition.LEFT:
                 x -= measuredW;
@@ -146,6 +127,23 @@ public class RelativePopupWindow extends PopupWindow {
                 break;
             case HorizontalPosition.RIGHT:
                 x += anchor.getWidth();
+                break;
+        }
+        switch (vertPos) {
+            case VerticalPosition.ABOVE:
+                y -= measuredH + anchor.getHeight();
+                break;
+            case VerticalPosition.ALIGN_BOTTOM:
+                y -= measuredH;
+                break;
+            case VerticalPosition.CENTER:
+                y -= anchor.getHeight()/2 + measuredH/2;
+                break;
+            case VerticalPosition.ALIGN_TOP:
+                y -= anchor.getHeight();
+                break;
+            case VerticalPosition.BELOW:
+                // Default position.
                 break;
         }
         PopupWindowCompat.showAsDropDown(this, anchor, x, y, Gravity.NO_GRAVITY);

@@ -48,12 +48,12 @@ public class ConversationPresenter extends LBasePresenter<ConversationContract.V
     }
 
     @Override
-    protected IChatModel getRealModel() {
+    protected IChatModel createRealModel() {
         return new ChatModel();
     }
 
     @Override
-    protected IChatModel getTestModel() {
+    protected IChatModel createTestModel() {
         return null;
     }
 
